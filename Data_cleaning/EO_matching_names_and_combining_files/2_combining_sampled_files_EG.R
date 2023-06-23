@@ -3,7 +3,7 @@ library(plyr)
 library(tidyverse)
 
 # Set working directory
-setwd("~/GitHub/MICS_SMDW/EO_matching_names_and_combining_files")
+setwd("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files")
 
 matched_names <- fread("matched_names_EG_2021.02.04.csv") %>% 
   select(-name_orig) %>%
@@ -22,9 +22,9 @@ all_names_MICS <- rbind(matched_names,unmatched_names)
  
 head(all_names_MICS)
 
-NAME_1_sampled <- fread("~/GitHub/MICS_SMDW/EO_matching_names_and_combining_files/NAME_1_sampled.csv")
-NAME_2_sampled <- fread("~/GitHub/MICS_SMDW/EO_matching_names_and_combining_files/NAME_2_sampled.csv")
-NAME_3_sampled <- fread("~/GitHub/MICS_SMDW/EO_matching_names_and_combining_files/NAME_3_sampled.csv")
+NAME_1_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_1_sampled.csv")
+NAME_2_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_2_sampled.csv")
+NAME_3_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_3_sampled.csv")
 
 
 NAME_1_combined <- left_join(all_names_MICS, NAME_1_sampled, by = c("matched_name1" = "NAME_1")) %>% 

@@ -15,7 +15,7 @@ Here we model the four constituent subcomponents of safely managed drinking wate
 
 # Set working directory
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, root.dir = 
-"~/GitHub/MICS_SMDW")
+"~/GitHub/mapping-safe-drinking-water-use-LMICs")
 
 library(data.table)
 library(tidyverse)
@@ -27,11 +27,11 @@ library(here)
 ## Loading data sets
 
 ```{r}
-source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
 
-source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-source("~/GitHub/MICS_SMDW/Training/feature_names/39_features.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/39_features.R")
 
 UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
 
@@ -61,7 +61,7 @@ combined_MICS_envir_human_e.coli <- EcoliFreeRegionalProportion %>%
 
 #for modelling e.coli contamination at PoC with 40 features
 
-source("~/GitHub/MICS_SMDW/Training/feature_names/39_features.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/39_features.R")
 
 combined_MICS_envir_human_e.coli  <- combined_MICS_envir_human_e.coli %>%
   select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("No_EcoliAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
@@ -86,7 +86,7 @@ combined_MICS_envir_human_e.coli <-combined_MICS_envir_human_e.coli %>%
 df.MICS_envir_human_e.coli_39 <- combined_MICS_envir_human_e.coli  %>% 
   select(all_of(bandNames_39),varToModel_e.coli,country_fold, HouseholdsInRegion.Freq.x) 
 
-#write.csv(df.MICS_envir_human_e.coli_39, "/Users/Esther/Documents/GitHub/MICS_SMDW/Prediction/Regre_Matrix_Ecoli.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(df.MICS_envir_human_e.coli_39, "/Users/Esther/Documents/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Regre_Matrix_Ecoli.csv", fileEncoding = "UTF-8", row.names = F)
 
 regMatrixH2O_e.coli_reg_39 <- as.h2o(df.MICS_envir_human_e.coli_39, destination_frame = "regMatrixH2O_e.coli_reg_39")
 
@@ -123,7 +123,7 @@ summary(rf.grid_39_e.coli, show_stack_traces = TRUE)
 
 print(rf_grid_perf_ecoli@summary_table)
 
-write.csv(rf_grid_perf_ecoli@summary_table,"~/GitHub/MICS_SMDW/Training/rf_grid_ecoli_reg_39.csv")
+write.csv(rf_grid_perf_ecoli@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/rf_grid_ecoli_reg_39.csv")
 ```
 
 best RF model with 39 features for e.coli contamination
@@ -169,7 +169,7 @@ mean_values_ecoli  <- rename39Features(mean_values_ecoli)
 
 mean_values_ecoli <- group39FeaturesInto5IndicatorGroups(mean_values_ecoli)
 
-write.csv(mean_values_ecoli, "~/GitHub/MICS_SMDW/Prediction/Shap_values_ecoli.csv", fileEncoding = "UTF-8", row.names = T)
+write.csv(mean_values_ecoli, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Shap_values_ecoli.csv", fileEncoding = "UTF-8", row.names = T)
 ```
 
 Plotting summarized average SHAP values by Indicator Group for E.coli estimates
@@ -225,7 +225,7 @@ TrainAndPredicted_ecoli$nr_HH_in_region <- df.MICS_envir_human_e.coli_39$Househo
 
 TrainAndPredicted_ecoli$Country <- combined_MICS_envir_human_e.coli $NAME_0
 
-source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
 TrainAndPredicted_ecoli<- joinWithCountryIncomeGroups(TrainAndPredicted_ecoli,UN_Population_Devision_Names, country_Income_Groups)
 
@@ -289,14 +289,14 @@ FullPrediction_ecoli$Income.group[FullPrediction_ecoli$country == "Saint Helena"
 FullPrediction_ecoli <- FullPrediction_ecoli %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_ecoli, "~/GitHub/MICS_SMDW/Prediction/prediction-results/Fullprediction_Ecoli_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_ecoli, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/Fullprediction_Ecoli_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
 ##Descriptive analysis of E.coli results
 ```{r}
-source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-Ecoli_originalprediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/prediction-results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
+Ecoli_originalprediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -466,7 +466,7 @@ summary(rf.grid_, show_stack_traces = TRUE)
 
 print(rf.grid.perf@summary_table)
 
-#write.csv(rf.grid.perf@summary_table,"~/GitHub/MICS_SMDW/Training/results_grid_search/rf_grid_Avail_reg_39_newest.csv")
+#write.csv(rf.grid.perf@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/results_grid_search/rf_grid_Avail_reg_39_newest.csv")
 
 ```
 
@@ -548,7 +548,7 @@ shap_values_Avail <- predict_contributions.H2OModel(
 mean_values_Avail <- as.data.frame(colMeans(abs(as.data.frame(shap_values_Avail) %>% select(-BiasTerm)))); names(mean_values_Avail) <- 'Mean'
 mean_values_Avail %>% arrange(desc(Mean))
 
-#write.csv(mean_values_Avail, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Shap_values_Avail_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Avail, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Shap_values_Avail_newest.csv", fileEncoding = "UTF-8", row.names = T)
 
 mean_values_Avail <- cbind(feature = rownames(mean_values_Avail), mean_values_Avail)
 
@@ -609,7 +609,7 @@ FullPrediction_Avail$Income.group[FullPrediction_Avail$country == "Saint Helena"
 FullPrediction_Avail <- FullPrediction_Avail %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_Avail, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Fullprediction_Avail_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_Avail, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Fullprediction_Avail_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
 #Modeling drinking water accessibility
@@ -652,7 +652,7 @@ combined_Accessibility_envir_human_39 <- combined_Accessibility_envir_human_39 %
 combined_Access_envir_regMatrix_39 <- combined_Accessibility_envir_human_39%>%
   select(all_of(bandNames_39),all_of(varToModel_Access),HouseholdsInRegion.Freq.x, country_fold)
 
-write.csv(combined_Access_envir_regMatrix_39 , "~/GitHub/MICS_SMDW/Prediction/Regre_Matrix_Access.csv", fileEncoding = "UTF-8", row.names = F)
+write.csv(combined_Access_envir_regMatrix_39 , "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Regre_Matrix_Access.csv", fileEncoding = "UTF-8", row.names = F)
 
 regMatrixH2O_Access_reg_39 <- as.h2o(combined_Access_envir_regMatrix_39, destination_frame = "regMatrixH2O_Access_reg_39")
 
@@ -688,7 +688,7 @@ summary(rf.grid_39_Access, show_stack_traces = TRUE)
 
 print(rf_grid_perf_Access@summary_table)
 
-#write.csv(rf_grid_perf_Access@summary_table,"~/GitHub/MICS_SMDW/Training/grid_search_results/rf_grid_Access_reg_39_newest.csv")
+#write.csv(rf_grid_perf_Access@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/grid_search_results/rf_grid_Access_reg_39_newest.csv")
 
 ```
 best RF model with 39 features for water accessibility
@@ -774,7 +774,7 @@ mean_values_Access  <- rename39Features(mean_values_Access)
 
 mean_values_Access <- group39FeaturesInto5IndicatorGroups(mean_values_Access)
 
-#write.csv(mean_values_Access, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Access, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
 ```
 
 Plotting summarized average SHAP values by Indicator Group for Access
@@ -828,13 +828,13 @@ FullPrediction_Access$Income.group[FullPrediction_Access$country == "Saint Helen
 FullPrediction_Access <- FullPrediction_Access %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_Access, "~/GitHub/MICS_SMDW/Prediction/prediction_results/FullPrediction_Access_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_Access, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/FullPrediction_Access_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 ##Descriptive analysis of accessibility results
 ```{r}
-#source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+#source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-Access_prediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
+Access_prediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -956,7 +956,7 @@ summary(rf.grid_39_improved, show_stack_traces = TRUE)
 
 print(rf_grid_perf_improved@summary_table)
 
-#write.csv(rf_grid_perf_improved@summary_table,"~/GitHub/MICS_SMDW/Training/grid_search_results_rf_grid_improved_reg_39_newest.csv")
+#write.csv(rf_grid_perf_improved@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/grid_search_results_rf_grid_improved_reg_39_newest.csv")
 
 ```
 
@@ -1039,7 +1039,7 @@ mean_values_Improved  <- rename39Features(mean_values_Improved)
 
 mean_values_Improved <- group39FeaturesInto5IndicatorGroups(mean_values_Improved)
 
-#write.csv(mean_values_Improved, "~/GitHub/MICS_SMDW/Prediction/predition_results/Shap_values_Improved_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Improved, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/predition_results/Shap_values_Improved_newest.csv", fileEncoding = "UTF-8", row.names = T)
 ```
 
 Plotting summarized average SHAP values by Indicator Group for Water Source Type
@@ -1121,14 +1121,14 @@ FullPrediction_Improved$Income.group[FullPrediction_Improved$country == "Saint H
 FullPrediction_Improved <- FullPrediction_Improved %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_Improved, "~/GitHub/MICS_SMDW/Prediction/prediction_results/FullPrediction_Improved_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_Improved, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/FullPrediction_Improved_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
 ##Descriptive analysis of improved drinking water source results
 ```{r}
-source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-Improved_prediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
+Improved_prediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 

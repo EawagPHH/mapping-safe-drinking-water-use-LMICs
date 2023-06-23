@@ -2,7 +2,7 @@
 #title: "Compiling and Labeling Multiple Indicator Cluster Survey Data for Training Set"
 
 
-setwd("C:\\Users\\Esther\\Documents\\GitHub\\MICS_SMDW\\Data_cleaning\\MICS_Preprocessing_Dataframes\\Compiling_MICS_test_and_training_sets")
+setwd("~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data_cleaning\\MICS_Preprocessing_Dataframes\\Compiling_MICS_test_and_training_sets")
 
 library(foreign)
 library(tidyr)
@@ -11,8 +11,8 @@ library(dplyr)
 source("FunctionsForLabelingHHMICS.R")
 source("FunctionsForExtractingVariablesFromMICS.R")
 
-PATH_TO_SURVEYS_TRAINING <- "C:\\Users\\Esther\\Documents\\GitHub\\MICS_SMDW\\Data\\HH_MICS_training"
-PATH_TO_NEWEST_SURVEYS_TRAINING <- "C:\\Users\\Esther\\Documents\\GitHub\\MICS_SMDW\\Data\\HH_MICS_new_training"
+PATH_TO_SURVEYS_TRAINING <- "~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data\\HH_MICS_training"
+PATH_TO_NEWEST_SURVEYS_TRAINING <- "~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data\\HH_MICS_new_training"
 loadSurveys(PATH_TO_SURVEYS_TRAINING)
 loadSurveys(PATH_TO_NEWEST_SURVEYS_TRAINING)
 

@@ -1,6 +1,6 @@
 #title: "Compiling and Labeling Multiple Indicator Cluster Survey Data for Testing Set"
 
-setwd("C:\\Users\\Esther\\Documents\\GitHub\\MICS_SMDW\\Data_cleaning\\MICS_Preprocessing_Dataframes")
+setwd("~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data_cleaning\\MICS_Preprocessing_Dataframes")
 
 replaceMinus99WithNa <- function(df){
   df[df == -99] <- NA

@@ -9,11 +9,11 @@ library(tidyverse)
 `%notin%` <- Negate(`%in%`)
 
 # Set working directory
-setwd("~/GitHub/MICS_SMDW/Data_cleaning/EO_matching_names_and_combining_files")
+setwd("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/EO_matching_names_and_combining_files")
 
 
 # Load unicef database
-unicef <- fread("~/GitHub/MICS_SMDW/Data_cleaning/EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
+unicef <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
   rowid_to_column(var = "ID") 
 
 
