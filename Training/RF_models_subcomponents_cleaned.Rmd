@@ -1,0 +1,1163 @@
+---
+title: "Modeling Subcomponents of SMDWs"
+author: "Esther Greenwood"
+date: "30/01/2022"
+output: html_document
+---
+
+Here we model the four constituent subcomponents of safely managed drinking water:
+(i) absence of faecal contamination (no detectable E. coli in a 100 ml sample of a household’s primary drinking water source),
+(ii) availability when needed (no insufficiency of water quantity experienced within the last month), 
+(iii) accessibility on premises (a water source located in the dwelling, yard or plot),  and 
+(iv) use of an improved drinking water source (a drinking water source which provides some degree of protection from faecal contamination) 
+
+```{r setup, include=FALSE}
+
+# Set working directory
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, root.dir = 
+"~/GitHub/MICS_SMDW")
+
+library(data.table)
+library(tidyverse)
+library(h2o)
+library(dplyr)
+library(here)
+```
+
+## Loading data sets
+
+```{r}
+source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
+
+source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+source("~/GitHub/MICS_SMDW/Training/feature_names/39_features.R")
+
+UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
+
+EO_features <- readEarthObservationFeaturesAndRenameCountriesAccordingToUN_WPP()
+
+EO_features <- renameDuplicateHH7RegionNamesFromDifferentCountries(EO_features)
+
+df.MICS_HH <- readHouseHoldSurveyData() 
+
+country_Income_Groups <- readCountryIncomeGroup()
+
+```
+
+#Modelling freedom of faecal contamination using E.coli as an indicator
+```{r}
+
+df.MICS_Ecoli <- createDataFrameWithEcoliIndicator(df.MICS_HH)
+
+df.MICS_Ecoli <- renameDuplicateHH7RegionNamesFromDifferentCountries(df.MICS_Ecoli)
+
+EcoliFreeRegionalProportion <-createIndicatorForRegionalProportionFreeOfEcoli(df.MICS_Ecoli)
+
+# combine with environmental and human data
+
+combined_MICS_envir_human_e.coli <- EcoliFreeRegionalProportion %>% 
+  left_join(EO_features, by = c("HH7_region"="HH7_region"))
+
+#for modelling e.coli contamination at PoC with 40 features
+
+source("~/GitHub/MICS_SMDW/Training/feature_names/39_features.R")
+
+combined_MICS_envir_human_e.coli  <- combined_MICS_envir_human_e.coli %>%
+  select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("No_EcoliAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
+
+```
+
+##Grid-search: Tuning hyperparameters of random forest model with 39 features
+Outcome: access to E.coli free water
+```{r}
+## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+
+h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
+
+## modelling e.coli
+varToModel_e.coli <-'No_EcoliAtRegionalLevel'
+
+combined_MICS_envir_human_e.coli  <-createColumnForCVfoldBasedOnCountries(combined_MICS_envir_human_e.coli ) 
+
+combined_MICS_envir_human_e.coli <-combined_MICS_envir_human_e.coli %>% 
+  drop_na(country_fold)
+
+df.MICS_envir_human_e.coli_39 <- combined_MICS_envir_human_e.coli  %>% 
+  select(all_of(bandNames_39),varToModel_e.coli,country_fold, HouseholdsInRegion.Freq.x) 
+
+#write.csv(df.MICS_envir_human_e.coli_39, "/Users/Esther/Documents/GitHub/MICS_SMDW/Prediction/Regre_Matrix_Ecoli.csv", fileEncoding = "UTF-8", row.names = F)
+
+regMatrixH2O_e.coli_reg_39 <- as.h2o(df.MICS_envir_human_e.coli_39, destination_frame = "regMatrixH2O_e.coli_reg_39")
+
+##grid search
+rf.params_39_e.coli<-list(ntrees = c(100,200),
+                mtries = c(6,10,13,20), #(about n^(1/2), 1/4, 1/3, 1/2 of number of features)
+                min_rows = c(1,3,5),
+                sample_rate = c(0.6,0.8)
+                )
+
+search.criteria<-list(strategy = 'RandomDiscrete', max_models = 150, seed = 0, max_runtime_secs = 3600)
+
+rf.grid_39_e.coli<-h2o.grid('randomForest',
+                  y = varToModel_e.coli,
+                  grid_id = 'rf.grid_e.coli',
+                  training_frame = regMatrixH2O_e.coli_reg_39,
+                  seed = 0,
+                  hyper_params = rf.params_39_e.coli,
+                  fold_column = "country_fold",
+                  weights_column = "HouseholdsInRegion.Freq.x",
+                  fold_assignment = 'AUTO',
+                  keep_cross_validation_predictions = TRUE, # Important!
+                  keep_cross_validation_fold_assignment = TRUE, # Important!
+                  search_criteria = search.criteria)
+
+summary(rf.grid_39_e.coli, show_stack_traces = TRUE)
+#retrieve grid searched model performance sort by RMSE/R2
+
+rf_grid_perf_ecoli<-h2o.getGrid(grid_id = 'rf.grid_e.coli',
+                          sort_by = 'R2', # This is also coefficient of determinaion values
+
+                                                    decreasing = TRUE)
+summary(rf.grid_39_e.coli, show_stack_traces = TRUE)
+
+print(rf_grid_perf_ecoli@summary_table)
+
+write.csv(rf_grid_perf_ecoli@summary_table,"~/GitHub/MICS_SMDW/Training/rf_grid_ecoli_reg_39.csv")
+```
+
+best RF model with 39 features for e.coli contamination
+```{r}
+# random forest regression using metrics of best performing model
+
+rf_model_ecoli_final <- h2o.randomForest(
+  y = varToModel_e.coli,
+  training_frame = regMatrixH2O_e.coli_reg_39,
+  ntrees = 100,
+  mtries = 13,
+  sample_rate = 0.6,
+  min_rows = 3,
+  fold_column = "country_fold",
+  weights_column = "HouseholdsInRegion.Freq.x",
+  seed = 0,
+  fold_assignment = 'AUTO',
+  keep_cross_validation_predictions = TRUE, # Important!
+  keep_cross_validation_fold_assignment = TRUE)
+
+h2o.r2(rf_model_ecoli_final, xval = TRUE)
+h2o.mae(rf_model_ecoli_final, xval = TRUE)
+
+h2o.varimp_plot(rf_model_ecoli_final)
+h2o.varimp(rf_model_ecoli_final)
+
+perf_40_ecoli <- h2o.performance(rf_model_ecoli_final)
+perf_40_ecoli
+```
+
+##Calculating and plotting SHAP values for E.coli predictions
+```{r}
+shap_values_ecoli <- predict_contributions.H2OModel(
+  rf_model_ecoli_final,
+  regMatrixH2O_e.coli_reg_39)
+
+mean_values_ecoli <- as.data.frame(colMeans(abs(as.data.frame(shap_values_ecoli) %>% select(-BiasTerm)))); names(mean_values_ecoli) <- 'Mean'
+mean_values_ecoli %>% arrange(desc(Mean))
+
+mean_values_ecoli <- cbind(feature = rownames(mean_values_ecoli), mean_values_ecoli)
+
+mean_values_ecoli  <- rename39Features(mean_values_ecoli)
+
+mean_values_ecoli <- group39FeaturesInto5IndicatorGroups(mean_values_ecoli)
+
+write.csv(mean_values_ecoli, "~/GitHub/MICS_SMDW/Prediction/Shap_values_ecoli.csv", fileEncoding = "UTF-8", row.names = T)
+```
+
+Plotting summarized average SHAP values by Indicator Group for E.coli estimates
+```{r}
+SHAP_values_Ecoli_grouped <- mean_values_ecoli %>% 
+  group_by(Indicator.Group) %>% 
+  summarise(SumOfAverageSHAPValue = sum(Mean))
+
+Plot_SHAP_Ecoli_grouped <- ggplot(SHAP_values_Ecoli_grouped, aes(x=reorder(Indicator.Group, SumOfAverageSHAPValue), y=SumOfAverageSHAPValue, fill= Indicator.Group)) +
+  ggtitle("Absence of faecal contamination")+
+  geom_bar(stat = "identity") + 
+  labs(y = "sum of average SHAP values", x="") +
+  scale_y_continuous(limits = c(0,0.150)) +
+coord_flip() +
+  scale_fill_manual(values=colours)+
+  guides(fill = FALSE, color = FALSE, linetype = FALSE, shape = FALSE)+
+  theme_bw()
+
+Plot_SHAP_Ecoli_grouped
+```
+Create the SHAP summary plot
+```{r}
+shap_summary_plot_ecoli <- h2o.shap_summary_plot(rf_model_ecoli_final, regMatrixH2O_e.coli_reg_39)
+print(shap_summary_plot_ecoli)
+
+shap_summary_plot_data <- shap_summary_plot_ecoli[['data']]
+shap_summary_plot_data$feature <- as.character(shap_summary_plot_data$feature)
+shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
+
+shap_summary_plot_data <- shap_summary_plot_data %>%
+  left_join(mean_values_ecoli, by = c("feature"="feature"))
+
+library(viridis)
+shap_summary_plot_data %>%
+  mutate(feature = fct_reorder(feature, Mean)) %>%
+ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
+        geom_hline(yintercept = 0, linetype = "dashed") +
+        geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
+        scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
+        coord_flip() +
+        labs(y = "SHAP contribution to E.coli prediction", x = "", col = "Normalized\nFeature Value") +
+        theme_bw() 
+```
+
+##Plot results from best RF Model for E.coli contamination
+Plot Predicted versus Observed E.coli contamination with results from leave-one-country-out holdout predictions.
+```{r}
+TrainAndPredicted_ecoli <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_ecoli_final))
+
+TrainAndPredicted_ecoli$train <- df.MICS_envir_human_e.coli_39$No_EcoliAtRegionalLevel
+
+TrainAndPredicted_ecoli$nr_HH_in_region <- df.MICS_envir_human_e.coli_39$HouseholdsInRegion.Freq.x
+
+TrainAndPredicted_ecoli$Country <- combined_MICS_envir_human_e.coli $NAME_0
+
+source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+TrainAndPredicted_ecoli<- joinWithCountryIncomeGroups(TrainAndPredicted_ecoli,UN_Population_Devision_Names, country_Income_Groups)
+
+# Plot predicted vs observed values
+
+colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+                                    
+plotPredObs_ecoli <- ggplot(TrainAndPredicted_ecoli, 
+                      aes(x = predict, 
+                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+  geom_point(shape=1) +
+  labs(x = "Predicted proportion of population with E.coli free drinking water",
+       y = "Observed proportion of population with E.coli free drinking water") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
+stat_smooth(se = T,
+              colour = "black",
+              size = 0.5,
+              method = "lm") +
+  geom_abline(slope = 1,
+              intercept = 0,
+              na.rm = FALSE, 
+              show.legend = NA, 
+              linetype = "dashed") +
+  labs(size="Households in region (n)", 
+              col="Income group") +
+  scale_colour_manual(values = colours) +
+  theme_bw()
+
+plotPredObs_ecoli                                                                                  
+```
+
+## E.coli prediction at global administrative (GADM) area level 1
+```{r}
+#level 1 prediction
+
+EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+
+regressionMatrixForPrediction <-EO_GADM_level1 %>%  
+ select(all_of(bandNames_39))
+ 
+regMatrixH2O_4pred_39 <- as.h2o(regressionMatrixForPrediction, destination_frame = "regMatrixH2O_4pred_39")
+
+FullPrediction_ecoli <- as.data.frame(h2o.predict(rf_model_ecoli_final, regMatrixH2O_4pred_39))
+
+FullPrediction_ecoli$region <- EO_GADM_level1[["NAME_1"]]
+FullPrediction_ecoli$GID_1 <- EO_GADM_level1[["GID_1"]]
+FullPrediction_ecoli$country <- EO_GADM_level1[["NAME_0"]]
+FullPrediction_ecoli$GID_0 <- EO_GADM_level1[["GID_0"]]
+
+country_Income_Groups <- renameCountryCodeForKosovo(country_Income_Groups)
+
+FullPrediction_ecoli <- FullPrediction_ecoli  %>% 
+  left_join(country_Income_Groups, by=(c("GID_0"="Code")))
+
+#Venezuela was not in the WB income group classification file so we add it as a lower-middle-income country according to the Inter-American Development Bank
+
+FullPrediction_ecoli$Income.group[FullPrediction_ecoli$country == "Venezuela"] <- "Lower middle income"
+FullPrediction_ecoli$Income.group[FullPrediction_ecoli$country == "Tokelau"] <- "Lower middle income"
+FullPrediction_ecoli$Income.group[FullPrediction_ecoli$country == "Saint Helena"] <- "Upper middle income"
+
+FullPrediction_ecoli <- FullPrediction_ecoli %>%
+  na.omit(Income.group)
+
+#write.csv(FullPrediction_ecoli, "~/GitHub/MICS_SMDW/Prediction/prediction-results/Fullprediction_Ecoli_newest.csv", fileEncoding = "UTF-8", row.names = F)
+```
+
+##Descriptive analysis of E.coli results
+```{r}
+source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Ecoli_originalprediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/prediction-results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
+
+GlobalRegions <- readAndRenameStandardGlobalRegionNames()
+
+#joining and preparing dataframe for analysis
+Ecoli_originalprediction <- Ecoli_originalprediction %>% 
+  left_join(EO_GADM_level1, by = c("GID_1"="GID_1", "GID_0"="GID_0")) %>% 
+  left_join(GlobalRegions, by = c("GID_0"="ISO.alpha3.Code")) 
+
+Ecoli_originalprediction$country[Ecoli_originalprediction$country == "Kosovo"] <- "Kosovo (under UNSC res. 1244)"
+  
+Ecoli_originalprediction$UNRegionName[Ecoli_originalprediction$country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+Ecoli_originalprediction$UNSubRegionName[Ecoli_originalprediction$country == "Kosovo (under UNSC res. 1244)"] <- "Eastern Europe"
+
+
+Ecoli_originalprediction <- Ecoli_originalprediction  %>% 
+  filter(Income.group == "Low income" |
+         Income.group == "Lower middle income" |
+         Income.group == "Upper middle income")
+
+```
+## estimates of across all LMICs
+```{r}
+Ecoli_originalprediction$numberOfPeopleinRegion <- Ecoli_originalprediction$GPWv4_Population_2020
+Ecoli_originalprediction$numberOfPeopleWithoutEcoliInRegion <- Ecoli_originalprediction$GPWv4_Population_2020*Ecoli_originalprediction$predict
+
+Ecoli_originalprediction$totalNumberOfPeopleLMICS <- sum(Ecoli_originalprediction$numberOfPeopleinRegion)#6.523e+09
+Ecoli_originalprediction$NumberOfPeopleLMICSwithoutEcoliSMDW <- sum(Ecoli_originalprediction$numberOfPeopleWithoutEcoliInRegion)#3420936496
+
+Ecoli_originalprediction$numberOfPeopleEcoliInRegion <- Ecoli_originalprediction$numberOfPeopleinRegion-Ecoli_originalprediction$numberOfPeopleWithoutEcoliInRegion
+
+Ecoli_originalprediction$numberOfPeopleLMICSEcoli <- sum(Ecoli_originalprediction$numberOfPeopleEcoliInRegion)# 3102063955
+
+```
+## estimates at UN region 
+```{r}
+Ecoli_originalprediction_UNregion <- Ecoli_originalprediction %>% 
+  group_by(UNRegionName) %>% 
+  summarise(numberOfPeopleinUNRegion = sum(numberOfPeopleinRegion))
+Ecoli_originalprediction_UNregion_ <- Ecoli_originalprediction %>% 
+  group_by(UNRegionName) %>% 
+  summarise(numberOfPeopleWithEcoliInUNRegion = sum(numberOfPeopleEcoliInRegion))
+
+Ecoli_originalprediction_UNregion$proportionPopWithEcoli <- Ecoli_originalprediction_UNregion_$numberOfPeopleWithEcoliInUNRegion/Ecoli_originalprediction_UNregion$numberOfPeopleinUNRegion
+
+Ecoli_originalprediction_UNSubregion <- Ecoli_originalprediction %>% 
+  group_by(UNSubRegionName) %>% 
+  summarise(numberOfPeopleWithEcoliInUNSubRegion = sum(numberOfPeopleEcoliInRegion))
+
+library(scales)
+
+UNSubregionoriginal_numberEcoli <- ggplot(Ecoli_originalprediction_UNSubregion, aes(x=reorder(UNSubRegionName, numberOfPeopleWithEcoliInUNSubRegion), y=numberOfPeopleWithEcoliInUNSubRegion)) + 
+  geom_bar(stat = "identity",fill="light blue" ) + 
+  scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6), limits = c(0, 1250000000))+
+  labs(y = "Number of people exposed to E.coli in their primary drinking water source", x="") +
+coord_flip() +
+  theme_bw()
+UNSubregionoriginal_numberEcoli
+```
+## estimates at UNsubregion levels
+```{r}
+populationEcoli_original_UNSubregion <- Ecoli_originalprediction %>% 
+  group_by(UNSubRegionName) %>% 
+  summarise(numberOfPeopleinUNSubRegion = sum(numberOfPeopleinRegion))
+
+Ecoli_originalprediction_UNSubregion$ProportionNoEcoli <- 1-Ecoli_originalprediction_UNSubregion$numberOfPeopleWithEcoliInUNSubRegion/populationEcoli_original_UNSubregion$numberOfPeopleinUNSubRegion
+
+UNSubregion_original_ProportionNoEcoli <- ggplot(Ecoli_originalprediction_UNSubregion, aes(x=reorder(UNSubRegionName, 1-ProportionNoEcoli), y=1-ProportionNoEcoli, fill=UNSubRegionName)) + 
+  geom_bar(stat = "identity",fill="light blue" ) + 
+  labs(y = "Proportion of population exposed to E.coli in the primary drinking water source",x="") +
+coord_flip() +
+  theme_bw()
+
+nationalpopulation_originalPercentageNoEcoli <- Ecoli_originalprediction %>% 
+  #filter(UNSubRegionName== "Sub-Saharan Africa") %>%
+  group_by(NAME_0) %>% 
+  summarise(numberOfPeopleEcoliIncountry = sum(numberOfPeopleEcoliInRegion))
+
+nationalpopulation_originalEcoli <- Ecoli_originalprediction %>% 
+  #filter(UNSubRegionName== "Sub-Saharan Africa") %>%
+  group_by(NAME_0) %>% 
+  summarise(numberOfPeopleincountry = sum(numberOfPeopleinRegion))
+
+nationalpopulation_originalPercentageNoEcoli$percentageNoEcoli <- 1-nationalpopulation_originalPercentageNoEcoli$numberOfPeopleEcoliIncountry/nationalpopulation_originalEcoli$numberOfPeopleincountry
+
+nationalpopulation_originalPercentageNoEcoli_ <- nationalpopulation_originalPercentageNoEcoli %>% 
+left_join(Ecoli_originalprediction, by = c("NAME_0"="NAME_0"))%>%
+  dplyr::select(UNRegionName, UNSubRegionName,income_group, NAME_0, numberOfPeopleEcoliIncountry, percentageNoEcoli) %>% unique()
+
+nationalpopulation_originalPercentageNoEcoli_ $propotionEcoli <- 1-nationalpopulation_originalPercentageNoEcoli_ $percentageNoEcoli
+
+```
+
+#Modelling drinking water availability
+
+Here we create a dataframe with indicators for drinking water availability.
+```{r}
+df.MICS_HH_availability <-createDataFrameWithAvailabilty(df.MICS_HH)
+
+df.MICS_HH_availability <- renameDuplicateHH7RegionNamesFromDifferentCountries(df.MICS_HH_availability)
+
+Availability_training <-createIndicatorForRegionalAvailability(df.MICS_HH_availability)
+
+```
+
+Joining dataframe with earth observation data
+```{r}
+combined_Availability_envir_human_39 <-  Availability_training %>%
+    left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
+    select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("AvailableAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
+```
+
+
+##Grid-search: Tuning hyperparameters of random forest model with 39 features
+Outcome: access to drinking water availability
+```{r}
+## modelling water availability
+## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+
+h2o.shutdown()
+h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
+
+varToModel_Avail <-'AvailableAtRegionalLevel'
+
+combined_Availability_envir_human_39 <- createColumnForCVfoldBasedOnCountries(combined_Availability_envir_human_39)
+
+combined_Availability_envir_human_39 <-combined_Availability_envir_human_39%>% drop_na(country_fold)
+
+# select only variables needed for random forest models  
+
+combined_Avail_envir_regMatrix_39 <- combined_Availability_envir_human_39%>%
+  select(all_of(bandNames_39),all_of(varToModel_Avail), HouseholdsInRegion.Freq.x, country_fold)%>% drop_na(country_fold)
+  
+#save regression Matrix as H2O data frames  
+
+regMatrixH2O_Avail_reg_39 <- as.h2o(combined_Avail_envir_regMatrix_39, destination_frame = "regMatrixH2O_Avail_reg_39")
+
+rf.params_39_Avail<-list(ntrees = c(100,200),
+                mtries = c(6,10,13,20), #(approx. n^(1/2), 1/4, 1/3, 1/2 of number of features)
+                min_rows = c(1,3,5),
+                sample_rate = c(0.6,0.8)
+                )
+
+search.criteria<-list(strategy = 'RandomDiscrete', max_models = 150, seed = 0, max_runtime_secs = 3600)
+
+rf.grid_<-h2o.grid('randomForest',
+                  y = varToModel_Avail,
+                  grid_id = 'rf.grid_',
+                  training_frame = regMatrixH2O_Avail_reg_39,
+                  seed = 0,
+                  hyper_params = rf.params_39_Avail,
+                  fold_column = "country_fold",
+                  weights_column = "HouseholdsInRegion.Freq.x",
+                  fold_assignment = 'AUTO',
+                  keep_cross_validation_predictions = TRUE, # Important!
+                  keep_cross_validation_fold_assignment = TRUE, # Important!
+                  search_criteria = search.criteria)
+
+summary(rf.grid_, show_stack_traces = TRUE)
+#retrieve grid searched model performance sort by RMSE/R2
+
+rf.grid.perf<-h2o.getGrid(grid_id = 'rf.grid_',
+                          sort_by = 'R2', # This is also coefficient of determinaion values
+
+                                                    decreasing = TRUE)
+summary(rf.grid_, show_stack_traces = TRUE)
+
+print(rf.grid.perf@summary_table)
+
+#write.csv(rf.grid.perf@summary_table,"~/GitHub/MICS_SMDW/Training/results_grid_search/rf_grid_Avail_reg_39_newest.csv")
+
+```
+
+best RF model with 39 features for water availability
+```{r}
+# random forest regression
+
+rf_model_Avail_final <- h2o.randomForest(
+  y = varToModel_Avail,
+  training_frame = regMatrixH2O_Avail_reg_39,
+  ntrees = 200,
+  mtries = 10,
+  sample_rate = 0.6,
+  min_rows = 1,
+  fold_column = "country_fold",
+  weights_column = "HouseholdsInRegion.Freq.x",
+  seed = 0,
+  #fold_assignment = 'AUTO',
+  keep_cross_validation_predictions = TRUE, # Important!
+  keep_cross_validation_fold_assignment = TRUE)
+
+h2o.r2(rf_model_Avail_final, xval = TRUE)
+h2o.mae(rf_model_Avail_final,  xval = TRUE)
+
+```
+
+Plot Predicted versus Observed Availability with results from leave-one-country-out holdout predictions.
+```{r}
+TrainAndPredicted_Avail <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_Avail_final))
+
+TrainAndPredicted_Avail$train <- combined_Availability_envir_human_39$AvailableAtRegionalLevel
+
+TrainAndPredicted_Avail$nr_HH_in_region <- combined_Availability_envir_human_39$HouseholdsInRegion.Freq.x
+
+TrainAndPredicted_Avail$Country <- combined_Availability_envir_human_39$NAME_0
+
+country_Income_Groups <- readCountryIncomeGroup()
+
+TrainAndPredicted_Avail<- joinWithCountryIncomeGroups(TrainAndPredicted_Avail,UN_Population_Devision_Names, country_Income_Groups)
+
+# Plot predicted vs observed values
+
+#colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+                                    
+plotPredObs_Avail <- ggplot(TrainAndPredicted_Avail, 
+                      aes(x = predict, 
+                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+  geom_point(shape=1) +
+  labs(x = "Predicted proportion of population with available drinking water",
+       y = "Observed proportion of population with available drinking water") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
+stat_smooth(se = T,
+              colour = "black",
+              size = 0.5,
+              method = "lm") +
+  geom_abline(slope = 1,
+              intercept = 0,
+              na.rm = FALSE, 
+              show.legend = NA, 
+              linetype = "dashed") +
+  labs(size="Households in region (n)", 
+              col="Income group") +
+  scale_colour_manual(values = colours) +
+  theme_bw()
+
+plotPredObs_Avail                                                                                       
+```
+
+## Calculating and plotting SHAP values for Water Availability predictions
+```{r}
+# Create the SHAP summary plot
+shap_summary_plot_avail <- h2o.shap_summary_plot(rf_model_Avail_final, regMatrixH2O_Avail_reg_39)
+print(shap_summary_plot_Avail)
+
+shap_values_Avail <- predict_contributions.H2OModel(
+  rf_model_Avail_final,
+  regMatrixH2O_Avail_reg_39)
+
+mean_values_Avail <- as.data.frame(colMeans(abs(as.data.frame(shap_values_Avail) %>% select(-BiasTerm)))); names(mean_values_Avail) <- 'Mean'
+mean_values_Avail %>% arrange(desc(Mean))
+
+#write.csv(mean_values_Avail, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Shap_values_Avail_newest.csv", fileEncoding = "UTF-8", row.names = T)
+
+mean_values_Avail <- cbind(feature = rownames(mean_values_Avail), mean_values_Avail)
+
+mean_values_Avail  <- rename39Features(mean_values_Avail)
+
+mean_values_Avail <- group39FeaturesInto5IndicatorGroups(mean_values_Avail)
+```
+
+Plotting summarized average SHAP values by Indicator Group for Availability
+```{r}
+SHAP_values_Avail_grouped <- mean_values_Avail %>% 
+  group_by(Indicator.Group) %>% 
+  summarise(SumOfAverageSHAPValue = sum(Mean))
+
+Plot_SHAP_Avail_grouped <- ggplot(SHAP_values_Avail_grouped, aes(x=reorder(Indicator.Group, SumOfAverageSHAPValue), y=SumOfAverageSHAPValue, fill= Indicator.Group)) +
+  ggtitle("Availability when needed")+
+  geom_bar(stat = "identity") + 
+  labs(y = "sum of average SHAP values", x="") +
+  scale_y_continuous(limits = c(0,0.150)) +
+coord_flip() +
+  scale_fill_manual(values=colours)+
+  guides(fill = FALSE, color = FALSE, linetype = FALSE, shape = FALSE)+
+  theme_bw()
+
+Plot_SHAP_Avail_grouped
+```
+
+##Availability prediction at global administrative (GADM) area level 1
+
+```{r}
+#level 1 prediction
+
+EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+
+regressionMatrixForPrediction <-EO_GADM_level1 %>%  
+ select(all_of(bandNames_39))
+ 
+regMatrixH2O_4pred_39 <- as.h2o(regressionMatrixForPrediction, destination_frame = "regMatrixH2O_4pred_39")
+
+FullPrediction_Avail <- as.data.frame(h2o.predict(rf_model_Avail_final, regMatrixH2O_4pred_39))
+
+FullPrediction_Avail$region <- EO_GADM_level1[["NAME_1"]]
+FullPrediction_Avail$GID_1 <- EO_GADM_level1[["GID_1"]]
+FullPrediction_Avail$country <- EO_GADM_level1[["NAME_0"]]
+FullPrediction_Avail$GID_0 <- EO_GADM_level1[["GID_0"]]
+
+country_Income_Groups <- renameCountryCodeForKosovo(country_Income_Groups)
+
+FullPrediction_Avail <- FullPrediction_Avail  %>% 
+  left_join(country_Income_Groups, by=(c("GID_0"="Code")))
+
+#Venezuela was not in the WB income group classification file so we add it as a lower-middle-income country according to the Inter-American Development Bank
+
+FullPrediction_Avail$Income.group[FullPrediction_Avail$country == "Venezuela"] <- "Lower middle income"
+FullPrediction_Avail$Income.group[FullPrediction_Avail$country == "Tokelau"] <- "Lower middle income"
+FullPrediction_Avail$Income.group[FullPrediction_Avail$country == "Saint Helena"] <- "Upper middle income"
+
+FullPrediction_Avail <- FullPrediction_Avail %>%
+  na.omit(Income.group)
+
+#write.csv(FullPrediction_Avail, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Fullprediction_Avail_newest.csv", fileEncoding = "UTF-8", row.names = F)
+```
+
+#Modeling drinking water accessibility
+
+Here we create a dataframe with indicators for drinking water accessibility.
+```{r}
+df.MICS_HH_accessibility <-createDataFrameWithAccessibilityIndicator(df.MICS_HH)
+
+df.MICS_HH_accessibility <- renameDuplicateHH7RegionNamesFromDifferentCountries(df.MICS_HH_accessibility)
+
+Accessibility_training <-createIndicatorForRegionalWaterAccessibility (df.MICS_HH_accessibility)
+
+```
+
+Joining dataframe with earth observation data
+```{r}
+combined_Accessibility_envir_human_39 <-  Accessibility_training %>%
+    left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
+    select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("AccessAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
+```
+
+RF models for water accessibility- using grid search
+```{r}
+## modelling water accessibility
+## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+
+h2o.shutdown(prompt = FALSE)
+h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
+
+## modelling accessibility
+
+varToModel_Access <-'AccessAtRegionalLevel'
+
+combined_Accessibility_envir_human_39 <- createColumnForCVfoldBasedOnCountries(combined_Accessibility_envir_human_39)
+
+combined_Accessibility_envir_human_39 <- combined_Accessibility_envir_human_39 %>% 
+  drop_na(country_fold)
+
+# select only variables needed for random forest models  
+combined_Access_envir_regMatrix_39 <- combined_Accessibility_envir_human_39%>%
+  select(all_of(bandNames_39),all_of(varToModel_Access),HouseholdsInRegion.Freq.x, country_fold)
+
+write.csv(combined_Access_envir_regMatrix_39 , "~/GitHub/MICS_SMDW/Prediction/Regre_Matrix_Access.csv", fileEncoding = "UTF-8", row.names = F)
+
+regMatrixH2O_Access_reg_39 <- as.h2o(combined_Access_envir_regMatrix_39, destination_frame = "regMatrixH2O_Access_reg_39")
+
+rf.params_39_Access<-list(ntrees = c(100,200),
+                mtries = c(6,10,13,20), #(about n^(1/2), 1/4, 1/3, 1/2 of number of features)
+                min_rows = c(1,3,5),
+                sample_rate = c(0.6,0.8)
+                )
+
+search.criteria<-list(strategy = 'RandomDiscrete', max_models = 150, seed = 0, max_runtime_secs = 3600)
+
+rf.grid_39_Access<-h2o.grid('randomForest',
+                  y = varToModel_Access,
+                  grid_id = 'rf.grid_Access',
+                  training_frame = regMatrixH2O_Access_reg_39,
+                  seed = 0,
+                  hyper_params = rf.params_39_Access,
+                  fold_column = "country_fold",
+                  weights_column = "HouseholdsInRegion.Freq.x",
+                  fold_assignment = 'AUTO',
+                  keep_cross_validation_predictions = TRUE, # Important!
+                  keep_cross_validation_fold_assignment = TRUE, # Important!
+                  search_criteria = search.criteria)
+
+summary(rf.grid_39_Access, show_stack_traces = TRUE)
+#retrieve grid searched model performance sort by RMSE/R2
+
+rf_grid_perf_Access<-h2o.getGrid(grid_id = 'rf.grid_Access',
+                          sort_by = 'R2', # This is also coefficient of determinaion values
+
+                                                    decreasing = TRUE)
+summary(rf.grid_39_Access, show_stack_traces = TRUE)
+
+print(rf_grid_perf_Access@summary_table)
+
+#write.csv(rf_grid_perf_Access@summary_table,"~/GitHub/MICS_SMDW/Training/grid_search_results/rf_grid_Access_reg_39_newest.csv")
+
+```
+best RF model with 39 features for water accessibility
+```{r}
+# random forest regression
+
+rf_model_Access_final <- h2o.randomForest(
+  y = varToModel_Access,
+  training_frame = regMatrixH2O_Access_reg_39,
+  ntrees = 200,
+  mtries = 20,
+  sample_rate = 0.8,
+  min_rows = 3,
+  #nfolds = 10,
+  fold_column = "country_fold",
+  weights_column = "HouseholdsInRegion.Freq.x",
+  seed = 0,
+  keep_cross_validation_predictions = TRUE, # Important!
+  keep_cross_validation_fold_assignment = TRUE)
+
+h2o.r2(rf_model_Access_final, xval = TRUE)
+h2o.mae(rf_model_Access_final, xval = TRUE)
+```
+
+Plot Predicted versus Observed Accessibility with results from leave-one-country-out holdout predictions.
+```{r}
+TrainAndPredicted_Access <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_Access_final))
+
+TrainAndPredicted_Access$train <- combined_Accessibility_envir_human_39$AccessAtRegionalLevel
+
+TrainAndPredicted_Access$nr_HH_in_region <- combined_Accessibility_envir_human_39$HouseholdsInRegion.Freq.x
+
+TrainAndPredicted_Access$Country <- combined_Accessibility_envir_human_39$NAME_0
+
+country_Income_Groups <- readCountryIncomeGroup()
+
+TrainAndPredicted_Access<- joinWithCountryIncomeGroups(TrainAndPredicted_Access,UN_Population_Devision_Names, country_Income_Groups)
+
+# Plot predicted vs observed values
+
+colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+                                    
+plotPredObs_Access <- ggplot(TrainAndPredicted_Access, 
+                      aes(x = predict, 
+                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+  geom_point(shape=1) +
+  labs(x = "Predicted proportion of population drinking water on premices",
+       y = "Observed proportion of population with drinking water on premices") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
+stat_smooth(se = T,
+              colour = "black",
+              size = 0.5,
+              method = "lm") +
+  geom_abline(slope = 1,
+              intercept = 0,
+              na.rm = FALSE, 
+              show.legend = NA, 
+              linetype = "dashed") +
+  labs(size="Households in region (n)", 
+              col="Income group") +
+  scale_colour_manual(values = colours) +
+  theme_bw()
+
+plotPredObs_Access                                                                                       
+```
+
+## Calculating and plotting SHAP values for Water Accessibility predictions
+```{r}
+# Create the SHAP summary plot
+shap_summary_plot_Access <- h2o.shap_summary_plot(rf_model_Access_final, regMatrixH2O_Access_reg_39)
+print(shap_summary_plot_Access)
+
+shap_values_Access <- predict_contributions.H2OModel(
+  rf_model_Access_final,
+  regMatrixH2O_Access_reg_39)
+
+mean_values_Access <- as.data.frame(colMeans(abs(as.data.frame(shap_values_Access) %>% select(-BiasTerm)))); names(mean_values_Access) <- 'Mean'
+mean_values_Access %>% arrange(desc(Mean))
+
+mean_values_Access <- cbind(feature = rownames(mean_values_Access), mean_values_Access)
+
+mean_values_Access  <- rename39Features(mean_values_Access)
+
+mean_values_Access <- group39FeaturesInto5IndicatorGroups(mean_values_Access)
+
+#write.csv(mean_values_Access, "~/GitHub/MICS_SMDW/Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
+```
+
+Plotting summarized average SHAP values by Indicator Group for Access
+```{r}
+SHAP_values_Access_grouped <- mean_values_Access %>% 
+  group_by(Indicator.Group) %>% 
+  summarise(SumOfAverageSHAPValue = sum(Mean))
+
+Plot_SHAP_Access_grouped <- ggplot(SHAP_values_Access_grouped, aes(x=reorder(Indicator.Group, SumOfAverageSHAPValue), y=SumOfAverageSHAPValue, fill= Indicator.Group)) +
+  ggtitle("Accessibility when needed")+
+  geom_bar(stat = "identity") + 
+  labs(y = "sum of average SHAP values", x="") +
+  scale_y_continuous(limits = c(0,0.150)) +
+coord_flip() +
+  scale_fill_manual(values=colours)+
+  guides(fill = FALSE, color = FALSE, linetype = FALSE, shape = FALSE)+
+  theme_bw()
+
+Plot_SHAP_Access_grouped
+```
+
+## Accessibility prediction at global administrative (GADM) area level 1
+```{r}
+#level 1 prediction
+
+EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+
+regressionMatrixForPrediction <-EO_GADM_level1 %>%  
+ select(all_of(bandNames_39))
+ 
+regMatrixH2O_4pred_39 <- as.h2o(regressionMatrixForPrediction, destination_frame = "regMatrixH2O_4pred_39")
+
+FullPrediction_Access <- as.data.frame(h2o.predict(rf_model_Access_final, regMatrixH2O_4pred_39))
+
+FullPrediction_Access$region <- EO_GADM_level1[["NAME_1"]]
+FullPrediction_Access$GID_1 <- EO_GADM_level1[["GID_1"]]
+FullPrediction_Access$country <- EO_GADM_level1[["NAME_0"]]
+FullPrediction_Access$GID_0 <- EO_GADM_level1[["GID_0"]]
+
+country_Income_Groups <- renameCountryCodeForKosovo(country_Income_Groups)
+
+FullPrediction_Access <- FullPrediction_Access  %>% 
+  left_join(country_Income_Groups, by=(c("GID_0"="Code")))
+
+#Venezuela was not in the WB income group classification file so we add it as a lower-middle-income country according to the Inter-American Development Bank
+
+FullPrediction_Access$Income.group[FullPrediction_Access$country == "Venezuela"] <- "Lower middle income"
+FullPrediction_Access$Income.group[FullPrediction_Access$country == "Tokelau"] <- "Lower middle income"
+FullPrediction_Access$Income.group[FullPrediction_Access$country == "Saint Helena"] <- "Upper middle income"
+
+FullPrediction_Access <- FullPrediction_Access %>%
+  na.omit(Income.group)
+
+#write.csv(FullPrediction_Access, "~/GitHub/MICS_SMDW/Prediction/prediction_results/FullPrediction_Access_newest.csv", fileEncoding = "UTF-8", row.names = F)
+```
+##Descriptive analysis of accessibility results
+```{r}
+#source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Access_prediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
+
+GlobalRegions <- readAndRenameStandardGlobalRegionNames()
+
+#joining and preparing dataframe for analysis
+Access_prediction <- Access_prediction %>% 
+  left_join(EO_GADM_level1, by = c("GID_1"="GID_1", "GID_0"="GID_0")) %>% 
+  left_join(GlobalRegions, by = c("GID_0"="ISO.alpha3.Code")) 
+
+Access_prediction$country[Access_prediction$country == "Kosovo"] <- "Kosovo (under UNSC res. 1244)"
+  
+Access_prediction$UNRegionName[Access_prediction$country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+Access_prediction$UNSubRegionName[Access_prediction$country == "Kosovo (under UNSC res. 1244)"] <- "Eastern Europe"
+
+Access_prediction <- Access_prediction  %>% 
+  filter(Income.group == "Low income" |
+         Income.group == "Lower middle income" |
+         Income.group == "Upper middle income")
+```
+## Accessibility estimates across all LMICs
+```{r}
+Access_prediction$numberOfPeopleinRegion <- Access_prediction$GPWv4_Population_2020
+Access_prediction$numberOfPeopleWithAccessInRegion <- Access_prediction$GPWv4_Population_2020*Access_prediction$predict
+
+Access_prediction$totalNumberOfPeopleLMICS <- sum(Access_prediction$numberOfPeopleinRegion)#6.523e+09
+Access_prediction$NumberOfPeopleLMICSwithAccess <- sum(Access_prediction$numberOfPeopleWithAccessInRegion)#4203853245
+
+```
+## Access estimates at regional level
+```{r}
+Access_prediction$numberOfPeopleWithoutAccessInRegion <- Access_prediction$numberOfPeopleinRegion-Access_prediction$numberOfPeopleWithAccessInRegion
+
+Access_prediction$numberOfPeopleLMICSWithoutAccess <- sum(Access_prediction$numberOfPeopleWithoutAccessInRegion)# 2319147206
+
+Access_prediction_UNregion <- Access_prediction %>% 
+  group_by(UNRegionName) %>% 
+  summarise(numberOfPeopleinUNRegion = sum(numberOfPeopleinRegion))
+Access_prediction_UNregion_ <- Access_prediction %>% 
+  group_by(UNRegionName) %>% 
+  summarise(numberOfPeopleWithoutAccessInUNRegion = sum(numberOfPeopleWithoutAccessInRegion))
+
+Access_prediction_UNregion$proportionPopWithoutAccess <- Access_prediction_UNregion_$numberOfPeopleWithoutAccessInUNRegion/Access_prediction_UNregion$numberOfPeopleinUNRegion
+
+Access_prediction_UNSubregion <- Access_prediction %>% 
+  group_by(UNSubRegionName) %>% 
+  summarise(numberOfPeopleWithoutAccessInUNSubRegion = sum(numberOfPeopleWithoutAccessInRegion))
+
+```
+
+#Random Forest Model - Outcome: water source type
+Here we create a dataframe with indicators for drinking water source type (proportion of people using an improved drinking water source).
+```{r}
+df.MICS_HH_improved <-createDataFrameWithmainWaterSourceType(df.MICS_HH)
+
+df.MICS_HH_improved <- renameDuplicateHH7RegionNamesFromDifferentCountries(df.MICS_HH_improved)
+
+Improved_training <-createIndicatorForRegionalWaterSourceType(df.MICS_HH_improved)
+
+```
+
+Joining dataframe with earth observation data
+```{r}
+combined_Improved_envir_human_39 <-  Improved_training %>%
+    left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
+    select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("ImprovedAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
+```
+
+Grid Search
+```{r}
+## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+
+h2o.shutdown(prompt = FALSE)
+h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
+
+## modelling water source type
+varToModel_improved <-'ImprovedAtRegionalLevel'
+
+combined_Improved_envir_human_39 <- createColumnForCVfoldBasedOnCountries(combined_Improved_envir_human_39)
+
+combined_Improved_envir_human_39 <- combined_Improved_envir_human_39 %>%
+  drop_na(country_fold)
+                             
+# select only variables needed for random forest models  
+combined_SMDW_envir_regMatrix_39 <- combined_Improved_envir_human_39 %>%
+  select(all_of(bandNames_39),all_of(varToModel_improved),HouseholdsInRegion.Freq.x, country_fold) 
+
+regMatrixH2O_improved_reg_39 <- as.h2o(combined_SMDW_envir_regMatrix_39, destination_frame = "regMatrixH2O_improved_reg_39")
+
+rf.params_39_improved<-list(ntrees = c(100,200),
+                mtries = c(6,10,13,20), #(about n^(1/2), 1/4, 1/3, 1/2 of number of features)
+                min_rows = c(1,3,5),
+                sample_rate = c(0.6,0.8)
+                )
+
+search.criteria<-list(strategy = 'RandomDiscrete', max_models = 150, seed = 0, max_runtime_secs = 3600)
+
+
+rf.grid_39_improved<-h2o.grid('randomForest',
+                  y = varToModel_improved,
+                  grid_id = 'rf.grid_improved',
+                  training_frame = regMatrixH2O_improved_reg_39,
+                  seed = 0,
+                  hyper_params = rf.params_39_improved,
+                  fold_column = "country_fold",
+                  weights_column = "HouseholdsInRegion.Freq.x",
+                  fold_assignment = 'AUTO',
+                  keep_cross_validation_predictions = TRUE, # Important!
+                  keep_cross_validation_fold_assignment = TRUE, # Important!
+                  search_criteria = search.criteria)
+
+summary(rf.grid_39_improved, show_stack_traces = TRUE)
+#retrieve grid searched model performance sort by RMSE/R2
+
+rf_grid_perf_improved<-h2o.getGrid(grid_id = 'rf.grid_improved',
+                          sort_by = 'R2', # This is also coefficient of determination values
+
+                                                    decreasing = TRUE)
+summary(rf.grid_39_improved, show_stack_traces = TRUE)
+
+print(rf_grid_perf_improved@summary_table)
+
+#write.csv(rf_grid_perf_improved@summary_table,"~/GitHub/MICS_SMDW/Training/grid_search_results_rf_grid_improved_reg_39_newest.csv")
+
+```
+
+##Best RF model for predicting water source type
+
+```{r}
+rf_model_improved_final <- h2o.randomForest(
+  y = varToModel_improved,
+  training_frame = regMatrixH2O_improved_reg_39,
+  ntrees = 200,
+  mtries = 13,
+  sample_rate = 0.6,
+  min_rows = 1,
+  fold_column = "country_fold",
+  weights_column = "HouseholdsInRegion.Freq.x",
+  seed = 0,
+  keep_cross_validation_predictions = TRUE, # Important!
+  keep_cross_validation_fold_assignment = TRUE)
+
+h2o.r2(rf_model_improved_final, xval = TRUE)
+h2o.mae(rf_model_improved_final, xval = TRUE)
+
+```
+Plot predicted versus Observed populations using improved drinking water sources with results from leave-one-country-out holdout predictions.
+```{r}
+TrainAndPredicted_Improved <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_improved_final))
+
+TrainAndPredicted_Improved$train <- combined_Improved_envir_human_39$ImprovedAtRegionalLevel
+
+TrainAndPredicted_Improved$nr_HH_in_region <- combined_Improved_envir_human_39$HouseholdsInRegion.Freq.x
+
+TrainAndPredicted_Improved$Country <- combined_Improved_envir_human_39$NAME_0
+
+country_Income_Groups <- readCountryIncomeGroup()
+
+TrainAndPredicted_Improved<- joinWithCountryIncomeGroups(TrainAndPredicted_Improved,UN_Population_Devision_Names, country_Income_Groups)
+
+# Plot predicted vs observed values
+
+colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+                                    
+plotPredObs_Improved <- ggplot(TrainAndPredicted_Improved, 
+                      aes(x = predict, 
+                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+  geom_point(shape=1) +
+  labs(x = "Predicted proportion of population using improved source",
+       y = "Observed proportion of population using improved source") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
+stat_smooth(se = T,
+              colour = "black",
+              size = 0.5,
+              method = "lm") +
+  geom_abline(slope = 1,
+              intercept = 0,
+              na.rm = FALSE, 
+              show.legend = NA, 
+              linetype = "dashed") +
+  labs(size="Households in region (n)", 
+              col="Income group") +
+  scale_colour_manual(values = colours) +
+  theme_bw()
+
+plotPredObs_Improved                                                                                       
+```
+
+##Calculating and plotting SHAP values for improved source predictions
+
+```{r}
+#Calculating average SHAP values
+shap_values_Improved <- predict_contributions.H2OModel(
+  rf_model_improved_final,
+  regMatrixH2O_improved_reg_39)
+
+mean_values_Improved <- as.data.frame(colMeans(abs(as.data.frame(shap_values_Improved) %>% select(-BiasTerm)))); names(mean_values_Improved) <- 'Mean'
+mean_values_Improved %>% arrange(desc(Mean))
+
+mean_values_Improved <- cbind(feature = rownames(mean_values_Improved), mean_values_Improved)
+
+mean_values_Improved  <- rename39Features(mean_values_Improved)
+
+mean_values_Improved <- group39FeaturesInto5IndicatorGroups(mean_values_Improved)
+
+#write.csv(mean_values_Improved, "~/GitHub/MICS_SMDW/Prediction/predition_results/Shap_values_Improved_newest.csv", fileEncoding = "UTF-8", row.names = T)
+```
+
+Plotting summarized average SHAP values by Indicator Group for Water Source Type
+```{r}
+SHAP_values_Improved_grouped <- mean_values_Improved %>% 
+  group_by(Indicator.Group) %>% 
+  summarise(SumOfAverageSHAPValue = sum(Mean))
+
+Plot_SHAP_Improved_grouped <- ggplot(SHAP_values_Improved_grouped, aes(x=reorder(Indicator.Group, SumOfAverageSHAPValue), y=SumOfAverageSHAPValue, fill= Indicator.Group)) +
+  ggtitle("Use of improved drinking water source")+
+  geom_bar(stat = "identity") + 
+  labs(y = "sum of average SHAP values", x="") +
+  scale_y_continuous(limits = c(0,0.150)) +
+coord_flip() +
+  scale_fill_manual(values=colours)+
+  guides(fill = FALSE, color = FALSE, linetype = FALSE, shape = FALSE)+
+  theme_bw()
+
+Plot_SHAP_Improved_grouped
+```
+Create the SHAP summary plot
+```{r}
+shap_summary_plot_Improved <- h2o.shap_summary_plot(rf_model_improved_final, regMatrixH2O_improved_reg_39)
+print(shap_summary_plot_Improved)
+
+shap_summary_plot <- h2o.shap_summary_plot(rf_model_SMDW, regMatrixH2O_SMDW)
+print(shap_summary_plot)
+
+shap_summary_plot_data <- shap_summary_plot_Improved[['data']]
+shap_summary_plot_data$feature <- as.character(shap_summary_plot_data$feature)
+shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
+
+shap_summary_plot_data <- shap_summary_plot_data %>%
+  left_join(mean_values_Improved, by = c("feature"="feature"))
+
+library(viridis)
+shap_summary_plot_data %>%
+  mutate(feature = fct_reorder(feature, Mean)) %>%
+ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
+        geom_hline(yintercept = 0, linetype = "dashed") +
+        geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
+        scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
+        coord_flip() +
+        labs(y = "SHAP contribution to improved source prediction", x = "", col = "Normalized\nFeature Value") +
+        theme_bw() 
+
+```
+
+
+##Improved drinking water source prediction at global administrative (GADM) area level 1
+```{r}
+#level 1 prediction
+
+EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+
+regressionMatrixForPrediction <-EO_GADM_level1 %>%  
+ select(all_of(bandNames_39))
+ 
+regMatrixH2O_4pred_39 <- as.h2o(regressionMatrixForPrediction, destination_frame = "regMatrixH2O_4pred_39")
+
+FullPrediction_Improved <- as.data.frame(h2o.predict(rf_model_improved_final, regMatrixH2O_4pred_39))
+
+FullPrediction_Improved$region <- EO_GADM_level1[["NAME_1"]]
+FullPrediction_Improved$GID_1 <- EO_GADM_level1[["GID_1"]]
+FullPrediction_Improved$country <- EO_GADM_level1[["NAME_0"]]
+FullPrediction_Improved$GID_0 <- EO_GADM_level1[["GID_0"]]
+
+country_Income_Groups <- renameCountryCodeForKosovo(country_Income_Groups)
+
+FullPrediction_Improved <- FullPrediction_Improved  %>% 
+  left_join(country_Income_Groups, by=(c("GID_0"="Code")))
+
+#Venezuela was not in the WB income group classification file so we add it as a lower-middle-income country according to the Inter-American Development Bank
+
+FullPrediction_Improved$Income.group[FullPrediction_Improved$country == "Venezuela"] <- "Lower middle income"
+FullPrediction_Improved$Income.group[FullPrediction_Improved$country == "Tokelau"] <- "Lower middle income"
+FullPrediction_Improved$Income.group[FullPrediction_Improved$country == "Saint Helena"] <- "Upper middle income"
+
+FullPrediction_Improved <- FullPrediction_Improved %>%
+  na.omit(Income.group)
+
+#write.csv(FullPrediction_Improved, "~/GitHub/MICS_SMDW/Prediction/prediction_results/FullPrediction_Improved_newest.csv", fileEncoding = "UTF-8", row.names = F)
+```
+
+##Descriptive analysis of improved drinking water source results
+```{r}
+source("~/GitHub/MICS_SMDW/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Improved_prediction <- read.csv( "~/GitHub/MICS_SMDW/Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
+
+GlobalRegions <- readAndRenameStandardGlobalRegionNames()
+
+#joining and preparing dataframe for analysis
+Improved_prediction <- Improved_prediction %>% 
+  left_join(EO_GADM_level1, by = c("GID_1"="GID_1", "GID_0"="GID_0")) %>% 
+  left_join(GlobalRegions, by = c("GID_0"="ISO.alpha3.Code")) 
+
+Improved_prediction$country[Improved_prediction$country == "Kosovo"] <- "Kosovo (under UNSC res. 1244)"
+  
+Improved_prediction$UNRegionName[Improved_prediction$country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+Improved_prediction$UNSubRegionName[Improved_prediction$country == "Kosovo (under UNSC res. 1244)"] <- "Eastern Europe"
+
+Improved_prediction <- Improved_prediction  %>% 
+  filter(Income.group == "Low income" |
+         Income.group == "Lower middle income" |
+         Income.group == "Upper middle income")
+```
+## estimates of across all LMICs
+```{r}
+Improved_prediction$numberOfPeopleinRegion <- Improved_prediction$GPWv4_Population_2020
+Improved_prediction$numberOfPeopleWithImprovedInRegion <- Improved_prediction$GPWv4_Population_2020*Improved_prediction$predict
+
+Improved_prediction$totalNumberOfPeopleLMICS <- sum(Improved_prediction$numberOfPeopleinRegion)#6.523e+09
+Improved_prediction$NumberOfPeopleLMICSwithImproved <- sum(Improved_prediction$numberOfPeopleWithImprovedInRegion)#5743373538
+
+Improved_prediction$numberOfPeopleWithOutImprovedInRegion <- Improved_prediction$numberOfPeopleinRegion-Improved_prediction$numberOfPeopleWithImprovedInRegion
+
+Improved_prediction$numberOfPeopleLMICSWithImproved <- sum(Improved_prediction$numberOfPeopleWithOutImprovedInRegion)#779626913
+
+```

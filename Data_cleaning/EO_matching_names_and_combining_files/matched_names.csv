@@ -1,0 +1,481 @@
+"HH7_region","country_orig","name_orig","country_matched","NAME_1_matched","NAME_2_matched","NAME_3_matched","NAME_4_matched","NAME_1_matched_fuzz","NAME_2_matched_fuzz","NAME_3_matched_fuzz","NAME_4_matched_fuzz"
+" EUA","Tonga","'Eua","Tonga","'Eua",NA,NA,NA,NA,NA,NA,NA
+"Abia","Nigeria","Abia","Nigeria","Abia",NA,NA,NA,NA,NA,NA,NA
+"Adamawa","Nigeria","Adamawa","Nigeria","Adamawa",NA,NA,NA,NA,NA,NA,NA
+"Akwa Ibom","Nigeria","Akwa Ibom","Nigeria","Akwa Ibom",NA,NA,NA,NA,NA,NA,NA
+"Alto Paraguay","Paraguay","Alto Paraguay","Paraguay","Alto Paraguay",NA,NA,NA,NA,NA,NA,NA
+"Anambra","Nigeria","Anambra","Nigeria","Anambra",NA,NA,NA,NA,NA,NA,NA
+"ASHANTI","Ghana","Ashanti","Ghana","Ashanti",NA,NA,NA,NA,NA,NA,NA
+"BABIL","Iraq","Babil","Iraq","Babil",NA,NA,NA,NA,NA,NA,NA
+"BAGHDAD","Iraq","Baghdad","Iraq","Baghdad",NA,NA,NA,NA,NA,NA,NA
+"Banjul","Gambia","Banjul","Gambia","Banjul",NA,NA,NA,NA,NA,NA,NA
+"Bauchi","Nigeria","Bauchi","Nigeria","Bauchi",NA,NA,NA,NA,NA,NA,NA
+"Bayelsa","Nigeria","Bayelsa","Nigeria","Bayelsa",NA,NA,NA,NA,NA,NA,NA
+"Benue","Nigeria","Benue","Nigeria","Benue",NA,NA,NA,NA,NA,NA,NA
+"BEREA","Lesotho","Berea","Lesotho","Berea",NA,NA,NA,NA,NA,NA,NA
+"Biombo","Guinea-Bissau","Biombo","Guinea-Bissau","Biombo",NA,NA,NA,NA,NA,NA,NA
+"Borno","Nigeria","Borno","Nigeria","Borno",NA,NA,NA,NA,NA,NA,NA
+"BOUENZA","Republic of Congo","Bouenza","Republic of Congo","Bouenza",NA,NA,NA,NA,NA,NA,NA
+"BRAZZAVILLE","Republic of Congo","Brazzaville","Republic of Congo","Brazzaville",NA,NA,NA,NA,NA,NA,NA
+"BROKOPONDO","Suriname","Brokopondo","Suriname","Brokopondo",NA,NA,NA,NA,NA,NA,NA
+"BRONG AHAFO","Ghana","Brong Ahafo","Ghana","Brong Ahafo",NA,NA,NA,NA,NA,NA,NA
+"Bulawayo","Zimbabwe","Bulawayo","Zimbabwe","Bulawayo",NA,NA,NA,NA,NA,NA,NA
+"Cacheu","Guinea-Bissau","Cacheu","Guinea-Bissau","Cacheu",NA,NA,NA,NA,NA,NA,NA
+"CENTRAL","Ghana","Central","Ghana","Central",NA,NA,NA,NA,NA,NA,NA
+"Central","Paraguay","Central","Paraguay","Central",NA,NA,NA,NA,NA,NA,NA
+"COMMEWIJNE","Suriname","Commewijne","Suriname","Commewijne",NA,NA,NA,NA,NA,NA,NA
+"CORONIE","Suriname","Coronie","Suriname","Coronie",NA,NA,NA,NA,NA,NA,NA
+"Cross River","Nigeria","Cross River","Nigeria","Cross River",NA,NA,NA,NA,NA,NA,NA
+"CUVETTE","Republic of Congo","Cuvette","Republic of Congo","Cuvette",NA,NA,NA,NA,NA,NA,NA
+"Delta","Nigeria","Delta","Nigeria","Delta",NA,NA,NA,NA,NA,NA,NA
+"Dhaka","Bangladesh","Dhaka","Bangladesh","Dhaka",NA,NA,NA,NA,NA,NA,NA
+"EASTERN","Ghana","Eastern","Ghana","Eastern",NA,NA,NA,NA,NA,NA,NA
+"Ebonyi","Nigeria","Ebonyi","Nigeria","Ebonyi",NA,NA,NA,NA,NA,NA,NA
+"Edo","Nigeria","Edo","Nigeria","Edo",NA,NA,NA,NA,NA,NA,NA
+"Ekiti","Nigeria","Ekiti","Nigeria","Ekiti",NA,NA,NA,NA,NA,NA,NA
+"Enugu","Nigeria","Enugu","Nigeria","Enugu",NA,NA,NA,NA,NA,NA,NA
+"Gombe","Nigeria","Gombe","Nigeria","Gombe",NA,NA,NA,NA,NA,NA,NA
+"GREATER ACCRA","Ghana","Greater Accra","Ghana","Greater Accra",NA,NA,NA,NA,NA,NA,NA
+"GURIA","Georgia","Guria","Georgia","Guria",NA,NA,NA,NA,NA,NA,NA
+"HA APAI","Tonga","Ha'apai","Tonga","Ha'apai",NA,NA,NA,NA,NA,NA,NA
+"Harare","Zimbabwe","Harare","Zimbabwe","Harare",NA,NA,NA,NA,NA,NA,NA
+"IMERETI","Georgia","Imereti","Georgia","Imereti",NA,NA,NA,NA,NA,NA,NA
+"Imo","Nigeria","Imo","Nigeria","Imo",NA,NA,NA,NA,NA,NA,NA
+"Jigawa","Nigeria","Jigawa","Nigeria","Jigawa",NA,NA,NA,NA,NA,NA,NA
+"Kaduna","Nigeria","Kaduna","Nigeria","Kaduna",NA,NA,NA,NA,NA,NA,NA
+"Kano","Nigeria","Kano","Nigeria","Kano",NA,NA,NA,NA,NA,NA,NA
+"Kara","Togo","Kara","Togo","Kara",NA,NA,NA,NA,NA,NA,NA
+"Katsina","Nigeria","Katsina","Nigeria","Katsina",NA,NA,NA,NA,NA,NA,NA
+"Kebbi","Nigeria","Kebbi","Nigeria","Kebbi",NA,NA,NA,NA,NA,NA,NA
+"Khulna","Bangladesh","Khulna","Bangladesh","Khulna",NA,NA,NA,NA,NA,NA,NA
+"Kogi","Nigeria","Kogi","Nigeria","Kogi",NA,NA,NA,NA,NA,NA,NA
+"KOUILOU","Republic of Congo","Kouilou","Republic of Congo","Kouilou",NA,NA,NA,NA,NA,NA,NA
+"KVEMO KARTLI","Georgia","Kvemo Kartli","Georgia","Kvemo Kartli",NA,NA,NA,NA,NA,NA,NA
+"Kwara","Nigeria","Kwara","Nigeria","Kwara",NA,NA,NA,NA,NA,NA,NA
+"Lagos","Nigeria","Lagos","Nigeria","Lagos",NA,NA,NA,NA,NA,NA,NA
+"LERIBE","Lesotho","Leribe","Lesotho","Leribe",NA,NA,NA,NA,NA,NA,NA
+"LIKOUALA","Republic of Congo","Likouala","Republic of Congo","Likouala",NA,NA,NA,NA,NA,NA,NA
+"MAFETENG","Lesotho","Mafeteng","Lesotho","Mafeteng",NA,NA,NA,NA,NA,NA,NA
+"Manicaland","Zimbabwe","Manicaland","Zimbabwe","Manicaland",NA,NA,NA,NA,NA,NA,NA
+"Maritime","Togo","Maritime","Togo","Maritime",NA,NA,NA,NA,NA,NA,NA
+"MAROWIJNE","Suriname","Marowijne","Suriname","Marowijne",NA,NA,NA,NA,NA,NA,NA
+"MASERU","Lesotho","Maseru","Lesotho","Maseru",NA,NA,NA,NA,NA,NA,NA
+"Mashonaland Central","Zimbabwe","Mashonaland Central","Zimbabwe","Mashonaland Central",NA,NA,NA,NA,NA,NA,NA
+"Mashonaland East","Zimbabwe","Mashonaland East","Zimbabwe","Mashonaland East",NA,NA,NA,NA,NA,NA,NA
+"Mashonaland West","Zimbabwe","Mashonaland West","Zimbabwe","Mashonaland West",NA,NA,NA,NA,NA,NA,NA
+"Masvingo","Zimbabwe","Masvingo","Zimbabwe","Masvingo",NA,NA,NA,NA,NA,NA,NA
+"Matabeleland North","Zimbabwe","Matabeleland North","Zimbabwe","Matabeleland North",NA,NA,NA,NA,NA,NA,NA
+"Matabeleland South","Zimbabwe","Matabeleland South","Zimbabwe","Matabeleland South",NA,NA,NA,NA,NA,NA,NA
+"Midlands","Zimbabwe","Midlands","Zimbabwe","Midlands",NA,NA,NA,NA,NA,NA,NA
+"MOKHOTLONG","Lesotho","Mokhotlong","Lesotho","Mokhotlong",NA,NA,NA,NA,NA,NA,NA
+"NIARI","Republic of Congo","Niari","Republic of Congo","Niari",NA,NA,NA,NA,NA,NA,NA
+"NICKERIE","Suriname","Nickerie","Suriname","Nickerie",NA,NA,NA,NA,NA,NA,NA
+"Niger","Nigeria","Niger","Nigeria","Niger",NA,NA,NA,NA,NA,NA,NA
+"NORTHERN","Ghana","Northern","Ghana","Northern",NA,NA,NA,NA,NA,NA,NA
+"Ogun","Nigeria","Ogun","Nigeria","Ogun",NA,NA,NA,NA,NA,NA,NA
+"Oio","Guinea-Bissau","Oio","Guinea-Bissau","Oio",NA,NA,NA,NA,NA,NA,NA
+"Ondo","Nigeria","Ondo","Nigeria","Ondo",NA,NA,NA,NA,NA,NA,NA
+"Osun","Nigeria","Osun","Nigeria","Osun",NA,NA,NA,NA,NA,NA,NA
+"Oyo","Nigeria","Oyo","Nigeria","Oyo",NA,NA,NA,NA,NA,NA,NA
+"PARA","Suriname","Para","Suriname","Para",NA,NA,NA,NA,NA,NA,NA
+"PARAMARIBO","Suriname","Paramaribo","Suriname","Paramaribo",NA,NA,NA,NA,NA,NA,NA
+"Plateau","Nigeria","Plateau","Nigeria","Plateau",NA,NA,NA,NA,NA,NA,NA
+"PLATEAUX","Republic of Congo","Plateaux","Republic of Congo","Plateaux",NA,NA,NA,NA,NA,NA,NA
+"Plateaux","Togo","Plateaux","Togo","Plateaux",NA,NA,NA,NA,NA,NA,NA
+"POOL","Republic of Congo","Pool","Republic of Congo","Pool",NA,NA,NA,NA,NA,NA,NA
+"PRIZREN","Kosovo","Prizren","Kosovo","Prizren",NA,NA,NA,NA,NA,NA,NA
+"Quinara","Guinea-Bissau","Quinara","Guinea-Bissau","Quinara",NA,NA,NA,NA,NA,NA,NA
+"QUTHING","Lesotho","Quthing","Lesotho","Quthing",NA,NA,NA,NA,NA,NA,NA
+"Rajshahi","Bangladesh","Rajshahi","Bangladesh","Rajshahi",NA,NA,NA,NA,NA,NA,NA
+"Rangpur","Bangladesh","Rangpur","Bangladesh","Rangpur",NA,NA,NA,NA,NA,NA,NA
+"Rivers","Nigeria","Rivers","Nigeria","Rivers",NA,NA,NA,NA,NA,NA,NA
+"SAMEGRELO ZEMO SVANETI","Georgia","Samegrelo-Zemo Svaneti","Georgia","Samegrelo-Zemo Svaneti",NA,NA,NA,NA,NA,NA,NA
+"SAMTSKHE JAVAKHETI","Georgia","Samtskhe-Javakheti","Georgia","Samtskhe-Javakheti",NA,NA,NA,NA,NA,NA,NA
+"San Pedro","Paraguay","San Pedro","Paraguay","San Pedro",NA,NA,NA,NA,NA,NA,NA
+"SANGHA","Republic of Congo","Sangha","Republic of Congo","Sangha",NA,NA,NA,NA,NA,NA,NA
+"SARAMACCA","Suriname","Saramacca","Suriname","Saramacca",NA,NA,NA,NA,NA,NA,NA
+"Savanes","Togo","Savanes","Togo","Savanes",NA,NA,NA,NA,NA,NA,NA
+"SHIDA KARTLI","Georgia","Shida Kartli","Georgia","Shida Kartli",NA,NA,NA,NA,NA,NA,NA
+"SIPALIWINI","Suriname","Sipaliwini","Suriname","Sipaliwini",NA,NA,NA,NA,NA,NA,NA
+"Sokoto","Nigeria","Sokoto","Nigeria","Sokoto",NA,NA,NA,NA,NA,NA,NA
+"Sylhet","Bangladesh","Sylhet","Bangladesh","Sylhet",NA,NA,NA,NA,NA,NA,NA
+"Taraba","Nigeria","Taraba","Nigeria","Taraba",NA,NA,NA,NA,NA,NA,NA
+"TBILISI","Georgia","Tbilisi","Georgia","Tbilisi",NA,NA,NA,NA,NA,NA,NA
+"THABA TSEKA","Lesotho","Thaba-Tseka","Lesotho","Thaba-Tseka",NA,NA,NA,NA,NA,NA,NA
+"Tombali","Guinea-Bissau","Tombali","Guinea-Bissau","Tombali",NA,NA,NA,NA,NA,NA,NA
+"TONGATAPU","Tonga","Tongatapu","Tonga","Tongatapu",NA,NA,NA,NA,NA,NA,NA
+"Ulaanbaatar","Mongolia","Ulaanbaatar","Mongolia","Ulaanbaatar",NA,NA,NA,NA,NA,NA,NA
+"UPPER EAST","Ghana","Upper East","Ghana","Upper East",NA,NA,NA,NA,NA,NA,NA
+"UPPER WEST","Ghana","Upper West","Ghana","Upper West",NA,NA,NA,NA,NA,NA,NA
+"VAVA U","Tonga","Vava'u","Tonga","Vava'u",NA,NA,NA,NA,NA,NA,NA
+"VOLTA","Ghana","Volta","Ghana","Volta",NA,NA,NA,NA,NA,NA,NA
+"WANICA","Suriname","Wanica","Suriname","Wanica",NA,NA,NA,NA,NA,NA,NA
+"WASIT","Iraq","Wasit","Iraq","Wasit",NA,NA,NA,NA,NA,NA,NA
+"WESTERN","Ghana","Western","Ghana","Western",NA,NA,NA,NA,NA,NA,NA
+"Yobe","Nigeria","Yobe","Nigeria","Yobe",NA,NA,NA,NA,NA,NA,NA
+"Zamfara","Nigeria","Zamfara","Nigeria","Zamfara",NA,NA,NA,NA,NA,NA,NA
+"ANALAMANGA","Madagascar","Analamanga","Madagascar",NA,"Analamanga",NA,NA,NA,NA,NA,NA
+"ANALANJIROFO","Madagascar","Analanjirofo","Madagascar",NA,"Analanjirofo",NA,NA,NA,NA,NA,NA
+"ANDROY","Madagascar","Androy","Madagascar",NA,"Androy",NA,NA,NA,NA,NA,NA
+"ANOSY","Madagascar","Anosy","Madagascar",NA,"Anosy",NA,NA,NA,NA,NA,NA
+"ATSINANANA","Madagascar","Atsinanana","Madagascar",NA,"Atsinanana",NA,NA,NA,NA,NA,NA
+"Bagerhat","Bangladesh","Bagerhat","Bangladesh",NA,"Bagerhat",NA,NA,NA,NA,NA,NA
+"Bandarban","Bangladesh","Bandarban","Bangladesh",NA,"Bandarban",NA,NA,NA,NA,NA,NA
+"Banjul","Gambia","Banjul","Gambia",NA,"Banjul",NA,NA,NA,NA,NA,NA
+"Barguna","Bangladesh","Barguna","Bangladesh",NA,"Barguna",NA,NA,NA,NA,NA,NA
+"BASRAH","Iraq","Basrah","Iraq",NA,"Basrah",NA,NA,NA,NA,NA,NA
+"Bauchi","Nigeria","Bauchi","Nigeria",NA,"Bauchi",NA,NA,NA,NA,NA,NA
+"BETSIBOKA","Madagascar","Betsiboka","Madagascar",NA,"Betsiboka",NA,NA,NA,NA,NA,NA
+"Bhola","Bangladesh","Bhola","Bangladesh",NA,"Bhola",NA,NA,NA,NA,NA,NA
+"BOENY","Madagascar","Boeny","Madagascar",NA,"Boeny",NA,NA,NA,NA,NA,NA
+"BONGOLAVA","Madagascar","Bongolava","Madagascar",NA,"Bongolava",NA,NA,NA,NA,NA,NA
+"BRAZZAVILLE","Republic of Congo","Brazzaville","Republic of Congo",NA,"Brazzaville",NA,NA,NA,NA,NA,NA
+"Bulawayo","Zimbabwe","Bulawayo","Zimbabwe",NA,"Bulawayo",NA,NA,NA,NA,NA,NA
+"Cacheu","Guinea-Bissau","Cacheu","Guinea-Bissau",NA,"Cacheu",NA,NA,NA,NA,NA,NA
+"Chandpur","Bangladesh","Chandpur","Bangladesh",NA,"Chandpur",NA,NA,NA,NA,NA,NA
+"Chuadanga","Bangladesh","Chuadanga","Bangladesh",NA,"Chuadanga",NA,NA,NA,NA,NA,NA
+"Dhaka","Bangladesh","Dhaka","Bangladesh",NA,"Dhaka",NA,NA,NA,NA,NA,NA
+"DIANA","Madagascar","Diana","Madagascar",NA,"Diana",NA,NA,NA,NA,NA,NA
+"Dinajpur","Bangladesh","Dinajpur","Bangladesh",NA,"Dinajpur",NA,NA,NA,NA,NA,NA
+"Ebonyi","Nigeria","Ebonyi","Nigeria",NA,"Ebonyi",NA,NA,NA,NA,NA,NA
+"Ekiti","Nigeria","Ekiti","Nigeria",NA,"Ekiti",NA,NA,NA,NA,NA,NA
+"Faridpur","Bangladesh","Faridpur","Bangladesh",NA,"Faridpur",NA,NA,NA,NA,NA,NA
+"Feni","Bangladesh","Feni","Bangladesh",NA,"Feni",NA,NA,NA,NA,NA,NA
+"Gaibandha","Bangladesh","Gaibandha","Bangladesh",NA,"Gaibandha",NA,NA,NA,NA,NA,NA
+"Gazipur","Bangladesh","Gazipur","Bangladesh",NA,"Gazipur",NA,NA,NA,NA,NA,NA
+"Gombe","Nigeria","Gombe","Nigeria",NA,"Gombe",NA,NA,NA,NA,NA,NA
+"Gopalganj","Bangladesh","Gopalganj","Bangladesh",NA,"Gopalganj",NA,NA,NA,NA,NA,NA
+"Habiganj","Bangladesh","Habiganj","Bangladesh",NA,"Habiganj",NA,NA,NA,NA,NA,NA
+"Harare","Zimbabwe","Harare","Zimbabwe",NA,"Harare",NA,NA,NA,NA,NA,NA
+"IHOROMBE","Madagascar","Ihorombe","Madagascar",NA,"Ihorombe",NA,NA,NA,NA,NA,NA
+"ITASY","Madagascar","Itasy","Madagascar",NA,"Itasy",NA,NA,NA,NA,NA,NA
+"Jamalpur","Bangladesh","Jamalpur","Bangladesh",NA,"Jamalpur",NA,NA,NA,NA,NA,NA
+"Janjanbureh","Gambia","Janjanbureh","Gambia",NA,"Janjanbureh",NA,NA,NA,NA,NA,NA
+"Jhalokati","Bangladesh","Jhalokati","Bangladesh",NA,"Jhalokati",NA,NA,NA,NA,NA,NA
+"Jhenaidah","Bangladesh","Jhenaidah","Bangladesh",NA,"Jhenaidah",NA,NA,NA,NA,NA,NA
+"Joypurhat","Bangladesh","Joypurhat","Bangladesh",NA,"Joypurhat",NA,NA,NA,NA,NA,NA
+"Kanifing","Gambia","Kanifing","Gambia",NA,"Kanifing",NA,NA,NA,NA,NA,NA
+"Kano","Nigeria","Kano","Nigeria",NA,"Kano",NA,NA,NA,NA,NA,NA
+"Khagrachhari","Bangladesh","Khagrachhari","Bangladesh",NA,"Khagrachhari",NA,NA,NA,NA,NA,NA
+"Khangai","Mongolia","Khangai","Mongolia",NA,"Khangai",NA,NA,NA,NA,NA,NA
+"Khulna","Bangladesh","Khulna","Bangladesh",NA,"Khulna",NA,NA,NA,NA,NA,NA
+"KIRKUK","Iraq","Kirkuk","Iraq",NA,"Kirkuk",NA,NA,NA,NA,NA,NA
+"Kurigram","Bangladesh","Kurigram","Bangladesh",NA,"Kurigram",NA,NA,NA,NA,NA,NA
+"Kushtia","Bangladesh","Kushtia","Bangladesh",NA,"Kushtia",NA,NA,NA,NA,NA,NA
+"Lakshmipur","Bangladesh","Lakshmipur","Bangladesh",NA,"Lakshmipur",NA,NA,NA,NA,NA,NA
+"Lalmonirhat","Bangladesh","Lalmonirhat","Bangladesh",NA,"Lalmonirhat",NA,NA,NA,NA,NA,NA
+"Madaripur","Bangladesh","Madaripur","Bangladesh",NA,"Madaripur",NA,NA,NA,NA,NA,NA
+"Magura","Bangladesh","Magura","Bangladesh",NA,"Magura",NA,NA,NA,NA,NA,NA
+"Manikganj","Bangladesh","Manikganj","Bangladesh",NA,"Manikganj",NA,NA,NA,NA,NA,NA
+"Masvingo","Zimbabwe","Masvingo","Zimbabwe",NA,"Masvingo",NA,NA,NA,NA,NA,NA
+"Maulvibazar","Bangladesh","Maulvibazar","Bangladesh",NA,"Maulvibazar",NA,NA,NA,NA,NA,NA
+"Meherpur","Bangladesh","Meherpur","Bangladesh",NA,"Meherpur",NA,NA,NA,NA,NA,NA
+"MELAKY","Madagascar","Melaky","Madagascar",NA,"Melaky",NA,NA,NA,NA,NA,NA
+"MENABE","Madagascar","Menabe","Madagascar",NA,"Menabe",NA,NA,NA,NA,NA,NA
+"Munshiganj","Bangladesh","Munshiganj","Bangladesh",NA,"Munshiganj",NA,NA,NA,NA,NA,NA
+"Mymensingh","Bangladesh","Mymensingh","Bangladesh",NA,"Mymensingh",NA,NA,NA,NA,NA,NA
+"NAJAF","Iraq","Najaf","Iraq",NA,"Najaf",NA,NA,NA,NA,NA,NA
+"Naogaon","Bangladesh","Naogaon","Bangladesh",NA,"Naogaon",NA,NA,NA,NA,NA,NA
+"Narail","Bangladesh","Narail","Bangladesh",NA,"Narail",NA,NA,NA,NA,NA,NA
+"Narsingdi","Bangladesh","Narsingdi","Bangladesh",NA,"Narsingdi",NA,NA,NA,NA,NA,NA
+"Nasarawa","Nigeria","Nasarawa","Nigeria",NA,"Nasarawa",NA,NA,NA,NA,NA,NA
+"Natore","Bangladesh","Natore","Bangladesh",NA,"Natore",NA,NA,NA,NA,NA,NA
+"Nilphamari","Bangladesh","Nilphamari","Bangladesh",NA,"Nilphamari",NA,NA,NA,NA,NA,NA
+"Noakhali","Bangladesh","Noakhali","Bangladesh",NA,"Noakhali",NA,NA,NA,NA,NA,NA
+"Pabna","Bangladesh","Pabna","Bangladesh",NA,"Pabna",NA,NA,NA,NA,NA,NA
+"Panchagarh","Bangladesh","Panchagarh","Bangladesh",NA,"Panchagarh",NA,NA,NA,NA,NA,NA
+"Patuakhali","Bangladesh","Patuakhali","Bangladesh",NA,"Patuakhali",NA,NA,NA,NA,NA,NA
+"Pirojpur","Bangladesh","Pirojpur","Bangladesh",NA,"Pirojpur",NA,NA,NA,NA,NA,NA
+"PRIZREN","Kosovo","Prizren","Kosovo",NA,"Prizren",NA,NA,NA,NA,NA,NA
+"Rajbari","Bangladesh","Rajbari","Bangladesh",NA,"Rajbari",NA,NA,NA,NA,NA,NA
+"Rajshahi","Bangladesh","Rajshahi","Bangladesh",NA,"Rajshahi",NA,NA,NA,NA,NA,NA
+"Rangamati","Bangladesh","Rangamati","Bangladesh",NA,"Rangamati",NA,NA,NA,NA,NA,NA
+"Rangpur","Bangladesh","Rangpur","Bangladesh",NA,"Rangpur",NA,NA,NA,NA,NA,NA
+"Satkhira","Bangladesh","Satkhira","Bangladesh",NA,"Satkhira",NA,NA,NA,NA,NA,NA
+"SAVA","Madagascar","Sava","Madagascar",NA,"Sava",NA,NA,NA,NA,NA,NA
+"Shariatpur","Bangladesh","Shariatpur","Bangladesh",NA,"Shariatpur",NA,NA,NA,NA,NA,NA
+"Sherpur","Bangladesh","Sherpur","Bangladesh",NA,"Sherpur",NA,NA,NA,NA,NA,NA
+"Sirajganj","Bangladesh","Sirajganj","Bangladesh",NA,"Sirajganj",NA,NA,NA,NA,NA,NA
+"SOFIA","Madagascar","Sofia","Madagascar",NA,"Sofia",NA,NA,NA,NA,NA,NA
+"Sunamganj","Bangladesh","Sunamganj","Bangladesh",NA,"Sunamganj",NA,NA,NA,NA,NA,NA
+"Sylhet","Bangladesh","Sylhet","Bangladesh",NA,"Sylhet",NA,NA,NA,NA,NA,NA
+"Tangail","Bangladesh","Tangail","Bangladesh",NA,"Tangail",NA,NA,NA,NA,NA,NA
+"TBILISI","Georgia","Tbilisi","Georgia",NA,"Tbilisi",NA,NA,NA,NA,NA,NA
+"Thakurgaon","Bangladesh","Thakurgaon","Bangladesh",NA,"Thakurgaon",NA,NA,NA,NA,NA,NA
+"VAKINANKARATRA","Madagascar","Vakinankaratra","Madagascar",NA,"Vakinankaratra",NA,NA,NA,NA,NA,NA
+"VATOVAVY FITOVINANY","Madagascar","Vatovavy Fitovinany","Madagascar",NA,"Vatovavy Fitovinany",NA,NA,NA,NA,NA,NA
+"Faridpur","Bangladesh","Faridpur","Bangladesh",NA,NA,"Faridpur",NA,NA,NA,NA,NA
+"Sherpur","Bangladesh","Sherpur","Bangladesh",NA,NA,"Sherpur",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Kathmandu","Nepal",NA,NA,"Kathmandu",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Makwanpur","Nepal",NA,NA,"Makwanpur",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Dhading","Nepal",NA,NA,"Dhading",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Lalitpur","Nepal",NA,NA,"Lalitpur",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Ramechhap","Nepal",NA,NA,"Ramechhap",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Sindhuli","Nepal",NA,NA,"Sindhuli",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Kavrepalanchok","Nepal",NA,NA,"Kavrepalanchok",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Bhaktapur","Nepal",NA,NA,"Bhaktapur",NA,NA,NA,NA,NA
+"Central Hill","Nepal","Nuwakot","Nepal",NA,NA,"Nuwakot",NA,NA,NA,NA,NA
+"Central Mountain","Nepal","Sindhupalchok","Nepal",NA,NA,"Sindhupalchok",NA,NA,NA,NA,NA
+"Central Mountain","Nepal","Dolakha","Nepal",NA,NA,"Dolakha",NA,NA,NA,NA,NA
+"Central Mountain","Nepal","Rasuwa","Nepal",NA,NA,"Rasuwa",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Dhanusa","Nepal",NA,NA,"Dhanusa",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Rautahat","Nepal",NA,NA,"Rautahat",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Mahottari","Nepal",NA,NA,"Mahottari",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Parsa","Nepal",NA,NA,"Parsa",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Chitawan","Nepal",NA,NA,"Chitawan",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Sarlahi","Nepal",NA,NA,"Sarlahi",NA,NA,NA,NA,NA
+"Central Terai","Nepal","Bara","Nepal",NA,NA,"Bara",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Ilam","Nepal",NA,NA,"Ilam",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Khotang","Nepal",NA,NA,"Khotang",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Udayapur","Nepal",NA,NA,"Udayapur",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Dhankuta","Nepal",NA,NA,"Dhankuta",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Terhathum","Nepal",NA,NA,"Terhathum",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Panchthar","Nepal",NA,NA,"Panchthar",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Okhaldhunga","Nepal",NA,NA,"Okhaldhunga",NA,NA,NA,NA,NA
+"Eastern Hill","Nepal","Bhojpur","Nepal",NA,NA,"Bhojpur",NA,NA,NA,NA,NA
+"Eastern Mountain","Nepal","Sankhuwasabha","Nepal",NA,NA,"Sankhuwasabha",NA,NA,NA,NA,NA
+"Eastern Mountain","Nepal","Solukhumbu","Nepal",NA,NA,"Solukhumbu",NA,NA,NA,NA,NA
+"Eastern Mountain","Nepal","Taplejung","Nepal",NA,NA,"Taplejung",NA,NA,NA,NA,NA
+"Eastern Terai","Nepal","Morang","Nepal",NA,NA,"Morang",NA,NA,NA,NA,NA
+"Eastern Terai","Nepal","Saptari","Nepal",NA,NA,"Saptari",NA,NA,NA,NA,NA
+"Eastern Terai","Nepal","Siraha","Nepal",NA,NA,"Siraha",NA,NA,NA,NA,NA
+"Eastern Terai","Nepal","Sunsari","Nepal",NA,NA,"Sunsari",NA,NA,NA,NA,NA
+"Eastern Terai","Nepal","Jhapa","Nepal",NA,NA,"Jhapa",NA,NA,NA,NA,NA
+"Far Western Hill","Nepal","Baitadi","Nepal",NA,NA,"Baitadi",NA,NA,NA,NA,NA
+"Far Western Hill","Nepal","Doti","Nepal",NA,NA,"Doti",NA,NA,NA,NA,NA
+"Far Western Hill","Nepal","Achham","Nepal",NA,NA,"Achham",NA,NA,NA,NA,NA
+"Far Western Hill","Nepal","Dadeldhura","Nepal",NA,NA,"Dadeldhura",NA,NA,NA,NA,NA
+"Far Western Mountain","Nepal","Bajura","Nepal",NA,NA,"Bajura",NA,NA,NA,NA,NA
+"Far Western Mountain","Nepal","Bajhang","Nepal",NA,NA,"Bajhang",NA,NA,NA,NA,NA
+"Far Western Mountain","Nepal","Darchula","Nepal",NA,NA,"Darchula",NA,NA,NA,NA,NA
+"Far WesternTerai","Nepal","Kailali","Nepal",NA,NA,"Kailali",NA,NA,NA,NA,NA
+"Far WesternTerai","Nepal","Kanchanpur","Nepal",NA,NA,"Kanchanpur",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Salyan","Nepal",NA,NA,"Salyan",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Surkhet","Nepal",NA,NA,"Surkhet",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Rukum","Nepal",NA,NA,"Rukum",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Pyuthan","Nepal",NA,NA,"Pyuthan",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Rolpa","Nepal",NA,NA,"Rolpa",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Dailekh","Nepal",NA,NA,"Dailekh",NA,NA,NA,NA,NA
+"MId Western Hill","Nepal","Jajarkot","Nepal",NA,NA,"Jajarkot",NA,NA,NA,NA,NA
+"MId Western Mountain","Nepal","Jumla","Nepal",NA,NA,"Jumla",NA,NA,NA,NA,NA
+"MId Western Mountain","Nepal","Kalikot","Nepal",NA,NA,"Kalikot",NA,NA,NA,NA,NA
+"MId Western Mountain","Nepal","Dolpa","Nepal",NA,NA,"Dolpa",NA,NA,NA,NA,NA
+"MId Western Mountain","Nepal","Humla","Nepal",NA,NA,"Humla",NA,NA,NA,NA,NA
+"MId Western Mountain","Nepal","Mugu","Nepal",NA,NA,"Mugu",NA,NA,NA,NA,NA
+"MId WesternTerai","Nepal","Dang","Nepal",NA,NA,"Dang",NA,NA,NA,NA,NA
+"MId WesternTerai","Nepal","Banke","Nepal",NA,NA,"Banke",NA,NA,NA,NA,NA
+"MId WesternTerai","Nepal","Bardiya","Nepal",NA,NA,"Bardiya",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Palpa","Nepal",NA,NA,"Palpa",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Syangja","Nepal",NA,NA,"Syangja",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Parbat","Nepal",NA,NA,"Parbat",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Tanahu","Nepal",NA,NA,"Tanahu",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Kaski","Nepal",NA,NA,"Kaski",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Gorkha","Nepal",NA,NA,"Gorkha",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Gulmi","Nepal",NA,NA,"Gulmi",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Baglung","Nepal",NA,NA,"Baglung",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Lamjung","Nepal",NA,NA,"Lamjung",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Arghakhanchi","Nepal",NA,NA,"Arghakhanchi",NA,NA,NA,NA,NA
+"Western  Hill","Nepal","Myagdi","Nepal",NA,NA,"Myagdi",NA,NA,NA,NA,NA
+"Western  Terai","Nepal","Nawalparasi","Nepal",NA,NA,"Nawalparasi",NA,NA,NA,NA,NA
+"Western  Terai","Nepal","Rupandehi","Nepal",NA,NA,"Rupandehi",NA,NA,NA,NA,NA
+"Western  Terai","Nepal","Kapilbastu","Nepal",NA,NA,"Kapilbastu",NA,NA,NA,NA,NA
+"Western Mountain","Nepal","Mustang","Nepal",NA,NA,"Mustang",NA,NA,NA,NA,NA
+"Western Mountain","Nepal","Manang","Nepal",NA,NA,"Manang",NA,NA,NA,NA,NA
+"ANDROY","Madagascar","Androy","Madagascar",NA,NA,NA,"Androy",NA,NA,NA,NA
+"ANOSY","Madagascar","Anosy","Madagascar",NA,NA,NA,"Anosy",NA,NA,NA,NA
+"Bandarban","Bangladesh","Bandarban","Bangladesh",NA,NA,NA,"Bandarban",NA,NA,NA,NA
+"Barguna","Bangladesh","Barguna","Bangladesh",NA,NA,NA,"Barguna",NA,NA,NA,NA
+"Chandpur","Bangladesh","Chandpur","Bangladesh",NA,NA,NA,"Chandpur",NA,NA,NA,NA
+"Faridpur","Bangladesh","Faridpur","Bangladesh",NA,NA,NA,"Faridpur",NA,NA,NA,NA
+"Gaibandha","Bangladesh","Gaibandha","Bangladesh",NA,NA,NA,"Gaibandha",NA,NA,NA,NA
+"Gazipur","Bangladesh","Gazipur","Bangladesh",NA,NA,NA,"Gazipur",NA,NA,NA,NA
+"IHOROMBE","Madagascar","Ihorombe","Madagascar",NA,NA,NA,"Ihorombe",NA,NA,NA,NA
+"Jamalpur","Bangladesh","Jamalpur","Bangladesh",NA,NA,NA,"Jamalpur",NA,NA,NA,NA
+"Khagrachhari","Bangladesh","Khagrachhari","Bangladesh",NA,NA,NA,"Khagrachhari",NA,NA,NA,NA
+"Kushtia","Bangladesh","Kushtia","Bangladesh",NA,NA,NA,"Kushtia",NA,NA,NA,NA
+"Lakshmipur","Bangladesh","Lakshmipur","Bangladesh",NA,NA,NA,"Lakshmipur",NA,NA,NA,NA
+"Magura","Bangladesh","Magura","Bangladesh",NA,NA,NA,"Magura",NA,NA,NA,NA
+"Munshiganj","Bangladesh","Munshiganj","Bangladesh",NA,NA,NA,"Munshiganj",NA,NA,NA,NA
+"Naogaon","Bangladesh","Naogaon","Bangladesh",NA,NA,NA,"Naogaon",NA,NA,NA,NA
+"Narail","Bangladesh","Narail","Bangladesh",NA,NA,NA,"Narail",NA,NA,NA,NA
+"Noakhali","Bangladesh","Noakhali","Bangladesh",NA,NA,NA,"Noakhali",NA,NA,NA,NA
+"Panchagarh","Bangladesh","Panchagarh","Bangladesh",NA,NA,NA,"Panchagarh",NA,NA,NA,NA
+"Pirojpur","Bangladesh","Pirojpur","Bangladesh",NA,NA,NA,"Pirojpur",NA,NA,NA,NA
+"Rangpur","Bangladesh","Rangpur","Bangladesh",NA,NA,NA,"Rangpur",NA,NA,NA,NA
+"Sherpur","Bangladesh","Sherpur","Bangladesh",NA,NA,NA,"Sherpur",NA,NA,NA,NA
+"Central Hill","Nepal","Ramechhap","Nepal",NA,NA,NA,"Ramechhap",NA,NA,NA,NA
+"Central Hill","Nepal","Nuwakot","Nepal",NA,NA,NA,"Nuwakot",NA,NA,NA,NA
+"Central Terai","Nepal","Rautahat","Nepal",NA,NA,NA,"Rautahat",NA,NA,NA,NA
+"Central Terai","Nepal","Mahottari","Nepal",NA,NA,NA,"Mahottari",NA,NA,NA,NA
+"Central Terai","Nepal","Parsa","Nepal",NA,NA,NA,"Parsa",NA,NA,NA,NA
+"Eastern Hill","Nepal","Udayapur","Nepal",NA,NA,NA,"Udayapur",NA,NA,NA,NA
+"Eastern Hill","Nepal","Okhaldhunga","Nepal",NA,NA,NA,"Okhaldhunga",NA,NA,NA,NA
+"Eastern Hill","Nepal","Bhojpur","Nepal",NA,NA,NA,"Bhojpur",NA,NA,NA,NA
+"Far WesternTerai","Nepal","Kanchanpur","Nepal",NA,NA,NA,"Kanchanpur",NA,NA,NA,NA
+"MId Western Hill","Nepal","Salyan","Nepal",NA,NA,NA,"Salyan",NA,NA,NA,NA
+"MId Western Mountain","Nepal","Mugu","Nepal",NA,NA,NA,"Mugu",NA,NA,NA,NA
+"Western Mountain","Nepal","Manang","Nepal",NA,NA,NA,"Manang",NA,NA,NA,NA
+"ADJARA A R ","Georgia","Adjara A r ","Georgia",NA,NA,NA,NA,"Ajaria",NA,NA,NA
+"KHAKHETI","Georgia","Khakheti","Georgia",NA,NA,NA,NA,"Kakheti",NA,NA,NA
+"MTKHETA MTIANETI","Georgia","Mtkheta Mtianeti","Georgia",NA,NA,NA,NA,"Mtskheta-Mtianeti",NA,NA,NA
+"ALAOTRA MANGORO","Madagascar","Alaotra Mangoro","Madagascar",NA,NA,NA,NA,"Antananarivo",NA,NA,NA
+"AMORON I MANIA","Madagascar","Amoron i Mania","Madagascar",NA,NA,NA,NA,"Antsiranana",NA,NA,NA
+"ATSIMO ANDREFANA","Madagascar","Atsimo Andrefana","Madagascar",NA,NA,NA,NA,"Antsiranana",NA,NA,NA
+"ATSIMO ATSINANANA","Madagascar","Atsimo Atsinanana","Madagascar",NA,NA,NA,NA,"Antsiranana",NA,NA,NA
+"HAUTE MATSIATRA","Madagascar","Haute Matsiatra","Madagascar",NA,NA,NA,NA,"Toamasina",NA,NA,NA
+"ANBAR","Iraq","Anbar","Iraq",NA,NA,NA,NA,"Al-Anbar",NA,NA,NA
+"DIALA","Iraq","Diala","Iraq",NA,NA,NA,NA,"Diyala",NA,NA,NA
+"DUHOK","Iraq","Duhok","Iraq",NA,NA,NA,NA,"Dihok",NA,NA,NA
+"ERBIL","Iraq","Erbil","Iraq",NA,NA,NA,NA,"Arbil",NA,NA,NA
+"KARBALAH","Iraq","Karbalah","Iraq",NA,NA,NA,NA,"Karbala'",NA,NA,NA
+"MISAN","Iraq","Misan","Iraq",NA,NA,NA,NA,"Maysan",NA,NA,NA
+"MUTHANA","Iraq","Muthana","Iraq",NA,NA,NA,NA,"Al-Muthannia",NA,NA,NA
+"NAINAWA","Iraq","Nainawa","Iraq",NA,NA,NA,NA,"Ninawa",NA,NA,NA
+"QADISYAH","Iraq","Qadisyah","Iraq",NA,NA,NA,NA,"Al-Qadisiyah",NA,NA,NA
+"SALAHADDIN","Iraq","Salahaddin","Iraq",NA,NA,NA,NA,"Sala ad-Din",NA,NA,NA
+"SULAIMANIYA","Iraq","Sulaimaniya","Iraq",NA,NA,NA,NA,"As-Sulaymaniyah",NA,NA,NA
+"THIQAR","Iraq","Thiqar","Iraq",NA,NA,NA,NA,"Dhi-Qar",NA,NA,NA
+"Barishal","Bangladesh","Barishal","Bangladesh",NA,NA,NA,NA,"Barisal",NA,NA,NA
+"Bogura","Bangladesh","Bogura","Bangladesh",NA,NA,NA,NA,"Barisal",NA,NA,NA
+"Bogura","Bangladesh","Bogura","Bangladesh",NA,NA,NA,NA,"Rangpur",NA,NA,NA
+"Brahmanbaria","Bangladesh","Brahmanbaria","Bangladesh",NA,NA,NA,NA,"Rajshahi",NA,NA,NA
+"Chapai Nawabganj","Bangladesh","Chapai Nawabganj","Bangladesh",NA,NA,NA,NA,"Chittagong",NA,NA,NA
+"Chattogram","Bangladesh","Chattogram","Bangladesh",NA,NA,NA,NA,"Chittagong",NA,NA,NA
+"Cox s Bazar","Bangladesh","Cox s Bazar","Bangladesh",NA,NA,NA,NA,"Barisal",NA,NA,NA
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,"Khulna",NA,NA,NA
+"Jashore","Bangladesh","Jashore","Bangladesh",NA,NA,NA,NA,"Rajshahi",NA,NA,NA
+"Kishoregonj","Bangladesh","Kishoregonj","Bangladesh",NA,NA,NA,NA,"Chittagong",NA,NA,NA
+"Narayangonj","Bangladesh","Narayangonj","Bangladesh",NA,NA,NA,NA,"Barisal",NA,NA,NA
+"Netrokona","Bangladesh","Netrokona","Bangladesh",NA,NA,NA,NA,"Sylhet",NA,NA,NA
+"Netrokona","Bangladesh","Netrokona","Bangladesh",NA,NA,NA,NA,"Khulna",NA,NA,NA
+"Basse","Gambia","Basse","Gambia",NA,NA,NA,NA,"Banjul",NA,NA,NA
+"Brikama","Gambia","Brikama","Gambia",NA,NA,NA,NA,"North Bank",NA,NA,NA
+"Kerewan","Gambia","Kerewan","Gambia",NA,NA,NA,NA,"Western",NA,NA,NA
+"Kuntaur","Gambia","Kuntaur","Gambia",NA,NA,NA,NA,"Banjul",NA,NA,NA
+"Mansakonko","Gambia","Mansakonko","Gambia",NA,NA,NA,NA,"Maccarthy Island",NA,NA,NA
+"BOTHA BOTHE","Lesotho","Botha Bothe","Lesotho",NA,NA,NA,NA,"Butha-Buthe",NA,NA,NA
+"MOHALES HOEK","Lesotho","Mohales Hoek","Lesotho",NA,NA,NA,NA,"Mohale's Hoek",NA,NA,NA
+"QACHAS NEK","Lesotho","Qachas Nek","Lesotho",NA,NA,NA,NA,"Qacha's Nek",NA,NA,NA
+"Centrale","Togo","Centrale","Togo",NA,NA,NA,NA,"Centre",NA,NA,NA
+"Golfe Urbain","Togo","Golfe Urbain","Togo",NA,NA,NA,NA,"Plateaux",NA,NA,NA
+"CENTRE EST","Tunisia","Centre Est","Tunisia",NA,NA,NA,NA,"Bizerte",NA,NA,NA
+"CENTRE OUEST","Tunisia","Centre Ouest","Tunisia",NA,NA,NA,NA,"Bizerte",NA,NA,NA
+"DISTRICT TUNIS","Tunisia","District Tunis","Tunisia",NA,NA,NA,NA,"Kairouan",NA,NA,NA
+"NORD EST","Tunisia","Nord Est","Tunisia",NA,NA,NA,NA,"Monastir",NA,NA,NA
+"NORD OUEST","Tunisia","Nord Ouest","Tunisia",NA,NA,NA,NA,"Sousse",NA,NA,NA
+"NORD OUEST","Tunisia","Nord Ouest","Tunisia",NA,NA,NA,NA,"Tozeur",NA,NA,NA
+"SUD EST","Tunisia","Sud Est","Tunisia",NA,NA,NA,NA,"Sousse",NA,NA,NA
+"SUD OUEST","Tunisia","Sud Ouest","Tunisia",NA,NA,NA,NA,"Sousse",NA,NA,NA
+"CUVETTE OUEST","Republic of Congo","Cuvette Ouest","Republic of Congo",NA,NA,NA,NA,"Cuvette-Ouest",NA,NA,NA
+"LEKOUMOU","Republic of Congo","Lekoumou","Republic of Congo",NA,NA,NA,NA,"Lékoumou",NA,NA,NA
+"POINTE NOIRE","Republic of Congo","Pointe Noire","Republic of Congo",NA,NA,NA,NA,"Pointe Noire",NA,NA,NA
+"FCT Abuja","Nigeria","Fct Abuja","Nigeria",NA,NA,NA,NA,"Kaduna",NA,NA,NA
+"FCT Abuja","Nigeria","Fct Abuja","Nigeria",NA,NA,NA,NA,"Taraba",NA,NA,NA
+"FERIZAJ","Kosovo","Ferizaj","Kosovo",NA,NA,NA,NA,"Prizren",NA,NA,NA
+"GJAKOVA","Kosovo","Gjakova","Kosovo",NA,NA,NA,NA,"Ðakovica",NA,NA,NA
+"GJILAN","Kosovo","Gjilan","Kosovo",NA,NA,NA,NA,"Gnjilane",NA,NA,NA
+"MITROVICA","Kosovo","Mitrovica","Kosovo",NA,NA,NA,NA,"Ðakovica",NA,NA,NA
+"PEJA","Kosovo","Peja","Kosovo",NA,NA,NA,NA,"Pecki",NA,NA,NA
+"PRISHTINA","Kosovo","Prishtina","Kosovo",NA,NA,NA,NA,"Pristina",NA,NA,NA
+"ONGO NIUA","Tonga","Ongo Niua","Tonga",NA,NA,NA,NA,"Tongatapu",NA,NA,NA
+"Resto","Paraguay","Resto","Paraguay",NA,NA,NA,NA,"Presidente Hayes",NA,NA,NA
+"SAB","Guinea-Bissau","Sab","Guinea-Bissau",NA,NA,NA,NA,"Gabú",NA,NA,NA
+"ADJARA A R ","Georgia","Adjara A r ","Georgia",NA,NA,NA,NA,NA,"Gagra",NA,NA
+"KHAKHETI","Georgia","Khakheti","Georgia",NA,NA,NA,NA,NA,"Shuakhevi",NA,NA
+"MTKHETA MTIANETI","Georgia","Mtkheta Mtianeti","Georgia",NA,NA,NA,NA,NA,"Mtskheta",NA,NA
+"ALAOTRA MANGORO","Madagascar","Alaotra Mangoro","Madagascar",NA,NA,NA,NA,NA,"Alaotra-Mangoro",NA,NA
+"AMORON I MANIA","Madagascar","Amoron i Mania","Madagascar",NA,NA,NA,NA,NA,"Amoron'i mania",NA,NA
+"ATSIMO ANDREFANA","Madagascar","Atsimo Andrefana","Madagascar",NA,NA,NA,NA,NA,"Atsimo-Andrefana",NA,NA
+"ATSIMO ATSINANANA","Madagascar","Atsimo Atsinanana","Madagascar",NA,NA,NA,NA,NA,"Atsimo-Atsinana",NA,NA
+"HAUTE MATSIATRA","Madagascar","Haute Matsiatra","Madagascar",NA,NA,NA,NA,NA,"Haute matsiatra",NA,NA
+"ANBAR","Iraq","Anbar","Iraq",NA,NA,NA,NA,NA,"Anah",NA,NA
+"DIALA","Iraq","Diala","Iraq",NA,NA,NA,NA,NA,"Balad",NA,NA
+"DIALA","Iraq","Diala","Iraq",NA,NA,NA,NA,NA,"Kalar",NA,NA
+"DUHOK","Iraq","Duhok","Iraq",NA,NA,NA,NA,NA,"Dahuk",NA,NA
+"ERBIL","Iraq","Erbil","Iraq",NA,NA,NA,NA,NA,"Arbil",NA,NA
+"KARBALAH","Iraq","Karbalah","Iraq",NA,NA,NA,NA,NA,"Karbala",NA,NA
+"MISAN","Iraq","Misan","Iraq",NA,NA,NA,NA,NA,"Al Miamona",NA,NA
+"MUTHANA","Iraq","Muthana","Iraq",NA,NA,NA,NA,NA,"Khanaqin",NA,NA
+"NAINAWA","Iraq","Nainawa","Iraq",NA,NA,NA,NA,NA,"Rania",NA,NA
+"QADISYAH","Iraq","Qadisyah","Iraq",NA,NA,NA,NA,NA,"Kadhimiya",NA,NA
+"QADISYAH","Iraq","Qadisyah","Iraq",NA,NA,NA,NA,NA,"Mahmudiya",NA,NA
+"SALAHADDIN","Iraq","Salahaddin","Iraq",NA,NA,NA,NA,NA,"Balad",NA,NA
+"SULAIMANIYA","Iraq","Sulaimaniya","Iraq",NA,NA,NA,NA,NA,"Sulaymaniya",NA,NA
+"THIQAR","Iraq","Thiqar","Iraq",NA,NA,NA,NA,NA,"Sinjar",NA,NA
+"THIQAR","Iraq","Thiqar","Iraq",NA,NA,NA,NA,NA,"Tikrit",NA,NA
+"THIQAR","Iraq","Thiqar","Iraq",NA,NA,NA,NA,NA,"Pshdar",NA,NA
+"Barishal","Bangladesh","Barishal","Bangladesh",NA,NA,NA,NA,NA,"Barisal",NA,NA
+"Bogura","Bangladesh","Bogura","Bangladesh",NA,NA,NA,NA,NA,"Bogra",NA,NA
+"Brahmanbaria","Bangladesh","Brahmanbaria","Bangladesh",NA,NA,NA,NA,NA,"Brahamanbaria",NA,NA
+"Chapai Nawabganj","Bangladesh","Chapai Nawabganj","Bangladesh",NA,NA,NA,NA,NA,"Nawabganj",NA,NA
+"Chattogram","Bangladesh","Chattogram","Bangladesh",NA,NA,NA,NA,NA,"Chittagong",NA,NA
+"Cox s Bazar","Bangladesh","Cox s Bazar","Bangladesh",NA,NA,NA,NA,NA,"Cox'S Bazar",NA,NA
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,"Comilla",NA,NA
+"Jashore","Bangladesh","Jashore","Bangladesh",NA,NA,NA,NA,NA,"Jessore",NA,NA
+"Kishoregonj","Bangladesh","Kishoregonj","Bangladesh",NA,NA,NA,NA,NA,"Kishoreganj",NA,NA
+"Narayangonj","Bangladesh","Narayangonj","Bangladesh",NA,NA,NA,NA,NA,"Narayanganj",NA,NA
+"Netrokona","Bangladesh","Netrokona","Bangladesh",NA,NA,NA,NA,NA,"Netrakona",NA,NA
+"Basse","Gambia","Basse","Gambia",NA,NA,NA,NA,NA,"Banjul",NA,NA
+"Brikama","Gambia","Brikama","Gambia",NA,NA,NA,NA,NA,"Niamina East",NA,NA
+"Brikama","Gambia","Brikama","Gambia",NA,NA,NA,NA,NA,"Niamina West",NA,NA
+"Kerewan","Gambia","Kerewan","Gambia",NA,NA,NA,NA,NA,"Kiang East",NA,NA
+"Kuntaur","Gambia","Kuntaur","Gambia",NA,NA,NA,NA,NA,"Kantora",NA,NA
+"Mansakonko","Gambia","Mansakonko","Gambia",NA,NA,NA,NA,NA,"Niamina Dankunku",NA,NA
+"Centrale","Togo","Centrale","Togo",NA,NA,NA,NA,NA,"Kéran",NA,NA
+"Golfe Urbain","Togo","Golfe Urbain","Togo",NA,NA,NA,NA,NA,"Golfe (incl Lomé)",NA,NA
+"CENTRE EST","Tunisia","Centre Est","Tunisia",NA,NA,NA,NA,NA,"Sakiet Ezzit",NA,NA
+"CENTRE OUEST","Tunisia","Centre Ouest","Tunisia",NA,NA,NA,NA,NA,"Ben Arous",NA,NA
+"DISTRICT TUNIS","Tunisia","District Tunis","Tunisia",NA,NA,NA,NA,NA,"Sidi Bouzid Est",NA,NA
+"NORD EST","Tunisia","Nord Est","Tunisia",NA,NA,NA,NA,NA,"Ksour Essef",NA,NA
+"NORD OUEST","Tunisia","Nord Ouest","Tunisia",NA,NA,NA,NA,NA,"Kef Ouest",NA,NA
+"SUD EST","Tunisia","Sud Est","Tunisia",NA,NA,NA,NA,NA,"Kef Est",NA,NA
+"SUD OUEST","Tunisia","Sud Ouest","Tunisia",NA,NA,NA,NA,NA,"Sfax Ouest",NA,NA
+"CUVETTE OUEST","Republic of Congo","Cuvette Ouest","Republic of Congo",NA,NA,NA,NA,NA,"Ouesso",NA,NA
+"LEKOUMOU","Republic of Congo","Lekoumou","Republic of Congo",NA,NA,NA,NA,NA,"Loudima",NA,NA
+"POINTE NOIRE","Republic of Congo","Pointe Noire","Republic of Congo",NA,NA,NA,NA,NA,"Pointe Noire",NA,NA
+"FCT Abuja","Nigeria","Fct Abuja","Nigeria",NA,NA,NA,NA,NA,"Funtua",NA,NA
+"FERIZAJ","Kosovo","Ferizaj","Kosovo",NA,NA,NA,NA,NA,"Srbica",NA,NA
+"GJAKOVA","Kosovo","Gjakova","Kosovo",NA,NA,NA,NA,NA,"Ðakovica",NA,NA
+"GJILAN","Kosovo","Gjilan","Kosovo",NA,NA,NA,NA,NA,"Gnjilane",NA,NA
+"MITROVICA","Kosovo","Mitrovica","Kosovo",NA,NA,NA,NA,NA,"Ðakovica",NA,NA
+"PEJA","Kosovo","Peja","Kosovo",NA,NA,NA,NA,NA,"Pec",NA,NA
+"PRISHTINA","Kosovo","Prishtina","Kosovo",NA,NA,NA,NA,NA,"Priština",NA,NA
+"Resto","Paraguay","Resto","Paraguay",NA,NA,NA,NA,NA,"Loreto",NA,NA
+"SAB","Guinea-Bissau","Sab","Guinea-Bissau",NA,NA,NA,NA,NA,"Gabu",NA,NA
+"ALAOTRA MANGORO","Madagascar","Alaotra Mangoro","Madagascar",NA,NA,NA,NA,NA,NA,"Taolagnaro",NA
+"AMORON I MANIA","Madagascar","Amoron i Mania","Madagascar",NA,NA,NA,NA,NA,NA,"Morondava",NA
+"ATSIMO ANDREFANA","Madagascar","Atsimo Andrefana","Madagascar",NA,NA,NA,NA,NA,NA,"Andramasina",NA
+"ATSIMO ATSINANANA","Madagascar","Atsimo Atsinanana","Madagascar",NA,NA,NA,NA,NA,NA,"Antsiranana Urban",NA
+"HAUTE MATSIATRA","Madagascar","Haute Matsiatra","Madagascar",NA,NA,NA,NA,NA,NA,"Ifanadiana",NA
+"Barishal","Bangladesh","Barishal","Bangladesh",NA,NA,NA,NA,NA,NA,"Trishal",NA
+"Bogura","Bangladesh","Bogura","Bangladesh",NA,NA,NA,NA,NA,NA,"Bogra Sadar",NA
+"Brahmanbaria","Bangladesh","Brahmanbaria","Bangladesh",NA,NA,NA,NA,NA,NA,"Brahman Para",NA
+"Chapai Nawabganj","Bangladesh","Chapai Nawabganj","Bangladesh",NA,NA,NA,NA,NA,NA,"Nawabganj",NA
+"Chattogram","Bangladesh","Chattogram","Bangladesh",NA,NA,NA,NA,NA,NA,"Patgram",NA
+"Cox s Bazar","Bangladesh","Cox s Bazar","Bangladesh",NA,NA,NA,NA,NA,NA,"Chak Bazar",NA
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,"Sulla",NA
+"Jashore","Bangladesh","Jashore","Bangladesh",NA,NA,NA,NA,NA,NA,"Tanore",NA
+"Kishoregonj","Bangladesh","Kishoregonj","Bangladesh",NA,NA,NA,NA,NA,NA,"Kishoreganj",NA
+"Narayangonj","Bangladesh","Narayangonj","Bangladesh",NA,NA,NA,NA,NA,NA,"Narayanganj Sadar",NA
+"Netrokona","Bangladesh","Netrokona","Bangladesh",NA,NA,NA,NA,NA,NA,"Netrokona Sadar",NA
+"ALAOTRA MANGORO","Madagascar","Alaotra Mangoro","Madagascar",NA,NA,NA,NA,NA,NA,NA,"Alasora"
+"AMORON I MANIA","Madagascar","Amoron i Mania","Madagascar",NA,NA,NA,NA,NA,NA,NA,"Ambodiriana"
+"ATSIMO ANDREFANA","Madagascar","Atsimo Andrefana","Madagascar",NA,NA,NA,NA,NA,NA,NA,"Ampondra"
+"ATSIMO ATSINANANA","Madagascar","Atsimo Atsinanana","Madagascar",NA,NA,NA,NA,NA,NA,NA,"Antsiranana I"
+"HAUTE MATSIATRA","Madagascar","Haute Matsiatra","Madagascar",NA,NA,NA,NA,NA,NA,NA,"Mahatsara"
+"Barishal","Bangladesh","Barishal","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Barisal"
+"Bogura","Bangladesh","Bogura","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Bagura"
+"Brahmanbaria","Bangladesh","Brahmanbaria","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Brahman Para"
+"Chapai Nawabganj","Bangladesh","Chapai Nawabganj","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Chapai Nababganj Paurashava"
+"Chattogram","Bangladesh","Chattogram","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Chatra"
+"Cox s Bazar","Bangladesh","Cox s Bazar","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Amin Bazar"
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Kulla"
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Dulla"
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Bulla"
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Sulla"
+"Cumilla","Bangladesh","Cumilla","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Chila"
+"Jashore","Bangladesh","Jashore","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Jashalong"
+"Jashore","Bangladesh","Jashore","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Pashapole"
+"Kishoregonj","Bangladesh","Kishoregonj","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Kishoreganj"
+"Narayangonj","Bangladesh","Narayangonj","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Paranganj"
+"Netrokona","Bangladesh","Netrokona","Bangladesh",NA,NA,NA,NA,NA,NA,NA,"Netrokona Paurashava"
