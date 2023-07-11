@@ -2,6 +2,9 @@
 
 Here we explore environmental and anthropogenic covariates driving the spatial variation in safely managed drinking water services (SMDWs), and generate a global map of subnational (GADM version 3.6) estimates of SMDWs use across 135 low- and middle-income countries. Further, we determine the subcomponents limiting use of SMDWs around the world. 
 
+This repository includes 1) "Data" as well as code for 2) "Data_cleaning", 3) "Feature_Selection", 4) "Training", and 5) "Prediction" of SMDWs and its constituent subcomponents. Names of files should describe their contents. We suggest you start with "MICS_Preprocessing_Dataframes" preprocessing the MICS data (However, we have also included README.md files in folders where additional clarification is needed.
+
+
  In order to reproduce our results you will need to download the following data (we have added the date we downloaded the data incase there have been changes since):
 
 
@@ -25,4 +28,3 @@ Downloaded from https://washdata.org/data/downloads on 11.07.2022.
 
 Downloaded from https://unstats.un.org/unsd/methodology/m49/overview/ on 14.07.2022
 
-This repository includes code for 1) "Data_cleaning", 2) "Feature_Selection", 3) "Training", and 4) "Prediction" of SMDWs and its constituent subcomponents. Names of files should describe their contents. We suggest you start with "MICS_Preprocessing_Dataframes" preprocessing the MICS data (However, we have also included README.md files in folders where additional clarification is needed.
