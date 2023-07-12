@@ -9,11 +9,11 @@ library(tidyverse)
 `%notin%` <- Negate(`%in%`)
 
 # Set working directory
-setwd("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/EO_matching_names_and_combining_files")
+setwd("./2_Data_cleaning/1_EO_matching_names_and_combining_files")
 
 
 # Load unicef database
-unicef <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
+unicef <- fread("./2_Data_cleaning/1_EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
   rowid_to_column(var = "ID") 
 
 
@@ -133,8 +133,8 @@ rm(matched_names_fuzz_df, matched_names, unmatched_names_sub
 unmatched_names_afterF <- unmatched_names %>% filter(name %notin% matched_names_wF$name) 
 nrow(unmatched_names_afterF)
 
-write.csv(matched_names_wF, "matched_names.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(matched_names_wF, "matched_names.csv", fileEncoding = "UTF-8", row.names = F)
 
-write.csv(unmatched_names_afterF, "unmatched_names_afterF_date.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(unmatched_names_afterF, "unmatched_names_afterF_date.csv", fileEncoding = "UTF-8", row.names = F)
 
 

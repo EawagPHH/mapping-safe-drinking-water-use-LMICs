@@ -1,20 +1,15 @@
 
 #title: "Compiling and Labeling Multiple Indicator Cluster Survey Data for Training Set"
 
-
-setwd("~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data_cleaning\\MICS_Preprocessing_Dataframes\\Compiling_MICS_test_and_training_sets")
-
 library(foreign)
 library(tidyr)
 library(dplyr)
 
-source("FunctionsForLabelingHHMICS.R")
-source("FunctionsForExtractingVariablesFromMICS.R")
+source("./Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForLabelingHHMICS.R")
+source("./Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForExtractingVariablesFromMICS.R")
 
-PATH_TO_SURVEYS_TRAINING <- "~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data\\HH_MICS_training"
-PATH_TO_NEWEST_SURVEYS_TRAINING <- "~\\GitHub\\mapping-safe-drinking-water-use-LMICs\\Data\\HH_MICS_new_training"
+PATH_TO_SURVEYS_TRAINING <- "./Data/HH_MICS_training"
 loadSurveys(PATH_TO_SURVEYS_TRAINING)
-loadSurveys(PATH_TO_NEWEST_SURVEYS_TRAINING)
 
 #Creating Variable with Country name
 hh_Algeria$country <- "Algeria"
@@ -44,19 +39,10 @@ hh_Togo$country <- "Togo"
 hh_Tonga$country <- "Tonga"
 hh_Tunisia$country <- "Tunisia"
 hh_Zimbabwe$country <- "Zimbabwe"
-
-hh_DominicanRepublic$country <- "Dominican Republic"
-hh_Honduras$country <- "Honduras"
-hh_Malawi$country <- "Malawi"
-hh_Nepal$country <- "Nepal"
 hh_PakistanAzadJammuKashmir$country <- "Pakistan"
-hh_PakistanKhyberPakhtunkhwa$country <- "Pakistan"
-hh_Samoa$country <- "Samoa"
-hh_TurksCaicos$country <- "Turks & Caicos"
-hh_Tuvalu$country <- "Tuvalu"
-hh_VietNam$country <- "Vietnam"
 
-#first surveys available
+
+#surveys available
 hh_Algeria_SMDW <- extractStandardSurveyVariables(hh_Algeria)
 hh_CentralAfricanRepublic_SMDW <- extractStandardSurveyVariables(hh_CentralAfricanRepublic)
 hh_Chad_SMDW <- extractStandardSurveyVariables(hh_Chad) 
@@ -87,43 +73,19 @@ hh_Lesotho_SMDW <- extractVariablesFromLesotho(hh_Lesotho)
 hh_Nigeria_SMDW <- extractVariablesFromNigeria(hh_Nigeria)
 hh_Paraguay_SMDW <-extractVariablesFromParaguay(hh_Paraguay)
 
-#more recent surveys added at later stage of project
-hh_DominicanRepublic <- extractStandardSurveyVariables(hh_DominicanRepublic)
-hh_Honduras <- extractStandardSurveyVariables(hh_Honduras)
-hh_Malawi <- extractStandardSurveyVariables(hh_Malawi)
-hh_Nepal <- extractStandardSurveyVariables(hh_Nepal)
-hh_PakistanAzadJammuKashmir <- extractStandardSurveyVariables(hh_PakistanAzadJammuKashmir)
-hh_PakistanKhyberPakhtunkhwa <- extractStandardSurveyVariables(hh_PakistanKhyberPakhtunkhwa)
-hh_Samoa <- extractStandardSurveyVariables(hh_Samoa)
-hh_TurksCaicos <- extractStandardSurveyVariables(hh_TurksCaicos)
-hh_VietNam <- extractStandardSurveyVariables(hh_VietNam)
 
-#more recent surveys added at later stage of project with some different variable naming
-hh_Tuvalu <- extractVariablesFromTuvalu(hh_Tuvalu)
+df.first_MICS <- rbind( hh_Algeria_SMDW, hh_Bangladesh_SMDW, hh_Chad_SMDW,hh_Gambia_SMDW, 
+                       hh_CentralAfricanRepublic_SMDW, hh_Georgia_SMDW, hh_Ghana_SMDW, 
+                       hh_GuineaBissau_SMDW, hh_Guyana_SMDW, hh_Iraq_SMDW, hh_Kiribati_SMDW, hh_Kosovo_SMDW, 
+                       hh_Lao_SMDW, hh_Lesotho_SMDW, hh_Madagascar_SMDW, hh_Mongolia_SMDW, 
+                       hh_Nigeria_SMDW, hh_PakistanPunjab_SMDW, hh_Palestine_SMDW, 
+                       hh_Paraguay_SMDW, hh_SaoTome_SMDW, hh_SierraLeone_SMDW, hh_Suriname_SMDW, 
+                       hh_Togo_SMDW, hh_Tonga_SMDW, hh_Tunisia_SMDW, hh_Zimbabwe_SMDW)
 
+df.first_MICS <- as.data.frame(do.call(cbind, df.first_MICS))
 
-df_first_MICS <- rbind( hh_Algeria, hh_Bangladesh, hh_Chad,hh_Gambia, 
-                       hh_CentralAfricanRepublic, hh_Georgia, hh_Ghana, 
-                       hh_GuineaBissau, hh_Guyana, hh_Iraq, hh_Kiribati, hh_Kosovo, 
-                       hh_Lao, hh_Lesotho, hh_Madagascar, hh_Mongolia, 
-                       hh_Nigeria, hh_PakistanPunjab, hh_Palestine, 
-                       hh_Paraguay, hh_SaoTome, hh_SierraLeone, hh_Suriname, 
-                       hh_Togo, hh_Tonga, hh_Tunisia, hh_Zimbabwe)
-
-df_later_MICS <- rbind(hh_DominicanRepublic, 
-                           hh_Honduras, hh_Malawi, hh_Nepal, hh_PakistanAzadJammuKashmir,
-                           hh_PakistanKhyberPakhtunkhwa, hh_Samoa, hh_TurksCaicos,
-                           hh_Tuvalu, hh_VietNam)
-
-df_first_MICS <- allVariablesAsCharacter(df.first.MICS)
-df_first_MICSLabeled <-labelingSurveyVariableResponses(df.first.MICS)
-
-df_later_MICS$WS7 <- as.character(df.later.MICS$WS7)
-df_later_MICS$WS8 <- as.character(df.later.MICS$WS8)
-
-df_later_MICSLabeled <- relabelingSurveyQuestionResponses(df.MICS.SMDW_test,WS1,WS2,WS3,WS4,WS7,WS8,WQ27)
+df.first_MICS <- VariablesWhichWereFactorsAsCharacterToAvoidGenerationOfNA(df.first_MICS)
+df.first_MICSLabeled <-labelingSurveyVariableResponses(as.data.frame(df.first_MICS))
 
 
-
-
-write.csv(df.MICS.SMDW, "df_MICS_SMDW.csv", fileEncoding = "UTF-8", row.names = F)
+write.csv(df.first_MICSLabeled, "df_MICS_SMDW.csv", fileEncoding = "UTF-8", row.names = F)

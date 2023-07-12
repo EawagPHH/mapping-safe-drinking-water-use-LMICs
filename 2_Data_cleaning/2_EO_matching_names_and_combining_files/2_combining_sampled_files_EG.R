@@ -3,7 +3,7 @@ library(plyr)
 library(tidyverse)
 
 # Set working directory
-setwd("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files")
+setwd("./2_Data_cleaning/1_EO_matching_names_and_combining_files")
 
 matched_names <- fread("matched_names_EG_2021.02.04.csv") %>% 
   select(-name_orig) %>%
@@ -22,9 +22,9 @@ all_names_MICS <- rbind(matched_names,unmatched_names)
  
 head(all_names_MICS)
 
-NAME_1_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_1_sampled.csv")
-NAME_2_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_2_sampled.csv")
-NAME_3_sampled <- fread("~/GitHub/mapping-safe-drinking-water-use-LMICs/EO_matching_names_and_combining_files/NAME_3_sampled.csv")
+NAME_1_sampled <- fread("./2_Data_cleaning/1_EO_matching_names_and_combining_files/NAME_1_sampled.csv")
+NAME_2_sampled <- fread("./2_Data_cleaning/1_EO_matching_names_and_combining_files/NAME_2_sampled.csv")
+NAME_3_sampled <- fread("./2_Data_cleaning/1_EO_matching_names_and_combining_files/NAME_3_sampled.csv")
 
 
 NAME_1_combined <- left_join(all_names_MICS, NAME_1_sampled, by = c("matched_name1" = "NAME_1")) %>% 
@@ -40,7 +40,7 @@ all_name_sampled <- plyr::rbind.fill(NAME_1_combined, NAME_2_combined, NAME_3_co
 
 rm(list=setdiff(ls(), "all_name_sampled"))
 
-fwrite(all_name_sampled, "MICS_env_sampled_.csv")
+#fwrite(all_name_sampled, "MICS_env_sampled_.csv")
 
 
 

@@ -1,6 +1,8 @@
 
-# Summary-Joining household survey and Earth observation data
-We used combined methods to match all GADM names (GADM version 3.6) with the region names reported in the household survey (variable: HH7) in order to join the household survey data with Earth observation data.
+#Joining household survey and Earth observation data
+Here we match all global administrative area names (GADM version 3.6) with the region names reported in the multiple indicator cluster survey (MICS) household data (variable: HH7) in order to join the household survey data with Earth observation data which we refer to as our environmental features. The process involves a substantial amount of manual matching as names in the survey data did not directly match with the GADM area names. We therefore suggest you use the cleaned file with all the environmental features used in this study which can be found in "1_Data/EnvironmentalFeatures/GADM_environmental_trainingData_final.csv". If you would however like to put the data frame together yourself follow the instructions below.
+
+# Summary of the matching earth observation and MICS data
 First we used a the fuzzyjoin R package (version 0.1.6) to match the household survey region names with names at GADM level 1, 2, or 3 and then reviewed and corrected false matches manually. For names which did not find a close match with fuzzyjoin we used Wikipedia and the online GADM database to identify equivalent names of survey place. If a survey place name has an equivalent GADM name at more than one level then select the level based on the trend within the country.
 
 Here is a more detailed description of how to combine the code in this file:
@@ -15,6 +17,6 @@ This code also writes the file "unmatched_names_afterF.csv" which includes all t
 2a) Run the file 2_combining_sampled_files_EG.csv which writes the "MICS_env_sampled_XX.XX.XX.csv" file. Open the written excel file and check for observations (matched names) which were not successfully combined with environmental data and document these in missing_regions.csv.
 
 
- ## 3) Updating the MICS_env_sampled.csv file as new survey come in
+## 3) Updating the MICS_env_sampled.csv file as new survey come in
 
  New MICS surveys appear fairly irregually. We therefore just added and matched the new regions with the corresponding GADM region manually into the most recent MICS_env_sampled.csv dataframe.

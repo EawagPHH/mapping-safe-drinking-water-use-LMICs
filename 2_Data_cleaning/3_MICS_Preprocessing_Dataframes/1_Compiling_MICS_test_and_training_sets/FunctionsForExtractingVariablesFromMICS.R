@@ -6,7 +6,7 @@ loadSurveys <- function(pathToSurveys){
   
   for (filename in filenames){
     name <- strsplit(filename, split = ".", fixed = TRUE)[[1]][1]
-    dfCountrySurvey <- sjlabelled::read_spss(paste(pathToSurveys,"\\",filename, sep=""))
+    dfCountrySurvey <- sjlabelled::read_spss(paste(pathToSurveys,"/",filename, sep=""))
     assign(name,dfCountrySurvey,envir = .GlobalEnv)
   }
 }
