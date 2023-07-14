@@ -3,20 +3,23 @@ title: "Modeling Subcomponents of SMDWs"
 author: "Esther Greenwood"
 date: "30/01/2022"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-Here we model the four constituent subcomponents of safely managed drinking water:
-(i) absence of faecal contamination (no detectable E. coli in a 100 ml sample of a household’s primary drinking water source),
-(ii) availability when needed (no insufficiency of water quantity experienced within the last month), 
-(iii) accessibility on premises (a water source located in the dwelling, yard or plot),  and 
-(iv) use of an improved drinking water source (a drinking water source which provides some degree of protection from faecal contamination) 
+# Modeling SMDWs subcomponents
 
-```{r setup, include=FALSE}
+Here we model the four constituent subcomponents of safely managed
+drinking water: (i) absence of faecal contamination (no detectable E.
+coli in a 100 ml sample of a household's primary drinking water source),
+(ii) availability when needed (no insufficiency of water quantity
+experienced within the last month), (iii) accessibility on premises (a
+water source located in the dwelling, yard or plot), and (iv) use of an
+improved drinking water source (a drinking water source which provides
+some degree of protection from faecal contamination)
 
-# Set working directory
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, root.dir = 
-"~/GitHub/mapping-safe-drinking-water-use-LMICs")
-
+```{r}
 library(data.table)
 library(tidyverse)
 library(h2o)
@@ -27,11 +30,11 @@ library(here)
 ## Loading data sets
 
 ```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R")
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/39_features.R")
+source("./4_Training/feature_names/39_features.R")
 
 UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
 
@@ -45,7 +48,8 @@ country_Income_Groups <- readCountryIncomeGroup()
 
 ```
 
-#Modelling freedom of faecal contamination using E.coli as an indicator
+# Modeling freedom of faecal contamination using E.coli as an indicator
+
 ```{r}
 
 df.MICS_Ecoli <- createDataFrameWithEcoliIndicator(df.MICS_HH)
@@ -61,21 +65,27 @@ combined_MICS_envir_human_e.coli <- EcoliFreeRegionalProportion %>%
 
 #for modelling e.coli contamination at PoC with 40 features
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/39_features.R")
+source("./4_Training/feature_names/39_features.R")
 
 combined_MICS_envir_human_e.coli  <- combined_MICS_envir_human_e.coli %>%
   select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("No_EcoliAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
 
 ```
 
-##Grid-search: Tuning hyperparameters of random forest model with 39 features
-Outcome: access to E.coli free water
-```{r}
-## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+## Grid-search: Tuning hyperparameters of random forest model with 39
 
+features Outcome: access to E.coli free water
+
+We performed a grid-search to iteratively explore the results of a suite
+of random forest models trained on the selected covariates. A list of
+hyperparameters was selected, varying in (1) the number of trees, (2)
+the number of variables sampled at each split and (3) the minimum
+observations per leaf and (4)sampling rate
+
+```{r}
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
-## modelling e.coli
+## modelling E.coli
 varToModel_e.coli <-'No_EcoliAtRegionalLevel'
 
 combined_MICS_envir_human_e.coli  <-createColumnForCVfoldBasedOnCountries(combined_MICS_envir_human_e.coli ) 
@@ -86,7 +96,7 @@ combined_MICS_envir_human_e.coli <-combined_MICS_envir_human_e.coli %>%
 df.MICS_envir_human_e.coli_39 <- combined_MICS_envir_human_e.coli  %>% 
   select(all_of(bandNames_39),varToModel_e.coli,country_fold, HouseholdsInRegion.Freq.x) 
 
-#write.csv(df.MICS_envir_human_e.coli_39, "/Users/Esther/Documents/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Regre_Matrix_Ecoli.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(df.MICS_envir_human_e.coli_39, "./5_Predictions/prediction_results/Regre_Matrix_Ecoli.csv", fileEncoding = "UTF-8", row.names = F)
 
 regMatrixH2O_e.coli_reg_39 <- as.h2o(df.MICS_envir_human_e.coli_39, destination_frame = "regMatrixH2O_e.coli_reg_39")
 
@@ -123,10 +133,11 @@ summary(rf.grid_39_e.coli, show_stack_traces = TRUE)
 
 print(rf_grid_perf_ecoli@summary_table)
 
-write.csv(rf_grid_perf_ecoli@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/rf_grid_ecoli_reg_39.csv")
+#write.csv(rf_grid_perf_ecoli@summary_table,"./4_Training/results_grid_search/rf_grid_ecoli_reg_39.csv")
 ```
 
-best RF model with 39 features for e.coli contamination
+## best RF model with 39 features for E.coli contamination
+
 ```{r}
 # random forest regression using metrics of best performing model
 
@@ -154,7 +165,8 @@ perf_40_ecoli <- h2o.performance(rf_model_ecoli_final)
 perf_40_ecoli
 ```
 
-##Calculating and plotting SHAP values for E.coli predictions
+Calculating and plotting SHAP values for E.coli predictions
+
 ```{r}
 shap_values_ecoli <- predict_contributions.H2OModel(
   rf_model_ecoli_final,
@@ -169,10 +181,13 @@ mean_values_ecoli  <- rename39Features(mean_values_ecoli)
 
 mean_values_ecoli <- group39FeaturesInto5IndicatorGroups(mean_values_ecoli)
 
-write.csv(mean_values_ecoli, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Shap_values_ecoli.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_ecoli, "./5_Prediction/prediction_results/Shap_values_ecoli.csv", fileEncoding = "UTF-8", row.names = T)
+
 ```
 
-Plotting summarized average SHAP values by Indicator Group for E.coli estimates
+Plotting summarized average SHAP values by Indicator Group for E.coli
+estimates
+
 ```{r}
 SHAP_values_Ecoli_grouped <- mean_values_ecoli %>% 
   group_by(Indicator.Group) %>% 
@@ -190,7 +205,9 @@ coord_flip() +
 
 Plot_SHAP_Ecoli_grouped
 ```
+
 Create the SHAP summary plot
+
 ```{r}
 shap_summary_plot_ecoli <- h2o.shap_summary_plot(rf_model_ecoli_final, regMatrixH2O_e.coli_reg_39)
 print(shap_summary_plot_ecoli)
@@ -214,8 +231,10 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
         theme_bw() 
 ```
 
-##Plot results from best RF Model for E.coli contamination
-Plot Predicted versus Observed E.coli contamination with results from leave-one-country-out holdout predictions.
+Plot results from best RF Model for E.coli contamination Plot as
+predicted versus observed E.coli contamination with results from
+leave-one-country-out holdout predictions.
+
 ```{r}
 TrainAndPredicted_ecoli <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_ecoli_final))
 
@@ -225,7 +244,7 @@ TrainAndPredicted_ecoli$nr_HH_in_region <- df.MICS_envir_human_e.coli_39$Househo
 
 TrainAndPredicted_ecoli$Country <- combined_MICS_envir_human_e.coli $NAME_0
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
 TrainAndPredicted_ecoli<- joinWithCountryIncomeGroups(TrainAndPredicted_ecoli,UN_Population_Devision_Names, country_Income_Groups)
 
@@ -258,6 +277,7 @@ plotPredObs_ecoli
 ```
 
 ## E.coli prediction at global administrative (GADM) area level 1
+
 ```{r}
 #level 1 prediction
 
@@ -289,14 +309,15 @@ FullPrediction_ecoli$Income.group[FullPrediction_ecoli$country == "Saint Helena"
 FullPrediction_ecoli <- FullPrediction_ecoli %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_ecoli, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/Fullprediction_Ecoli_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_ecoli, "./5_Predictions/prediction_results/Fullprediction_Ecoli_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
-##Descriptive analysis of E.coli results
-```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+## Descriptive analysis of E.coli results
 
-Ecoli_originalprediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
+```{r}
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Ecoli_originalprediction <- read.csv( "./5_Predictions/prediction_results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -318,7 +339,9 @@ Ecoli_originalprediction <- Ecoli_originalprediction  %>%
          Income.group == "Upper middle income")
 
 ```
-## estimates of across all LMICs
+
+## E.coli estimates of across all LMICs
+
 ```{r}
 Ecoli_originalprediction$numberOfPeopleinRegion <- Ecoli_originalprediction$GPWv4_Population_2020
 Ecoli_originalprediction$numberOfPeopleWithoutEcoliInRegion <- Ecoli_originalprediction$GPWv4_Population_2020*Ecoli_originalprediction$predict
@@ -331,7 +354,9 @@ Ecoli_originalprediction$numberOfPeopleEcoliInRegion <- Ecoli_originalprediction
 Ecoli_originalprediction$numberOfPeopleLMICSEcoli <- sum(Ecoli_originalprediction$numberOfPeopleEcoliInRegion)# 3102063955
 
 ```
-## estimates at UN region 
+
+## E.coli estimates at UN region
+
 ```{r}
 Ecoli_originalprediction_UNregion <- Ecoli_originalprediction %>% 
   group_by(UNRegionName) %>% 
@@ -356,7 +381,9 @@ coord_flip() +
   theme_bw()
 UNSubregionoriginal_numberEcoli
 ```
-## estimates at UNsubregion levels
+
+## E.coli estimates at UNsubregion levels
+
 ```{r}
 populationEcoli_original_UNSubregion <- Ecoli_originalprediction %>% 
   group_by(UNSubRegionName) %>% 
@@ -390,9 +417,11 @@ nationalpopulation_originalPercentageNoEcoli_ $propotionEcoli <- 1-nationalpopul
 
 ```
 
-#Modelling drinking water availability
+# Modeling drinking water availability
 
-Here we create a dataframe with indicators for drinking water availability.
+Here we create a dataframe with indicators for drinking water
+availability.
+
 ```{r}
 df.MICS_HH_availability <-createDataFrameWithAvailabilty(df.MICS_HH)
 
@@ -403,19 +432,24 @@ Availability_training <-createIndicatorForRegionalAvailability(df.MICS_HH_availa
 ```
 
 Joining dataframe with earth observation data
+
 ```{r}
 combined_Availability_envir_human_39 <-  Availability_training %>%
     left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
     select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("AvailableAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
 ```
 
+## Grid-search: Tuning hyperparameters of random forest model with 39
 
-##Grid-search: Tuning hyperparameters of random forest model with 39 features
-Outcome: access to drinking water availability
+features Outcome: access to drinking water availability
+
+grid-search to iteratively explore the results of a suite of random
+forest models trained on the selected covariates. A list of
+hyperparameters was selected, varying in (1) the number of trees, (2)
+the number of variables sampled at each split and (3) the minimum
+observations per leaf and (4) sampling rate.
+
 ```{r}
-## modelling water availability
-## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
-
 h2o.shutdown()
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
@@ -466,11 +500,12 @@ summary(rf.grid_, show_stack_traces = TRUE)
 
 print(rf.grid.perf@summary_table)
 
-#write.csv(rf.grid.perf@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/results_grid_search/rf_grid_Avail_reg_39_newest.csv")
+#write.csv(rf.grid.perf@summary_table,"./4_Training/results_grid_search/rf_grid_Avail_reg_39_newest.csv")
 
 ```
 
-best RF model with 39 features for water availability
+## best RF model with 39 features for water availability
+
 ```{r}
 # random forest regression
 
@@ -493,7 +528,9 @@ h2o.mae(rf_model_Avail_final,  xval = TRUE)
 
 ```
 
-Plot Predicted versus Observed Availability with results from leave-one-country-out holdout predictions.
+Plot Predicted versus Observed Availability with results from
+leave-one-country-out holdout predictions.
+
 ```{r}
 TrainAndPredicted_Avail <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_Avail_final))
 
@@ -535,7 +572,8 @@ stat_smooth(se = T,
 plotPredObs_Avail                                                                                       
 ```
 
-## Calculating and plotting SHAP values for Water Availability predictions
+Calculating and plotting SHAP values for Water Availability predictions
+
 ```{r}
 # Create the SHAP summary plot
 shap_summary_plot_avail <- h2o.shap_summary_plot(rf_model_Avail_final, regMatrixH2O_Avail_reg_39)
@@ -548,7 +586,7 @@ shap_values_Avail <- predict_contributions.H2OModel(
 mean_values_Avail <- as.data.frame(colMeans(abs(as.data.frame(shap_values_Avail) %>% select(-BiasTerm)))); names(mean_values_Avail) <- 'Mean'
 mean_values_Avail %>% arrange(desc(Mean))
 
-#write.csv(mean_values_Avail, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Shap_values_Avail_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Avail, "./5_Predictions/prediction_results/Shap_values_Avail_newest.csv", fileEncoding = "UTF-8", row.names = T)
 
 mean_values_Avail <- cbind(feature = rownames(mean_values_Avail), mean_values_Avail)
 
@@ -557,7 +595,9 @@ mean_values_Avail  <- rename39Features(mean_values_Avail)
 mean_values_Avail <- group39FeaturesInto5IndicatorGroups(mean_values_Avail)
 ```
 
-Plotting summarized average SHAP values by Indicator Group for Availability
+Plotting summarized average SHAP values by Indicator Group for
+Availability
+
 ```{r}
 SHAP_values_Avail_grouped <- mean_values_Avail %>% 
   group_by(Indicator.Group) %>% 
@@ -576,7 +616,7 @@ coord_flip() +
 Plot_SHAP_Avail_grouped
 ```
 
-##Availability prediction at global administrative (GADM) area level 1
+## Availability prediction at global administrative (GADM) area level 1
 
 ```{r}
 #level 1 prediction
@@ -612,9 +652,11 @@ FullPrediction_Avail <- FullPrediction_Avail %>%
 #write.csv(FullPrediction_Avail, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Fullprediction_Avail_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
-#Modeling drinking water accessibility
+# Modeling drinking water accessibility
 
-Here we create a dataframe with indicators for drinking water accessibility.
+Here we create a dataframe with indicators for drinking water
+accessibility.
+
 ```{r}
 df.MICS_HH_accessibility <-createDataFrameWithAccessibilityIndicator(df.MICS_HH)
 
@@ -625,13 +667,15 @@ Accessibility_training <-createIndicatorForRegionalWaterAccessibility (df.MICS_H
 ```
 
 Joining dataframe with earth observation data
+
 ```{r}
 combined_Accessibility_envir_human_39 <-  Accessibility_training %>%
     left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
     select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("AccessAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
 ```
 
-RF models for water accessibility- using grid search
+## RF models for water accessibility- using grid search
+
 ```{r}
 ## modelling water accessibility
 ## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
@@ -652,7 +696,7 @@ combined_Accessibility_envir_human_39 <- combined_Accessibility_envir_human_39 %
 combined_Access_envir_regMatrix_39 <- combined_Accessibility_envir_human_39%>%
   select(all_of(bandNames_39),all_of(varToModel_Access),HouseholdsInRegion.Freq.x, country_fold)
 
-write.csv(combined_Access_envir_regMatrix_39 , "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Regre_Matrix_Access.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(combined_Access_envir_regMatrix_39 , "./5_Prediction/prediction_results/Regre_Matrix_Access.csv", fileEncoding = "UTF-8", row.names = F)
 
 regMatrixH2O_Access_reg_39 <- as.h2o(combined_Access_envir_regMatrix_39, destination_frame = "regMatrixH2O_Access_reg_39")
 
@@ -688,10 +732,12 @@ summary(rf.grid_39_Access, show_stack_traces = TRUE)
 
 print(rf_grid_perf_Access@summary_table)
 
-#write.csv(rf_grid_perf_Access@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/grid_search_results/rf_grid_Access_reg_39_newest.csv")
+#write.csv(rf_grid_perf_Access@summary_table,"./4_Training/grid_search_results/rf_grid_Access_reg_39_newest.csv")
 
 ```
-best RF model with 39 features for water accessibility
+
+## best RF model with 39 features for water accessibility
+
 ```{r}
 # random forest regression
 
@@ -713,7 +759,9 @@ h2o.r2(rf_model_Access_final, xval = TRUE)
 h2o.mae(rf_model_Access_final, xval = TRUE)
 ```
 
-Plot Predicted versus Observed Accessibility with results from leave-one-country-out holdout predictions.
+Plot Predicted versus Observed Accessibility with results from
+leave-one-country-out holdout predictions.
+
 ```{r}
 TrainAndPredicted_Access <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_Access_final))
 
@@ -755,7 +803,8 @@ stat_smooth(se = T,
 plotPredObs_Access                                                                                       
 ```
 
-## Calculating and plotting SHAP values for Water Accessibility predictions
+Calculating and plotting SHAP values for Water Accessibility predictions
+
 ```{r}
 # Create the SHAP summary plot
 shap_summary_plot_Access <- h2o.shap_summary_plot(rf_model_Access_final, regMatrixH2O_Access_reg_39)
@@ -774,10 +823,11 @@ mean_values_Access  <- rename39Features(mean_values_Access)
 
 mean_values_Access <- group39FeaturesInto5IndicatorGroups(mean_values_Access)
 
-#write.csv(mean_values_Access, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Access, "./5_Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
 ```
 
 Plotting summarized average SHAP values by Indicator Group for Access
+
 ```{r}
 SHAP_values_Access_grouped <- mean_values_Access %>% 
   group_by(Indicator.Group) %>% 
@@ -797,6 +847,7 @@ Plot_SHAP_Access_grouped
 ```
 
 ## Accessibility prediction at global administrative (GADM) area level 1
+
 ```{r}
 #level 1 prediction
 
@@ -828,13 +879,15 @@ FullPrediction_Access$Income.group[FullPrediction_Access$country == "Saint Helen
 FullPrediction_Access <- FullPrediction_Access %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_Access, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/FullPrediction_Access_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_Access, "./5_Prediction/prediction_results/FullPrediction_Access_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
-##Descriptive analysis of accessibility results
-```{r}
-#source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
-Access_prediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
+## Descriptive analysis of accessibility results
+
+```{r}
+#source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Access_prediction <- read.csv( "./5_Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -854,7 +907,9 @@ Access_prediction <- Access_prediction  %>%
          Income.group == "Lower middle income" |
          Income.group == "Upper middle income")
 ```
+
 ## Accessibility estimates across all LMICs
+
 ```{r}
 Access_prediction$numberOfPeopleinRegion <- Access_prediction$GPWv4_Population_2020
 Access_prediction$numberOfPeopleWithAccessInRegion <- Access_prediction$GPWv4_Population_2020*Access_prediction$predict
@@ -863,7 +918,9 @@ Access_prediction$totalNumberOfPeopleLMICS <- sum(Access_prediction$numberOfPeop
 Access_prediction$NumberOfPeopleLMICSwithAccess <- sum(Access_prediction$numberOfPeopleWithAccessInRegion)#4203853245
 
 ```
+
 ## Access estimates at regional level
+
 ```{r}
 Access_prediction$numberOfPeopleWithoutAccessInRegion <- Access_prediction$numberOfPeopleinRegion-Access_prediction$numberOfPeopleWithAccessInRegion
 
@@ -884,8 +941,11 @@ Access_prediction_UNSubregion <- Access_prediction %>%
 
 ```
 
-#Random Forest Model - Outcome: water source type
-Here we create a dataframe with indicators for drinking water source type (proportion of people using an improved drinking water source).
+# Modeling water source type
+
+Here we create a dataframe with indicators for drinking water source
+type (proportion of people using an improved drinking water source).
+
 ```{r}
 df.MICS_HH_improved <-createDataFrameWithmainWaterSourceType(df.MICS_HH)
 
@@ -896,16 +956,22 @@ Improved_training <-createIndicatorForRegionalWaterSourceType(df.MICS_HH_improve
 ```
 
 Joining dataframe with earth observation data
+
 ```{r}
 combined_Improved_envir_human_39 <-  Improved_training %>%
     left_join(EO_features, by = c("HH7_region"="HH7_region")) %>%
     select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("ImprovedAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
 ```
 
-Grid Search
-```{r}
-## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+## Grid Search for water source type model
 
+grid-search to iteratively explore the results of a suite of random
+forest models trained on the selected covariates. A list of
+hyperparameters was selected, varying in (1) the number of trees, (2)
+the number of variables sampled at each split and (3) the minimum
+observations per leaf and (4)sampling rate.
+
+```{r}
 h2o.shutdown(prompt = FALSE)
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
@@ -956,11 +1022,11 @@ summary(rf.grid_39_improved, show_stack_traces = TRUE)
 
 print(rf_grid_perf_improved@summary_table)
 
-#write.csv(rf_grid_perf_improved@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/grid_search_results_rf_grid_improved_reg_39_newest.csv")
+#write.csv(rf_grid_perf_improved@summary_table,"./4_Training/results_grid_search/grid_search_results_rf_grid_improved_reg_39_newest.csv")
 
 ```
 
-##Best RF model for predicting water source type
+## Best RF model for predicting water source type
 
 ```{r}
 rf_model_improved_final <- h2o.randomForest(
@@ -980,7 +1046,10 @@ h2o.r2(rf_model_improved_final, xval = TRUE)
 h2o.mae(rf_model_improved_final, xval = TRUE)
 
 ```
-Plot predicted versus Observed populations using improved drinking water sources with results from leave-one-country-out holdout predictions.
+
+Plot predicted versus Observed populations using improved drinking water
+sources with results from leave-one-country-out holdout predictions.
+
 ```{r}
 TrainAndPredicted_Improved <- as.data.frame(h2o.cross_validation_holdout_predictions(rf_model_improved_final))
 
@@ -1022,7 +1091,7 @@ stat_smooth(se = T,
 plotPredObs_Improved                                                                                       
 ```
 
-##Calculating and plotting SHAP values for improved source predictions
+Calculating and plotting SHAP values for improved source predictions
 
 ```{r}
 #Calculating average SHAP values
@@ -1039,10 +1108,12 @@ mean_values_Improved  <- rename39Features(mean_values_Improved)
 
 mean_values_Improved <- group39FeaturesInto5IndicatorGroups(mean_values_Improved)
 
-#write.csv(mean_values_Improved, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/predition_results/Shap_values_Improved_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_values_Improved, "./5_Prediction/predition_results/Shap_values_Improved_newest.csv", fileEncoding = "UTF-8", row.names = T)
 ```
 
-Plotting summarized average SHAP values by Indicator Group for Water Source Type
+Plotting summarized average SHAP values by Indicator Group for Water
+Source Type
+
 ```{r}
 SHAP_values_Improved_grouped <- mean_values_Improved %>% 
   group_by(Indicator.Group) %>% 
@@ -1060,7 +1131,9 @@ coord_flip() +
 
 Plot_SHAP_Improved_grouped
 ```
+
 Create the SHAP summary plot
+
 ```{r}
 shap_summary_plot_Improved <- h2o.shap_summary_plot(rf_model_improved_final, regMatrixH2O_improved_reg_39)
 print(shap_summary_plot_Improved)
@@ -1088,8 +1161,10 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
 
 ```
 
+## Improved drinking water source prediction at global administrative
 
-##Improved drinking water source prediction at global administrative (GADM) area level 1
+(GADM) area level 1
+
 ```{r}
 #level 1 prediction
 
@@ -1121,14 +1196,15 @@ FullPrediction_Improved$Income.group[FullPrediction_Improved$country == "Saint H
 FullPrediction_Improved <- FullPrediction_Improved %>%
   na.omit(Income.group)
 
-#write.csv(FullPrediction_Improved, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction_results/FullPrediction_Improved_newest.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(FullPrediction_Improved, "./5_Prediction/prediction_results/FullPrediction_Improved_newest.csv", fileEncoding = "UTF-8", row.names = F)
 ```
 
-##Descriptive analysis of improved drinking water source results
-```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+## Descriptive analysis of improved drinking water source results
 
-Improved_prediction <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
+```{r}
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
+Improved_prediction <- read.csv( "./5_Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -1148,7 +1224,9 @@ Improved_prediction <- Improved_prediction  %>%
          Income.group == "Lower middle income" |
          Income.group == "Upper middle income")
 ```
-## estimates of across all LMICs
+
+## Water source type estimates of across all LMICs
+
 ```{r}
 Improved_prediction$numberOfPeopleinRegion <- Improved_prediction$GPWv4_Population_2020
 Improved_prediction$numberOfPeopleWithImprovedInRegion <- Improved_prediction$GPWv4_Population_2020*Improved_prediction$predict

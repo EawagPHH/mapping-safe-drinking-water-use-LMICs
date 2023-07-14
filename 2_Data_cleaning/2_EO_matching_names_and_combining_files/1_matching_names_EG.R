@@ -8,14 +8,9 @@ library(tidyverse)
 # Define custom operator
 `%notin%` <- Negate(`%in%`)
 
-# Set working directory
-setwd("./2_Data_cleaning/1_EO_matching_names_and_combining_files")
-
-
 # Load unicef database
-unicef <- fread("./2_Data_cleaning/1_EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
+unicef <- fread("./2_Data_cleaning/2_EO_matching_names_and_combining_files/MICS_householdsurveys_regionNames.csv", encoding = "UTF-8") %>% 
   rowid_to_column(var = "ID") 
-
 
 df <- unicef %>% 
   select(HH7_region, place) %>% 
@@ -33,7 +28,9 @@ table_Bangladesh_df <- table( df[ df$country == "Bangladesh" , c("name")] )
 
 # GADM database of region/district polygons is used for sampling;
 # Check whether names match
-GADM_regions <- fread("all_regions_GADM.csv", encoding = "UTF-8")
+#GADM_regions <- fread("./2_Data_cleaning/2_EO_matching_names_and_combining_files/all_regions_GADM.csv", encoding = "UTF-8")
+GADM_regions <- read.csv("./2_Data_cleaning/2_EO_matching_names_and_combining_files/all_regions_GADM.csv", encoding = "UTF-8")
+
 head(GADM_regions)
 
 matched_names_lvl4 <- inner_join(df, (GADM_regions %>% mutate(NAME_4_matched = NAME_4, country_matched = NAME_0)), 
@@ -84,7 +81,6 @@ matched_names_fuzz <- list()
 
 countries_to_match <- unique(unmatched_names$country)
 
-
 for(j in c(1,2,3,4)){
 
 for(i in countries_to_match){
@@ -97,7 +93,7 @@ GADM_to_match <- GADM_regions %>%
 unmatched_names_sub <- unmatched_names %>% filter(country == i)
 
 matched_names_fuzz[[i]][[j]] <- stringdist_join(unmatched_names_sub, GADM_to_match, 
-                                 by = c(#"country" = "NAME_0",
+                                 by = c("country" = "NAME_0",
                                         "name" = paste0("NAME_", j)),
                                  mode = "left",
                                  ignore_case = FALSE, 

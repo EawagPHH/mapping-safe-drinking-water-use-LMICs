@@ -1,5 +1,5 @@
 ---
-title: "PCA_cluster_analysis"
+title: "cluster_analysis"
 author: "Esther"
 date: "07/02/2022"
 output: html_document
@@ -8,7 +8,7 @@ output: html_document
 ```{r}
 # Set working directory
 knitr::opts_chunk$set(echo = TRUE, root.dir = 
-"C:/Users/Esther/Documents/GitHub/MICS_SMDW/Feature Selection")
+"./3_Feature_selection")
 
 library(data.table)
 library(factoextra)
@@ -19,7 +19,7 @@ library(Hmisc)
 
 ## Pre-selected environmental varibales
 
-We pre-elected 117 variables based on their relevance for modelling safely managed drinking water as anthropogenic, hydrogeologic, climatic, topographic and biogeographic indicators from a list of 384 variables used in ecological modelling (compiled by the Crowther Lab). 
+We pre-elected 117 variables based on their relevance for modelling safely managed drinking water as anthropogenic, hydrogeologic, climatic, topographic and biogeographic indicators from a list of 384 variables used in ecological modelling (compiled by the ETHZ Crowther Lab). 
 
 ```{r}
 bandNames <- c(
@@ -146,42 +146,19 @@ bandNames <- c(
   #"WWF_Ecoregion"
 )
 
-
-
 ```
+
 Load 100 000 randomly sampled data points from the selected features layers and then exclude observations with NAs. 
 ```{r}
 # Load data from 100k randomly sampled data points
-random_points_data <- fread("/Users/Esther/Documents/GitHub/MICS_SMDW/Feature Selection/subs100k.csv") %>% mutate_all(as.numeric)
+random_points_data <- fread("./switchdrive/Data_for_reviewers/EnvironmentalFeatures/subs100k.csv") %>% mutate_all(as.numeric)
 
 #select variables 
 random_points <- random_points_data %>% select(all_of(bandNames)) %>%
   na.omit() #loose about 20000 observations which have NAs
 ```
-#PCA for determining the number of dimensions needed to describe the variation in the dataset
 
-```{r}
-res.pca <- prcomp((random_points), scale = TRUE)
-
-fviz_screeplot(res.pca, addlabels = TRUE, ylim = c(0, 50))
-
-get_eig(res.pca) %>% 
-  rownames_to_column(var = "Dimensions") %>%
-  mutate(Dimensions = as.numeric(str_remove(Dimensions, "Dim."))) %>% 
-  arrange(Dimensions) %>% 
-  ggplot(aes(x = Dimensions, y = cumulative.variance.percent)) +
-  geom_point() +
-  theme(axis.text.x = element_text(angle = 90))
-
-#Results taken from table:
-# Dimensions to describe 80% of variation: 24 
-# Dimensions to describe 90% of variation: 39
-# Dimensions to describe 95% of variation: 51
-# Dimensions to describe 99% of variation: 73
-# Dimensions to describe 99.9% of variation: 91
-
-```
-# Use clustering of variables to reduce the number of features for our model.
+## Use clustering of variables to reduce the number of features for our model.
 ```{r}
 
 library(ClustOfVar)
@@ -193,7 +170,7 @@ for (k in c(24,39,51,73,91)){
   cuttree <- cutreevar(hclust, k = k)
   
   df <- cuttree$cluster %>% as.data.frame() %>% rename('cluster' = 1) %>% rownames_to_column("variable") %>% arrange(cluster)
-  df %>% fwrite(paste0('/Users/Esther/Documents/GitHub/MICS_SMDW/Feature Selection/clustofvar_50k_',k,'.csv'))
+  df %>% fwrite(paste0('./Feature Selection/clustofvar_50k_new_',k,'.csv'))
   
 }
 ```

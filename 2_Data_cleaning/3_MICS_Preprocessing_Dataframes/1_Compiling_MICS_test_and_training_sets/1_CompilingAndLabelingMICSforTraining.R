@@ -5,10 +5,10 @@ library(foreign)
 library(tidyr)
 library(dplyr)
 
-source("./Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForLabelingHHMICS.R")
-source("./Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForExtractingVariablesFromMICS.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForLabelingHHMICS.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForExtractingVariablesFromMICS.R")
 
-PATH_TO_SURVEYS_TRAINING <- "./Data/HH_MICS_training"
+PATH_TO_SURVEYS_TRAINING <- "~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/HH_MICS_training"
 loadSurveys(PATH_TO_SURVEYS_TRAINING)
 
 #Creating Variable with Country name
@@ -88,4 +88,4 @@ df.first_MICS <- VariablesWhichWereFactorsAsCharacterToAvoidGenerationOfNA(df.fi
 df.first_MICSLabeled <-labelingSurveyVariableResponses(as.data.frame(df.first_MICS))
 
 
-write.csv(df.first_MICSLabeled, "df_MICS_SMDW.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(df.first_MICSLabeled, "df_MICS_SMDW.csv", fileEncoding = "UTF-8", row.names = F)

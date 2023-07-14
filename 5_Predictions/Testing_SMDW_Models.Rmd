@@ -1,15 +1,17 @@
 ---
 title: "Testing SMDW Random Forest Models"
 ---
+# Testing Safely Managed Drinking Water Model on independent test set 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, root.dir = 
-"~/GitHub/mapping-safe-drinking-water-use-LMICs")
+"./5_Predictions")
 
 library(data.table)
 library(tidyverse)
 library(dplyr)
 ```
+
 Loading (1) Multiple Indicator Cluster Survey (MICS) data for our test set as well as (2) a list with region names from the MICS surveys (HH7_region) in the test set matched with corresponding GADM areas at level 1.
 
 ```{r}
@@ -29,7 +31,7 @@ We had 3 different cases when matching HH7_region names from the MICS with a GAD
 24= HH7_region is similar to several GADM level 1 areas together but differences exist (Nepal n=2)
 
 ```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/FunctionsForExtractingVariablesFromMICS.R", encoding = 'UTF-8')
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/FunctionsForExtractingVariablesFromMICS.R", encoding = 'UTF-8')
 
 #For case 3 we replace the HH7_region Name With Corresponding GADM level 1 Name 
 df.MICS_test <- replaceHH7_regionNameWithCorrespondingGADMNAme(df.MICS_test)
@@ -41,7 +43,7 @@ matchedRegionNames_test <- replaceHH7NameWithCorrespondingGADMNAme(matchedRegion
 Creating indicators for Safely Managed Drinking Water (SMDW) and calculating coverage rates at HH7_region level and country level.
 
 ```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R")
 
 df.MICS_SMDW_FullTestSet <- creatingSMDWIndicators_forTestSet(df.MICS_test)
 
@@ -53,14 +55,13 @@ SMDW_test_country <- createIndicatorForCountrySMDWCoverage(df.MICS_SMDW_FullTest
 Next we match our SMDW predictions at GADM area level 1 with our calculated SMDW coverage rates at a) HH7_region level and b) country level. We do this for predictions generated from our best performing random forest model built on the original training set as well as for the average prediction of 100 random forest models build on geographically stratified training sets.
 
 ```{r}
-
 #Load predicted values from highest performing model and average of geographically stratified models
 
-SMDW_Predictions <- read.csv( "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/SMDWPredictions_forTest.csv", fileEncoding = "UTF-8") %>% 
+SMDW_Predictions <- read.csv( "./5_Predictions/prediction_results/SMDWPredictions_forTest.csv", fileEncoding = "UTF-8") %>% 
   select(predict.x, mean,GID_1, GID_0)
 
 #Load and join population counts for 2020 to prediction data frame
-Population_2020 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8") %>% 
+Population_2020 <- read.csv("./1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv", encoding = "UTF-8") %>% 
   select(GID_1, GPWv4_Population_2020)
 
 SMDW_Predictions <- SMDW_Predictions %>% 
@@ -138,7 +139,6 @@ SMDW_test_HH7_100pred <- SMDW_100Predictions_HH7 %>%
   unique() %>%
   na.omit()
 
-
 SMDW_test_country_original <- SMDW_originalPrediction_country %>% 
   left_join(SMDW_test_country, by = c("country"="country"),all=TRUE) %>% 
   select("predict_country","SMDWcoverageAtCountryLevel","country", "HouseholdsInCountry.Freq.x", "GID_0") %>% 
@@ -187,7 +187,7 @@ Plotting test set at HH7
 ```{r}
 # Load data frame with country Income Group
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
 country_Income_Groups <- readCountryIncomeGroup() %>% 
   select("Code", "Income.group")

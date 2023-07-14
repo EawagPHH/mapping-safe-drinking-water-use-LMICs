@@ -1,6 +1,6 @@
 #title: "Compiling and Labeling Multiple Indicator Cluster Survey Data for Testing Set"
 
-setwd("~GitHub\\mapping-safe-drinking-water-use-LMICs\\Data_cleaning\\MICS_Preprocessing_Dataframes\\Compiling_MICS_test_and_training_sets")
+setwd("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets")
 
 library(foreign)
 library(tidyr)
@@ -13,7 +13,7 @@ library(surveytoolbox)
 source("FunctionsForLabelingHHMICS.R")
 source("FunctionsForExtractingVariablesFromMICS.R")
 
-PATH_TO_SURVEYS_TESTING <- "~/GitHub/mapping-safe-drinking-water-use-LMICs/Data/HH_MICS_test"
+PATH_TO_SURVEYS_TESTING <- "~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/HH_MICS_test"
 
 loadSurveys(PATH_TO_SURVEYS_TESTING)
 
@@ -122,5 +122,5 @@ df.MICS.SMDW_test$WS8 <- as.character(df.MICS.SMDW_test$WS8)
 
 df.MICS.SMDW_testLabeled <- relabelingSurveyQuestionResponses(df.MICS.SMDW_test,WS1,WS2,WS3,WS4,WS7,WS8,WQ27)
 
-write.csv(df.MICS.SMDW_testLabeled, "df_SMDW_test_final.csv", fileEncoding = "UTF-8", row.names = F)
+#write.csv(df.MICS.SMDW_testLabeled, "df_SMDW_test_final.csv", fileEncoding = "UTF-8", row.names = F)
 

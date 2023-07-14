@@ -2,12 +2,12 @@
 
 
 readCountryNamesOfUNPopulationDivisionWorldPopulationProspects <- function(){
-  UN_Population_Devision_Names<- read.csv(here("Data/CountryNamesUNPopulationDivisionWorldPopulationProspects.csv"), encoding = "UTF-8") 
+  UN_Population_Devision_Names<- read.csv("./1_Data/CountryNamesUNPopulationDivisionWorldPopulationProspects.csv", encoding = "UTF-8") 
   return(UN_Population_Devision_Names)
 }
 
 readUNSDMethodologyGlobalRegions <- function(){
-  UN_Population_Devision_Names<- read.csv(here("Data/UNSDMethodologyGlobalRegions.csv"), encoding = "UTF-8") 
+  UN_Population_Devision_Names<- read.csv("./1_Data/UNSDMethodologyGlobalRegions.csv", encoding = "UTF-8") 
   return(UN_Population_Devision_Names)
 }
 
@@ -20,7 +20,7 @@ renameCountryNamesAccordingToUNPopulationDevision <- function(df){
 
 readEarthObservationFeaturesAndRenameCountriesAccordingToUN_WPP <- function(){
   
-  EO_features <- read.csv(here("Data/EnvironmentalFeatures/GADM_environmental_trainingData_final.csv"), encoding = "UTF-8") 
+  EO_features <- read.csv("./1_Data/EnvironmentalFeatures/GADM_environmental_trainingData_final.csv", encoding = "UTF-8") 
   
   EO_features <-renameCountryNamesAccordingToUNPopulationDevision(EO_features)
   
@@ -28,17 +28,17 @@ readEarthObservationFeaturesAndRenameCountriesAccordingToUN_WPP <- function(){
 }
 
 readHouseHoldSurveyData <- function(){
-  df.MICS_HH <- read.csv(here("Data/HH_MICS_training/df_MICS_SMDW_250222.csv"), encoding = "UTF-8")
+  df.MICS_HH <- read.csv("./1_Data/HH_MICS_training/df_MICS_SMDW_250222.csv", encoding = "UTF-8")
   return(df.MICS_HH)
 }
 
 readHouseHoldSurveyDataForTestSet <- function(){
-  df.MICS_HH <- read.csv("./Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/df_SMDW_test_final.csv", encoding = "UTF-8")
+  df.MICS_HH <- read.csv("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/df_SMDW_test_final.csv", encoding = "UTF-8")
   return(df.MICS_HH)
 }
 
 readMatchedRegionNamesForTestSet <- function(){
-  df.MICS_HH <- read.csv("./Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet.csv", encoding = "UTF-8")
+  df.MICS_HH <- read.csv("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet.csv", encoding = "UTF-8")
   return(df.MICS_HH)
 }
   
@@ -80,7 +80,7 @@ joinWithCountryUNGlobalRegions <- function(regMatrix_SMDW, UN_Population_Devisio
 }
     
 readAndRenameStandardGlobalRegionNames <- function(){
-  UNStandardGlobalRegion <- read.csv(here("Data/UNSDMethodologyGlobalRegions.csv"), encoding = "UTF-8")
+  UNStandardGlobalRegion <- read.csv(here("1_Data/UNSDMethodologyGlobalRegions.csv"), encoding = "UTF-8")
   
   UNStandardGlobalRegion <- UNStandardGlobalRegion %>% 
     select("Region.Code","Region.Name","Sub.region.Code", "Sub.region.Name", "ISO.alpha3.Code","Least.Developed.Countries..LDC.","Land.Locked.Developing.Countries..LLDC.", "Small.Island.Developing.States..SIDS.")
@@ -94,7 +94,7 @@ return(UNStandardGlobalRegion)
 }
 
 readCountryIncomeGroup <- function(){
-  countryIncomeGroup <- read.csv("./Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
+  countryIncomeGroup <- read.csv("./1_Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
   
   countryIncomeGroup <- countryIncomeGroup %>% 
     select("Code", "Region", "Income.group")
@@ -115,7 +115,7 @@ renameCountryCodeForKosovo <- function(countryIncomeGroup){
   
 
 readAndRenameCountryIncomeGroup <- function(){
-  countryIncomeGroup <- read.csv("./Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
+  countryIncomeGroup <- read.csv("./1_Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
   
   countryIncomeGroup[countryIncomeGroup == "XKX"] <- "XKO"
 
@@ -161,8 +161,3 @@ renameUNRegionForKosovo <- function(df){
 
 return(df)
 }
-
-
-
-
-

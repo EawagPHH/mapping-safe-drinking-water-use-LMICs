@@ -3,13 +3,14 @@ title: "RF_SMDW_final"
 author: "Esther Greenwood"
 output: html_document
 ---
-# Modelling Safely Managed Drinking Water in low and middle income countries
+
+# Modeling Safely Managed Drinking Water in low and middle income countries
 
 Here we model access to safely managed drinking water (SMDW) using random forest models with Earth Observation and Multiple Indicator Cluster Survey (MICS) data.
 
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, root.dir = 
-"~/GitHub/mapping-safe-drinking-water-use-LMICs")
+"./4_Training")
 
 library(data.table)
 library(tidyverse)
@@ -18,10 +19,10 @@ library(dplyr)
 library(here)
 ```
 
-##Loading ("reading") Data and joining data sets
+Loading ("reading") Data and joining data sets
 
 ```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
 
 UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
 
@@ -33,12 +34,12 @@ country_Income_Groups <- readCountryIncomeGroup()
 
 ```
 
-##Creating SMDW indicator
+## Creating SMDW indicator
 
 Here we create indicators for safely managed drinking water (SMDW) based on the criteria defined by the Framework of the Joint Monitoring Program. For drinking water to be safely managed survey responses must indicate that it is (1) free from E.coli contamination at the point of collection, (2) accessible in house or on plot, (3) taken from an improved water source and (4) household members must not have experience water insufficiency within the last month.
 
 ```{r}
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data_cleaning/MICS_Preprocessing_Dataframes/CreatingSMDWIndicator.R")
+source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R")
 
 df.MICS_HH_SMDW <- creatingSMDWIndicators(df.MICS_HH)
 
@@ -46,16 +47,17 @@ SMDW_training <- createIndicatorForRegionalSMDWCoverage(df.MICS_HH_SMDW)
 
 ```
 
-Combining SMDW indicator from MICS data with earth observation data 
+Combining SMDW indicator from MICS data with earth observation data
+
 ```{r}
 EO_features <- renameDuplicateHH7RegionNamesFromDifferentCountries(EO_features)
 
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/24_features.r")
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/39_features.R")
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/51_features.R")
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/73_features.R")
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/91_features.R")
-source("~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/feature_names/117_features.R")
+source("./4_Training/feature_names/24_features.r")
+source("./4_Training/feature_names/39_features.R")
+source("./4_Training/feature_names/51_features.R")
+source("./4_Training/feature_names/73_features.R")
+source("./4_Training/feature_names/91_features.R")
+source("./4_Training/feature_names/117_features.R")
 
 # environmental and human features
 combined_SMDW_envir_human_24 <- joiningWithFeatureSets(SMDW_training, EO_features, bandNames_24)
@@ -76,20 +78,19 @@ combined_SMDW_envir <- joiningWithFeatureSets(SMDW_training, EO_features, bandNa
 
 ```
 
-##Random Forest Modelling
+## Random Forest Modelling
 
-##Feature selection
+## Feature selection
 
 Here we run 5 random forest models with default parameters and different feature sets with 117, 73, 51, 39 and 24 features.
+
+1) random forest model with all 117 pre-selected features
 
 ```{r}
 
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
-#random forest model with all 117 pre-selected features
-
 varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
-
 
 #number countries for cross validation fold assignment
 
@@ -124,13 +125,11 @@ h2o.mae(rf_model_SMDW_117,xval = TRUE)
 
 h2o.shutdown()
 ```
+
+2) random forest model with 73 pre-selected features
+
 ```{r}
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
-
-#random forest model with 73 pre-selected features
-
-varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
-
 
 #number countries for cross validation fold assignment
 
@@ -164,11 +163,10 @@ h2o.r2(rf_model_SMDW_73, xval = TRUE)
 h2o.mae(rf_model_SMDW_73, xval=TRUE)
 
 ```
+
+3) random forest model with 51 pre-selected features
+
 ```{r}
-#random forest model with 51 pre-selected features
-
-varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
-
 
 #number countries for cross validation fold assignment
 
@@ -201,10 +199,10 @@ rf_model_SMDW_51 <- h2o.randomForest(
 h2o.r2(rf_model_SMDW_51, xval = TRUE)
 h2o.mae(rf_model_SMDW_51, xval=TRUE)
 ```
-```{r}
-#random forest model with 39 pre-selected features
 
-varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
+4) random forest model with 39 pre-selected features
+
+```{r}
 
 #number countries for cross validation fold assignment
 
@@ -236,10 +234,10 @@ rf_model_SMDW_39 <- h2o.randomForest(
 h2o.r2(rf_model_SMDW_39, xval = TRUE)
 h2o.mae(rf_model_SMDW_39, xval=TRUE)
 ```
-```{r}
-#random forest model with 24 pre-selected features
 
-varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
+5) random forest model with 24 pre-selected features
+
+```{r}
 
 #number countries for cross validation fold assignment
 
@@ -274,10 +272,11 @@ h2o.mae(rf_model_SMDW_24, xval=TRUE)
 h2o.shutdown()
 ```
 
-##Grid-search: Tuning hyperparameters of random forest model with 39 features
-```{r}
-## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
+## Grid-search: Tuning hyperparameters of random forest model with 39 features
 
+We conducted a grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split and (3) the minimum observations per leaf and (4) sampling rate
+
+```{r}
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
 varToModel_SMDW <-'SMDWcoverageAtRegionalLevel'
@@ -327,11 +326,13 @@ summary(rf.grid_39, show_stack_traces = TRUE)
 
 print(rf.grid.perf@summary_table)
 
-#write.csv(rf.grid.perf@summary_table,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Training/rf_grid_SMDW_reg_39.csv")
+#write.csv(rf.grid.perf@summary_table,"./4_Training/results_grid_search/rf_grid_SMDW_reg_39.csv")
 
+h2o.shutdown()
 ```
 
-##Best RF model for SMDW using 39 features (environmental and human indicators)
+## Best RF model for SMDW using 39 features (environmental and human indicators)
+
 ```{r}
 
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
@@ -347,13 +348,12 @@ combined_SMDW_envir_human_39 <- createColumnForCVfoldBasedOnCountries(combined_S
 combined_SMDW_envir_regMatrix_39 <- combined_SMDW_envir_human_39 %>%
   select(all_of(bandNames_39),all_of(varToModel_SMDW),HouseholdsInRegion.Freq.x, country_fold)
 
-#write.csv(combined_SMDW_envir_regMatrix_39, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/Regre_Matrix_SMDW.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(combined_SMDW_envir_regMatrix_39, "./5_Prediction/prediction_results/Regre_Matrix_SMDW.csv", fileEncoding = "UTF-8", row.names = T)
 
 #save regression Matrix as H2O data frames  
 regMatrixH2O_SMDW <- as.h2o(combined_SMDW_envir_regMatrix_39, destination_frame = "regMatrixH2O_SMDW")
 
 # random forest regression- with leave-one-country-out cross-validation
-
 rf_model_SMDW <- h2o.randomForest(
   y = varToModel_SMDW,
   training_frame = regMatrixH2O_SMDW,
@@ -373,14 +373,13 @@ rf_model_SMDW <- h2o.randomForest(
 h2o.r2(rf_model_SMDW, xval = TRUE)
 h2o.mae(rf_model_SMDW, xval = TRUE)
 
-
 h2o.varimp_plot(rf_model_SMDW)
 h2o.varimp(rf_model_SMDW)
 
 ```
 
-##Plot results from best RF Model for SMDWs
-Plot Predicted versus Observed SMDWs usage with results from leave-one-country-out holdout predictions.
+Plot results from best RF Model for SMDWs Plot Predicted versus Observed SMDWs usage with results from leave-one-country-out holdout predictions.
+
 ```{r}
 #create data frame with validation holdout predictions, observed SMDWs values
 
@@ -419,7 +418,8 @@ plotPredObs_SMDW
 
 ```
 
-Create compute SHAP values and plot SHAP Contribution summary 
+Create compute SHAP values and plot SHAP Contribution summary
+
 ```{r}
 shap_values_SMDW_39<- predict_contributions.H2OModel(
   rf_model_SMDW,
@@ -435,7 +435,7 @@ mean_SHAPvalues_SMDW  <- rename39Features(mean_SHAPvalues_SMDW)
 mean_SHAPvalues_SMDW <- group39FeaturesInto5IndicatorGroups(mean_SHAPvalues_SMDW)
 
 
-#write.csv(mean_SHAPvalues_SMDW, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/Shap_values_SMDW_39_newest.csv", fileEncoding = "UTF-8", row.names = T)
+#write.csv(mean_SHAPvalues_SMDW, "./5_Prediction/prediction_results/Shap_values_SMDW_39_newest.csv", fileEncoding = "UTF-8", row.names = T)
 
 shap_summary_plot <- h2o.shap_summary_plot(rf_model_SMDW, regMatrixH2O_SMDW)
 print(shap_summary_plot)
@@ -461,6 +461,7 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
 ```
 
 Plotting summarized average SHAP values by Indicator Group
+
 ```{r}
 library(tibble)
   
@@ -482,7 +483,8 @@ Plot_SHAP_SMDW_grouped
 
 ```
 
-##Random-fold cross validation results 
+Random-fold cross validation results 
+
 ```{r}
 combined_SMDW_envir_regMatrix_39_randomFold <- combined_SMDW_envir_human_39 %>%
   select(all_of(bandNames_39),all_of(varToModel_SMDW),HouseholdsInRegion.Freq.x)
@@ -513,7 +515,8 @@ h2o.mae(rf_model_SMDW_randomfoldCV, xval = TRUE)
 
 ```
 
-##Modelling with only human versus only environmental features
+## Modelling with only human versus only environmental features
+
 ```{r}
 #1) modelling only with human features
 
@@ -580,7 +583,7 @@ h2o.mae(rf_model_SMDW_envir, xval = TRUE)
 ```{r}
 #level 1 prediction
 
-EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+EO_GADM_level1 <- read.csv(here("1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
 
 regressionMatrixForPrediction <- EO_GADM_level1 %>%  
  select(all_of(bandNames_39))
@@ -613,7 +616,8 @@ FullPrediction_SMDW <- FullPrediction_SMDW %>%
 
 ```
 
-##Uncertainty analysis
+## Uncertainty analysis
+
 Here we calculate the Coefficient of Variation and Interquartile range across random forest models built off stratified bootstrapped samples of the training set.
 
 ```{r}
@@ -684,7 +688,8 @@ Plot_UNRegionDistribution_Prediction
 
 ```
 
-##Boot-strapping samples from training set with UN Global Regions as stratification categories
+## Boot-strapping samples from training set with UN Global Regions as stratification categories
+
 ```{r}
 #preparing data frame
 regMatrix_SMDW <- joiningWithFeatureSets(SMDW_training, EO_features, bandNames_39) %>% 
@@ -792,7 +797,7 @@ rf_predictions$GID_0 <-EO_GADM_level1$GID_0
 rf_predictions$percentile25 <- apply(rf_predictions[,1:100],1, quantile, probs= 0.25)
 rf_predictions$percentile75 <- apply(rf_predictions[,1:100],1, quantile, probs= 0.75)
 
- #write.csv(rf_predictions, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/100Bootstrap_SMDWPredictions.csv", fileEncoding = "UTF-8", row.names = F) 
+ #write.csv(rf_predictions, "./5_Prediction/prediction_results/100Bootstrap_SMDWPredictions.csv", fileEncoding = "UTF-8", row.names = F) 
 
 #Interquartile Range, Mean and Coefficient of Variation across RF model predictions
 NumberOfModels <- c(5, 10, 20, 30, 40, 50, 60, 70, 80,90, 100)
@@ -866,15 +871,16 @@ CoV_AcrossPredictions <- ggplot(rf_predictions_IQR,
 
 CoV_AcrossPredictions
 
-#write.csv(rf_predictions_IQR, "~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/IQR_CoV_Mean_ofSMDWModels_newest.csv", fileEncoding = "UTF-8", row.names = F) 
+#write.csv(rf_predictions_IQR, "./5_Prediction/prediction_results/IQR_CoV_Mean_ofSMDWModels_newest.csv", fileEncoding = "UTF-8", row.names = F) 
  
 ```
 
-##Descriptive analysis of results
+## Descriptive analysis of results
 
 In the next section we calculate numbers of people without SMDWs and coverage rates across all LMICS, at UN region level and at national level
+
 ```{r}
-rf_predictions <- read.csv("~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/100Bootstrap_SMDWPredictions.csv", fileEncoding = "UTF-8")
+rf_predictions <- read.csv("./5_Prediction/prediction_results/100Bootstrap_SMDWPredictions.csv", fileEncoding = "UTF-8")
 
 FullPrediction_SMDW_UNGlobalRegions <- FullPrediction_SMDW_UNGlobalRegions %>% 
   left_join(rf_predictions, by = c("GID_1"="GID_1", "GID_0"="GID_0"))
@@ -918,7 +924,7 @@ FullPrediction_SMDW_UNGlobalRegions$NumberOfPeopleNoSMDWinRegion_IQR_75 <- FullP
 #Number of people without SMDWs in LMICs (based on 75 percentile of prediction values of 100 RFs)
 sum(FullPrediction_SMDW_UNGlobalRegions$NumberOfPeopleNoSMDWinRegion_IQR_75)# 4131923213 = 63% of LMIC population
 
-#write.csv(FullPrediction_SMDW_UNGlobalRegions,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/SMDWPredictions_proportionAndNumberOfPeople_newest.csv") 
+#write.csv(FullPrediction_SMDW_UNGlobalRegions,"./5_Prediction/prediction_results/SMDWPredictions_proportionAndNumberOfPeople_newest.csv") 
 
 # Calculating Proportion Of LMIC population not using SMDWs at UN region level (with single best performing model predictions)
 
@@ -951,7 +957,6 @@ UNSubregion_numberSMDW <- ggplot(SMDW_predictions_UNSubregion, aes(x=reorder(UNS
 coord_flip() +
   theme_bw()
 
-
 #calculating the proportion of people without access to SMDWs at UN subregion level (results from single best RF)
 
 population_UNSubregion <- FullPrediction_SMDW_UNGlobalRegions %>% 
@@ -967,6 +972,7 @@ coord_flip() +
   theme_bw()
 
 ```
+
 ```{r}
 # Calculating SMDWs use at National level
 
@@ -1024,13 +1030,13 @@ nationalpopulationSMDWcoverage_$propotionwithoutSMDW_IQR_75 <- 1-nationalpopulat
 
 nationalpopulationSMDWcoverage_$propotionwithoutSMDW_mean <- 1-nationalpopulationSMDWcoverage_$nationalSMDWcoverage_mean
 
-#write.csv(nationalpopulationSMDWcoverage_,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/PredictionResultsNational_final_incl_mean_percentiles_newest.csv") 
+#write.csv(nationalpopulationSMDWcoverage_,"./5_Prediction/prediction_results/PredictionResultsNational_final_incl_mean_percentiles_newest.csv") 
 ```
 
-##Comparing national estimates with JMP Data
+## Comparing national estimates with JMP Data
 
 ```{r}
-JMP_SMDWs <- read.csv("~/GitHub/mapping-safe-drinking-water-use-LMICs/Data/JMP_2020_SMDWs_extracted.csv", encoding = "UTF-8") 
+JMP_SMDWs <- read.csv("switchdrive/Data_for_reviewers/JMP_2020_SMDWs_extracted.csv", encoding = "UTF-8") 
 
 #joining and preparing data frame with our predictions with SMDWs estimates reported by the JMP
 nationalPredictions_JMP_SMDWs <- nationalpopulationSMDWcoverage_ %>%
@@ -1088,9 +1094,11 @@ plotPredictionVsJMP_UNRegion <- ggplot(nationalPredictions_JMP_SMDWs_omitNA,
    #geom_linerange(data = nationalPredictions_JMP_SMDWs_omitNA, aes(xmin = nationalSMDWcoverage_IQR_25, xmax = nationalSMDWcoverage_IQR_75, size=.3))+
   theme_bw() + scale_color_npg()
 
-#write.csv(nationalPredictions_JMP_SMDWs,"~/GitHub/mapping-safe-drinking-water-use-LMICs/Prediction/prediction-results/nationalPredictions_JMP_SMDWs_newest.csv") 
+#write.csv(nationalPredictions_JMP_SMDWs,"~./5_Prediction/prediction_results/nationalPredictions_JMP_SMDWs_newest.csv") 
 ```
+
 ## Analysis of differences in JMP estimates and random forest predictions
+
 ```{r}
 #calculating difference (delta) between prediction from single RF model and JMP reported estimates
 nationalPredictions_JMP_SMDWs_omitNA$delta_JMP_singlePrediction <- abs(nationalPredictions_JMP_SMDWs_omitNA$JMP.reported-nationalPredictions_JMP_SMDWs_omitNA$nationalSMDWcoverage)
@@ -1120,6 +1128,7 @@ delta_JMP_meanPrediction_income <- nationalPredictions_JMP_SMDWs_omitNA %>%
 ```
 
 Comparison of final random forest model predictions to averaged prediction of 100 spatially stratified RF models
+
 ```{r}
 nationalpopulationSMDWcoverage_income <- nationalpopulationSMDWcoverage_ %>%
   left_join(UN_Population_Devision_Names, by = c("X.U.FEFF.Country"="X.U.FEFF.Country")) %>%
@@ -1186,5 +1195,4 @@ plotPredictionFinalVs100Models_subnational <- ggplot(FullPrediction_SMDW_UNGloba
               linetype = "dashed") +
   theme_bw() + scale_color_npg()
 
-```
 ```
