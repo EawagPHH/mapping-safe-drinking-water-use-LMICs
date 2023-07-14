@@ -1,0 +1,244 @@
+HH7,NAME_1,GID_1,country,comment,Matched
+BOUENZA,Bouenza,COG.1_1,Congo,,1
+BRAZZAVILLE,Brazzaville,COG.2_1,Congo,,1
+CUVETTE,Cuvette,COG.4_1,Congo,,1
+CUVETTE OUEST,Cuvette-Ouest,COG.3_1,Congo,,1
+KOUILOU,Kouilou,COG.5_1,Congo,,1
+LEKOUMOU,LÃ©koumou,COG.6_1,Congo,,1
+LIKOUALA,Likouala,COG.7_1,Congo,,1
+NIARI,Niari,COG.8_1,Congo,,1
+PLATEAUX,Plateaux,COG.9_1,Congo,,1
+POINTE-NOIRE,Pointe Noire,COG.10_1,Congo,,1
+POOL,Pool,COG.11_1,Congo,,1
+SANGHA,Sangha,COG.12_1,Congo,,1
+Centre,Yamoussoukro,CIV.13_1,Cote d'Ivoire,slightly different district definitions,24
+Centre,Lacs,CIV.6_1,Cote d'Ivoire,slightly different district definitions,24
+Centre-Est,ComoÃ©,CIV.3_1,Cote d'Ivoire,slightly different district definitions,14
+Centre-Nord,VallÃ©e du Bandama,CIV.11_1,Cote d'Ivoire,slightly different district definitions,14
+Centre-Ouest,Sassandra-MarahouÃ©,CIV.9_1,Cote d'Ivoire,slightly different district definitions,14
+Nord,Savanes,CIV.10_1,Cote d'Ivoire,slightly different district definitions,14
+Nord-Est,Zanzan,CIV.14_1,Cote d'Ivoire,slightly different district definitions,14
+Nord-Ouest,DenguÃ©lÃ©,CIV.4_1,Cote d'Ivoire,slightly different district definitions,24
+Nord-Ouest,Woroba,CIV.12_1,Cote d'Ivoire,slightly different district definitions,24
+Ouest,Montagnes,CIV.8_1,Cote d'Ivoire,slightly different district definitions,14
+Sud sans Ville d'Abidjan,Lagunes,CIV.7_1,Cote d'Ivoire,slightly different district definitions,24
+Sud sans Ville d'Abidjan,GÃ´h-Djiboua,CIV.5_1,Cote d'Ivoire,slightly different district definitions,24
+Sud-Ouest,Bas-Sassandra,CIV.2_1,Cote d'Ivoire,slightly different district definitions,14
+Ville d'Abidjan,Abidjan,CIV.1_1,Cote d'Ivoire,slightly different district definitions,14
+CIBAO NORDESTE,Salcedo,DOM.22_1,Dominican Republic,,2
+CIBAO NORDESTE,Duarte,DOM.6_1,Dominican Republic,,2
+CIBAO NORDESTE,MarÃ­a Trinidad SÃ¡nchez,DOM.15_1,Dominican Republic,,2
+CIBAO NORDESTE,SamanÃ¡,DOM.23_1,Dominican Republic,,2
+CIBAO SUR,La Vega,DOM.14_1,Dominican Republic,,2
+CIBAO SUR,MonseÃ±or Nouel,DOM.16_1,Dominican Republic,,2
+CIBAO SUR,SÃ¡nchez RamÃ­rez,DOM.28_1,Dominican Republic,,2
+CIBAO NORTE,Puerto Plata,DOM.21_1,Dominican Republic,,2
+CIBAO NORTE,Santiago,DOM.30_1,Dominican Republic,,2
+CIBAO NORTE,Espaillat,DOM.8_1,Dominican Republic,,2
+EL VALLE,San Juan,DOM.26_1,Dominican Republic,,2
+EL VALLE,La Estrelleta,DOM.12_1,Dominican Republic,,2
+CIBAO NOROESTE,Monte Cristi,DOM.17_1,Dominican Republic,,2
+CIBAO NOROESTE,DajabÃ³n,DOM.4_1,Dominican Republic,,2
+CIBAO NOROESTE,Santiago RodrÃ­guez,DOM.29_1,Dominican Republic,,2
+CIBAO NOROESTE,Valverde,DOM.32_1,Dominican Republic,,2
+ENRIQUILLO,Bahoruco,DOM.2_1,Dominican Republic,,2
+ENRIQUILLO,Independencia,DOM.10_1,Dominican Republic,,2
+ENRIQUILLO,Barahona,DOM.3_1,Dominican Republic,,2
+ENRIQUILLO,Pedernales,DOM.19_1,Dominican Republic,,2
+HIGUAMO,Monte Plata,DOM.18_1,Dominican Republic,,2
+HIGUAMO,Hato Mayor,DOM.9_1,Dominican Republic,,2
+HIGUAMO,San Pedro de MacorÃ­s,DOM.27_1,Dominican Republic,,2
+OZAMA,Distrito Nacional,DOM.5_1,Dominican Republic,,2
+OZAMA,Santo Domingo,DOM.31_1,Dominican Republic,,2
+VALDESIA,Azua,DOM.1_1,Dominican Republic,,2
+VALDESIA,San JosÃ© de Ocoa,DOM.25_1,Dominican Republic,,2
+VALDESIA,San CristÃ³bal,DOM.24_1,Dominican Republic,,2
+VALDESIA,Peravia,DOM.20_1,Dominican Republic,,2
+YUMA,El Seybo,DOM.7_1,Dominican Republic,,2
+YUMA,La Romana,DOM.13_1,Dominican Republic,,2
+YUMA,La Altagracia,DOM.11_1,Dominican Republic,,2
+CENTRAL,Central,FJI.1_1,Fiji,,1
+EASTERN,Eastern,FJI.2_1,Fiji,,1
+NORTHERN,Northern,FJI.3_1,Fiji,,1
+WESTERN,Western,FJI.5_1,Fiji,,1
+ATLANTIDA,AtlÃ¡ntida,HND.1_1,Honduras,,1
+CHOLUTECA,Choluteca,HND.2_1,Honduras,,1
+COLON,ColÃ³n,HND.3_1,Honduras,,1
+COMAYAGUA,Comayagua,HND.4_1,Honduras,,1
+COPAN,CopÃ¡n,HND.5_1,Honduras,,1
+CORTES,CortÃ©s,HND.6_1,Honduras,,3
+DISTRITO CENTRAL,Francisco MorazÃ¡n,HND.8_1,Honduras,,3
+EL PARAISO,El ParaÃ­so,HND.7_1,Honduras,,1
+FRANCISCO MORAZAN,Francisco MorazÃ¡n,HND.8_1,Honduras,,3
+GRACIAS A DIOS,Gracias a Dios,HND.9_1,Honduras,,1
+INTIBUCA,IntibucÃ¡,HND.10_1,Honduras,,1
+ISLAS DE LA BAHIA,Islas de la BahÃ­a,HND.11_1,Honduras,,1
+LA PAZ,La Paz,HND.12_1,Honduras,,1
+LEMPIRA,Lempira,HND.13_1,Honduras,,1
+OCOTEPEQUE,Ocotepeque,HND.14_1,Honduras,,1
+OLANCHO,Olancho,HND.15_1,Honduras,,1
+SAN PEDRO SULA,CortÃ©s,HND.6_1,Honduras,,3
+SANTA BARBARA,Santa BÃ¡rbara,HND.16_1,Honduras,,1
+VALLE,Valle,HND.17_1,Honduras,,1
+YORO,Yoro,HND.18_1,Honduras,,1
+Central,Nkhotakota,MWI.20_1,Malawi,,2
+Central,Kasungu,MWI.9_1,Malawi,,2
+Central,Mchinji,MWI.14_1,Malawi,,2
+Central,Ntchisi,MWI.23_1,Malawi,,2
+Central,Dowa,MWI.7_1,Malawi,,2
+Central,Salima,MWI.26_1,Malawi,,2
+Central,Lilongwe,MWI.11_1,Malawi,,2
+Central,Dedza,MWI.6_1,Malawi,,2
+Central,Ntcheu,MWI.22_1,Malawi,,2
+North,Chitipa,MWI.5_1,Malawi,,2
+North,Karonga,MWI.8_1,Malawi,,2
+North,Likoma,MWI.10_1,Malawi,,2
+North,Mzimba,MWI.17_1,Malawi,,2
+North,Nkhata Bay,MWI.19_1,Malawi,,2
+North,Rumphi,MWI.25_1,Malawi,,2
+South,Balaka,MWI.1_1,Malawi,,2
+South,Blantyre,MWI.2_1,Malawi,,2
+South,Chikwawa,MWI.3_1,Malawi,,2
+South,Chiradzulu,MWI.4_1,Malawi,,2
+South,Machinga,MWI.12_1,Malawi,,2
+South,Mangochi,MWI.13_1,Malawi,,2
+South,Mulanje,MWI.15_1,Malawi,,2
+South,Mwanza,MWI.16_1,Malawi,,2
+South,Neno,MWI.18_1,Malawi,,2
+South,Nsanje,MWI.21_1,Malawi,,2
+South,Phalombe,MWI.24_1,Malawi,,2
+South,Thyolo,MWI.27_1,Malawi,,2
+South,Zomba,MWI.28_1,Malawi,,2
+GANDAKI PROVINCE,West,NPL.5_1,Nepal,slightly different district definitions,24
+KARNALI PROVINCE,Mid-Western,NPL.4_1,Nepal,slightly different district definitions,14
+PROVINCE NO. 1,East,NPL.2_1,Nepal,slightly different district definitions,14
+PROVINCE NO. 2,Central,NPL.1_1,Nepal,slightly different district definitions,24
+PROVINCE NO. 3,Central,NPL.1_1,Nepal,slightly different district definitions,24
+PROVINCE NO. 5,West,NPL.5_1,Nepal,slightly different district definitions,24
+SUDOORPASCHIM PROVINCE,Far-Western,NPL.3_1,Nepal,slightly different district definitions,14
+Bagh,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average of SMDW coverage,3
+Bhimber,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Haveli,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Jhelum,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Kotli,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Mirpur,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Muzaffarabad,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Neelum,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Poonch,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Sudhnoti,Azad Kashmir,PAK.1_1,Pakistan,calculate the regional average,3
+Abbotabad,,PAK.3_1 and PAK.5_1,Pakistan,equivalent of 2 GADMS,
+Bajor,,PAK.3_1 and PAK.5_2,Pakistan,,
+Bannu,,PAK.3_1 and PAK.5_3,Pakistan,,
+Batagram,,PAK.3_1 and PAK.5_4,Pakistan,,
+Buner,,PAK.3_1 and PAK.5_5,Pakistan,,
+Charsadda,,PAK.3_1 and PAK.5_6,Pakistan,,
+Chitral,,PAK.3_1 and PAK.5_7,Pakistan,,
+Dera Ismail Khan,,PAK.3_1 and PAK.5_8,Pakistan,,
+Hangu,,PAK.3_1 and PAK.5_9,Pakistan,,
+Hari Pur,,PAK.3_1 and PAK.5_10,Pakistan,,
+Karak,,PAK.3_1 and PAK.5_11,Pakistan,,
+Khyber,,PAK.3_1 and PAK.5_12,Pakistan,,
+Kohat,,PAK.3_1 and PAK.5_13,Pakistan,,
+Kohistan,,PAK.3_1 and PAK.5_14,Pakistan,,
+Kuram,,PAK.3_1 and PAK.5_15,Pakistan,,
+Laki Marwat,,PAK.3_1 and PAK.5_16,Pakistan,,
+Lower Dir,,PAK.3_1 and PAK.5_17,Pakistan,,
+Malakand,,PAK.3_1 and PAK.5_18,Pakistan,,
+Mansehra,,PAK.3_1 and PAK.5_19,Pakistan,,
+Mardan,,PAK.3_1 and PAK.5_20,Pakistan,,
+Mohmind,,PAK.3_1 and PAK.5_21,Pakistan,,
+North Waziristan,,PAK.3_1 and PAK.5_22,Pakistan,,
+Nowshehra,,PAK.3_1 and PAK.5_23,Pakistan,,
+Orakzai,,PAK.3_1 and PAK.5_24,Pakistan,,
+Peshawar,,PAK.3_1 and PAK.5_25,Pakistan,,
+Shangla,,PAK.3_1 and PAK.5_26,Pakistan,,
+South Waziristan,,PAK.3_1 and PAK.5_27,Pakistan,,
+Swabi,,PAK.3_1 and PAK.5_28,Pakistan,,
+Swat,,PAK.3_1 and PAK.5_29,Pakistan,,
+Tank,,PAK.3_1 and PAK.5_30,Pakistan,,
+Torghar,,PAK.3_1 and PAK.5_31,Pakistan,,
+Upper Dir,,PAK.3_1 and PAK.5_32,Pakistan,,
+Apia Urban Area,Tuamasaga,WSM.9_1,Samoa,just part of Tuamasaga,14
+North West Upolu,A'ana,WSM.1_1,Samoa,,2
+North West Upolu,Aiga-i-le-Tai,WSM.2_1,Samoa,,2
+Rest of Upolu,Atua,WSM.3_1,Samoa,,2
+Rest of Upolu,Va'a-o-Fonoti,WSM.10_1,Samoa,,2
+Savaii,Fa'asaleleaga,WSM.4_1,Samoa,,2
+Savaii,Gaga'emauga,WSM.5_1,Samoa,,2
+Savaii,Gagaifomauga,WSM.6_1,Samoa,,2
+Savaii,Satupa'itea,WSM.8_1,Samoa,,2
+Savaii,Palauli,WSM.7_1,Samoa,,2
+Savaii,Vaisigano,WSM.11_1,Samoa,,2
+GRAND TURK,Grand Turk,TCA.1_1,Turks & Caicos,,1
+MIDDLE CAICOS,Middle Caicos,TCA.2_1,Turks & Caicos,,1
+NORTH CAICOS,North Caicos,TCA.3_1,Turks & Caicos,,1
+PROVIDENCIALES,Providenciales and West Caicos,TCA.4_1,Turks & Caicos,,1
+SALT CAY,Salt Cay,TCA.5_1,Turks & Caicos,,1
+SOUTH CAICOS,South Caicos and East Caicos,TCA.6_1,Turks & Caicos,,1
+Funafuti,Funafuti,TUV.1_1,Tuvalu,,1
+Nanumaga,Nanumanga,TUV.2_1,Tuvalu,,1
+Nanumea,Nanumea,TUV.3_1,Tuvalu,,1
+Niutao,Niutao,TUV.5_1,Tuvalu,,1
+Nui,Nui,TUV.6_1,Tuvalu,,1
+Nukufetau,Nukufetau,TUV.7_1,Tuvalu,,1
+Vaitupu,Vaitupu,TUV.9_1,Tuvalu,,1
+CENTRAL HIGHLANDS,Äáº¯k Láº¯k,VNM.15_1,Viet Nam,,2
+CENTRAL HIGHLANDS,Äáº¯k NÃ´ng,VNM.16_1,Viet Nam,,2
+CENTRAL HIGHLANDS,Gia Lai,VNM.21_1,Viet Nam,,2
+CENTRAL HIGHLANDS,Kon Tum,VNM.34_1,Viet Nam,,2
+CENTRAL HIGHLANDS,LÃ¢m Äá»ng,VNM.37_1,Viet Nam,,2
+MEKONG RIVER DELTA,Long An,VNM.39_1,Viet Nam,,2
+MEKONG RIVER DELTA,Äá»ng ThÃ¡p,VNM.18_1,Viet Nam,,2
+MEKONG RIVER DELTA,Tiá»n Giang,VNM.58_1,Viet Nam,,2
+MEKONG RIVER DELTA,An Giang,VNM.1_1,Viet Nam,,2
+MEKONG RIVER DELTA,Báº¿n Tre,VNM.6_1,Viet Nam,,2
+MEKONG RIVER DELTA,VÄ©nh Long,VNM.61_1,Viet Nam,,2
+MEKONG RIVER DELTA,TrÃ  Vinh,VNM.59_1,Viet Nam,,2
+MEKONG RIVER DELTA,HÃ  Giang,VNM.26_1,Viet Nam,,2
+MEKONG RIVER DELTA,KiÃªn Giang,VNM.33_1,Viet Nam,,2
+MEKONG RIVER DELTA,SÃ³c TrÄng,VNM.51_1,Viet Nam,,2
+MEKONG RIVER DELTA,Báº¡c LiÃªu,VNM.2_1,Viet Nam,,2
+MEKONG RIVER DELTA,CÃ  Mau,VNM.13_1,Viet Nam,,2
+MEKONG RIVER DELTA,Cáº§n ThÆ¡,VNM.12_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Thanh HÃ³a,VNM.57_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Nghá» An,VNM.41_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,HÃ  TÄ©nh,VNM.29_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Quáº£ng BÃ¬nh,VNM.46_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Quáº£ng Trá»,VNM.50_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Thá»«a ThiÃªn Huáº¿,VNM.54_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,ÄÃ  Náºµng,VNM.19_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Quáº£ng Nam,VNM.47_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Quáº£ng NgÃ£i,VNM.48_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,BÃ¬nh Thuáº­n,VNM.11_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,PhÃº YÃªn,VNM.45_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,KhÃ¡nh HÃ²a,VNM.32_1,Viet Nam,,2
+NORTH CENTRAL AND CENTRAL COASTAL,Ninh Thuáº­n,VNM.43_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Háº­u Giang,VNM.24_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Cao Báº±ng,VNM.14_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,LÃ o Cai,VNM.38_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Báº¯c Káº¡n,VNM.4_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Láº¡ng SÆ¡n,VNM.35_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,TuyÃªn Quang,VNM.60_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,YÃªn BÃ¡i,VNM.63_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,ThÃ¡i NguyÃªn,VNM.56_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,PhÃº Thá»,VNM.44_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Báº¯c Giang,VNM.3_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Quáº£ng Ninh,VNM.49_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Lai ChÃ¢u,VNM.36_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,Äiá»n BiÃªn,VNM.20_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,SÆ¡n La,VNM.52_1,Viet Nam,,2
+NORTHERN MIDLANDS AND MOUNTAIN,HoÃ  BÃ¬nh,VNM.30_1,Viet Nam,,2
+RED RIVER DELTA,Báº¯c Ninh,VNM.5_1,Viet Nam,,2
+RED RIVER DELTA,HÃ  Nam,VNM.28_1,Viet Nam,,2
+RED RIVER DELTA,Háº£i DÆ°Æ¡ng,VNM.22_1,Viet Nam,,2
+RED RIVER DELTA,HÆ°ng YÃªn,VNM.31_1,Viet Nam,,2
+RED RIVER DELTA,Nam Äá»nh,VNM.40_1,Viet Nam,,2
+RED RIVER DELTA,Ninh BÃ¬nh,VNM.42_1,Viet Nam,,2
+RED RIVER DELTA,ThÃ¡i BÃ¬nh,VNM.55_1,Viet Nam,,2
+RED RIVER DELTA,VÄ©nh PhÃºc,VNM.62_1,Viet Nam,,2
+SOUTH EAST,Äá»ng Nai,VNM.17_1,Viet Nam,,2
+SOUTH EAST,BÃ¬nh DÆ°Æ¡ng,VNM.9_1,Viet Nam,,2
+SOUTH EAST,BÃ  Rá»a - VÅ©ng TÃ u,VNM.7_1,Viet Nam,,2
+SOUTH EAST,BÃ¬nh PhÆ°á»c,VNM.10_1,Viet Nam,,2
+SOUTH EAST,TÃ¢y Ninh,VNM.53_1,Viet Nam,,2
+SOUTH EAST,Há» ChÃ­ Minh,VNM.25_1,Viet Nam,,2
