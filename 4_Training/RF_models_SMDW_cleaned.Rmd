@@ -22,7 +22,7 @@ library(here)
 Loading ("reading") Data and joining data sets
 
 ```{r}
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
 UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
 
@@ -84,7 +84,7 @@ combined_SMDW_envir <- joiningWithFeatureSets(SMDW_training, EO_features, bandNa
 
 Here we run 5 random forest models with default parameters and different feature sets with 117, 73, 51, 39 and 24 features.
 
-1) random forest model with all 117 pre-selected features
+1)  random forest model with all 117 pre-selected features
 
 ```{r}
 
@@ -126,7 +126,7 @@ h2o.mae(rf_model_SMDW_117,xval = TRUE)
 h2o.shutdown()
 ```
 
-2) random forest model with 73 pre-selected features
+2)  random forest model with 73 pre-selected features
 
 ```{r}
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
@@ -164,7 +164,7 @@ h2o.mae(rf_model_SMDW_73, xval=TRUE)
 
 ```
 
-3) random forest model with 51 pre-selected features
+3)  random forest model with 51 pre-selected features
 
 ```{r}
 
@@ -200,7 +200,7 @@ h2o.r2(rf_model_SMDW_51, xval = TRUE)
 h2o.mae(rf_model_SMDW_51, xval=TRUE)
 ```
 
-4) random forest model with 39 pre-selected features
+4)  random forest model with 39 pre-selected features
 
 ```{r}
 
@@ -235,7 +235,7 @@ h2o.r2(rf_model_SMDW_39, xval = TRUE)
 h2o.mae(rf_model_SMDW_39, xval=TRUE)
 ```
 
-5) random forest model with 24 pre-selected features
+5)  random forest model with 24 pre-selected features
 
 ```{r}
 
@@ -483,7 +483,7 @@ Plot_SHAP_SMDW_grouped
 
 ```
 
-Random-fold cross validation results 
+Random-fold cross validation results
 
 ```{r}
 combined_SMDW_envir_regMatrix_39_randomFold <- combined_SMDW_envir_human_39 %>%
