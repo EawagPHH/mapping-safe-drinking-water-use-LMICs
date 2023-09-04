@@ -39,7 +39,7 @@ country_Income_Groups <- readCountryIncomeGroup()
 Here we create indicators for safely managed drinking water (SMDW) based on the criteria defined by the Framework of the Joint Monitoring Program. For drinking water to be safely managed survey responses must indicate that it is (1) free from E.coli contamination at the point of collection, (2) accessible in house or on plot, (3) taken from an improved water source and (4) household members must not have experience water insufficiency within the last month.
 
 ```{r}
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R"))
 
 df.MICS_HH_SMDW <- creatingSMDWIndicators(df.MICS_HH)
 
@@ -52,12 +52,12 @@ Combining SMDW indicator from MICS data with earth observation data
 ```{r}
 EO_features <- renameDuplicateHH7RegionNamesFromDifferentCountries(EO_features)
 
-source("./4_Training/feature_names/24_features.r")
-source("./4_Training/feature_names/39_features.R")
-source("./4_Training/feature_names/51_features.R")
-source("./4_Training/feature_names/73_features.R")
-source("./4_Training/feature_names/91_features.R")
-source("./4_Training/feature_names/117_features.R")
+source(here("./4_Training/feature_names/24_features.r"))
+source(here("./4_Training/feature_names/39_features.R"))
+source(here("./4_Training/feature_names/51_features.R"))
+source(here("./4_Training/feature_names/73_features.R"))
+source(here("./4_Training/feature_names/91_features.R"))
+source(here("./4_Training/feature_names/117_features.R"))
 
 # environmental and human features
 combined_SMDW_envir_human_24 <- joiningWithFeatureSets(SMDW_training, EO_features, bandNames_24)
@@ -138,11 +138,10 @@ combined_SMDW_envir_human_73 <- createColumnForCVfoldBasedOnCountries(combined_S
 # select only variables needed for random forest models  
 
 combined_SMDW_envir_regMatrix_73 <- combined_SMDW_envir_human_73%>%
-  select(all_of(bandNames_73),all_of(varToModel_SMDW),HouseholdsInRegion.Freq.x, country_fold)%>% drop_na(country_fold)
+  dplyr::select(all_of(bandNames_73),all_of(varToModel_SMDW),HouseholdsInRegion.Freq.x, country_fold)%>% drop_na(country_fold)
 
 #save regression Matrix as H2O data frames  
 regMatrixH2O_SMDW_73 <- as.h2o(combined_SMDW_envir_regMatrix_73, destination_frame = "regMatrixH2O_SMDW_73")
-
 
 # random forest regression
 
@@ -880,7 +879,7 @@ CoV_AcrossPredictions
 In the next section we calculate numbers of people without SMDWs and coverage rates across all LMICS, at UN region level and at national level
 
 ```{r}
-rf_predictions <- read.csv("./5_Prediction/prediction_results/100Bootstrap_SMDWPredictions.csv", fileEncoding = "UTF-8")
+rf_predictions <- read.csv(here("./5_Predictions/prediction_results/100Bootstrap_SMDWPredictions.csv"))
 
 FullPrediction_SMDW_UNGlobalRegions <- FullPrediction_SMDW_UNGlobalRegions %>% 
   left_join(rf_predictions, by = c("GID_1"="GID_1", "GID_0"="GID_0"))
@@ -952,7 +951,7 @@ SMDW_predictions_UNSubregion <- FullPrediction_SMDW_UNGlobalRegions %>%
 
 UNSubregion_numberSMDW <- ggplot(SMDW_predictions_UNSubregion, aes(x=reorder(UNSubRegionName, numberOfPeopleWithNOSMDWinUNSubRegion), y=numberOfPeopleWithNOSMDWinUNSubRegion)) + 
   geom_bar(stat = "identity",fill="light blue" ) + 
-  scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6), limits = c(0, 1250000000))+
+  #scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6), limits = c(0, 1250000000))+
   labs(y = "Number of people not using SMDWs", x="") +
 coord_flip() +
   theme_bw()
@@ -1036,7 +1035,7 @@ nationalpopulationSMDWcoverage_$propotionwithoutSMDW_mean <- 1-nationalpopulatio
 ## Comparing national estimates with JMP Data
 
 ```{r}
-JMP_SMDWs <- read.csv("switchdrive/Data_for_reviewers/JMP_2020_SMDWs_extracted.csv", encoding = "UTF-8") 
+JMP_SMDWs <- read.csv("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/JMP_2020_SMDWs_extracted.csv", encoding = "UTF-8") 
 
 #joining and preparing data frame with our predictions with SMDWs estimates reported by the JMP
 nationalPredictions_JMP_SMDWs <- nationalpopulationSMDWcoverage_ %>%
@@ -1049,9 +1048,9 @@ nationalPredictions_JMP_SMDWs$nationalSMDWcoverage_Hhlevel <- as.numeric(nationa
 nationalPredictions_JMP_SMDWs$nationalPopulation <- nationalPredictions_JMP_SMDWs$numberOfPeopleNoSMDWincountry/nationalPredictions_JMP_SMDWs$propotionwithoutSMDW
 
 nationalPredictions_JMP_SMDWs_omitNA <- nationalPredictions_JMP_SMDWs %>% 
-  select(-Training,-Validation,-nationalSMDWcoverage_Hhlevel) %>% 
+  select(-Training,-Validation,-X.U.FEFF.Country,-nationalSMDWcoverage_Hhlevel) %>% 
   na.omit() %>%
-  left_join(UN_Population_Devision_Names, by = c("X.U.FEFF.Country"="X.U.FEFF.Country")) %>%
+  left_join(UN_Population_Devision_Names, by = c("country"="Country")) %>%
   left_join(country_Income_Groups, by = c("ISO3.Alpha.code"="Code"))
 
 
@@ -1131,7 +1130,7 @@ Comparison of final random forest model predictions to averaged prediction of 10
 
 ```{r}
 nationalpopulationSMDWcoverage_income <- nationalpopulationSMDWcoverage_ %>%
-  left_join(UN_Population_Devision_Names, by = c("X.U.FEFF.Country"="X.U.FEFF.Country")) %>%
+  left_join(UN_Population_Devision_Names, by = c("country"="Country")) %>%
   left_join(country_Income_Groups, by = c("ISO3.Alpha.code"="Code"))
 
 nationalpopulationSMDWcoverage_income$Income.group[nationalpopulationSMDWcoverage_income$country == "Venezuela"] <- "Lower middle income"

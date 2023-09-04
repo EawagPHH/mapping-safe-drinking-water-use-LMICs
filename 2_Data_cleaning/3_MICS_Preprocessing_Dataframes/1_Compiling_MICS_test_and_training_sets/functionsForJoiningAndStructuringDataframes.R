@@ -2,12 +2,12 @@
 
 
 readCountryNamesOfUNPopulationDivisionWorldPopulationProspects <- function(){
-  UN_Population_Devision_Names<- read.csv("./1_Data/CountryNamesUNPopulationDivisionWorldPopulationProspects.csv", encoding = "UTF-8") 
+  UN_Population_Devision_Names<- read.csv(here("1_Data/CountryNamesUNPopulationDivisionWorldPopulationProspects.csv")) 
   return(UN_Population_Devision_Names)
 }
 
 readUNSDMethodologyGlobalRegions <- function(){
-  UN_Population_Devision_Names<- read.csv("./1_Data/UNSDMethodologyGlobalRegions.csv", encoding = "UTF-8") 
+  UN_Population_Devision_Names<- read.csv(here("./1_Data/UNSDMethodologyGlobalRegions.csv")) 
   return(UN_Population_Devision_Names)
 }
 
@@ -20,7 +20,7 @@ renameCountryNamesAccordingToUNPopulationDevision <- function(df){
 
 readEarthObservationFeaturesAndRenameCountriesAccordingToUN_WPP <- function(){
   
-  EO_features <- read.csv("./1_Data/EnvironmentalFeatures/GADM_environmental_trainingData_final.csv", encoding = "UTF-8") 
+  EO_features <- read.csv(here("./1_Data/EnvironmentalFeatures/GADM_environmental_trainingData_final.csv")) 
   
   EO_features <-renameCountryNamesAccordingToUNPopulationDevision(EO_features)
   
@@ -28,17 +28,17 @@ readEarthObservationFeaturesAndRenameCountriesAccordingToUN_WPP <- function(){
 }
 
 readHouseHoldSurveyData <- function(){
-  df.MICS_HH <- read.csv("./1_Data/HH_MICS_training/df_MICS_SMDW_250222.csv", encoding = "UTF-8")
+  df.MICS_HH <- read.csv("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/df_MICS_SMDW_250222.csv")
   return(df.MICS_HH)
 }
 
 readHouseHoldSurveyDataForTestSet <- function(){
-  df.MICS_HH <- read.csv("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/df_SMDW_test_final.csv", encoding = "UTF-8")
+  df.MICS_HH <- read.csv(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/df_SMDW_test_final.csv"))
   return(df.MICS_HH)
 }
 
 readMatchedRegionNamesForTestSet <- function(){
-  df.MICS_HH <- read.csv("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet.csv", encoding = "UTF-8")
+  df.MICS_HH <- read.csv(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet.csv"))
   return(df.MICS_HH)
 }
   
@@ -63,7 +63,7 @@ return(TrainAndPredicted_SMDW)
 joinWithCountryIncomeGroups <- function(TrainAndPredicted_SMDW, UN_Population_Devision_Names, country_Income_Groups){
   
   TrainAndPredicted_SMDW <- TrainAndPredicted_SMDW %>%
-    left_join(UN_Population_Devision_Names, by = c("Country"="X.U.FEFF.Country"))%>%
+    left_join(UN_Population_Devision_Names, by = c("Country"="Country"))%>%
     left_join(country_Income_Groups, by = c("ISO3.Alpha.code"="Code")) 
   
   return(TrainAndPredicted_SMDW)
@@ -72,7 +72,7 @@ joinWithCountryIncomeGroups <- function(TrainAndPredicted_SMDW, UN_Population_De
 joinWithCountryUNGlobalRegions <- function(regMatrix_SMDW, UN_Population_Devision_Names, GlobalRegions){
   
   regMatrix_SMDW <- regMatrix_SMDW %>%
-    left_join(UN_Population_Devision_Names, by = c("NAME_0"="X.U.FEFF.Country")) %>%
+    left_join(UN_Population_Devision_Names, by = c("NAME_0"="Country")) %>%
     left_join(GlobalRegions, by = c("ISO3.Alpha.code"="ISO.alpha3.Code")) %>%
   
   
@@ -94,7 +94,7 @@ return(UNStandardGlobalRegion)
 }
 
 readCountryIncomeGroup <- function(){
-  countryIncomeGroup <- read.csv("./1_Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
+  countryIncomeGroup <- read.csv(here("./1_Data/WorldBankIncomeGroup2020.csv"))
   
   countryIncomeGroup <- countryIncomeGroup %>% 
     select("Code", "Region", "Income.group")
@@ -115,7 +115,7 @@ renameCountryCodeForKosovo <- function(countryIncomeGroup){
   
 
 readAndRenameCountryIncomeGroup <- function(){
-  countryIncomeGroup <- read.csv("./1_Data/WorldBankIncomeGroup2020.csv", encoding = "UTF-8")
+  countryIncomeGroup <- read.csv(here("./1_Data/WorldBankIncomeGroup2020.csv"))
   
   countryIncomeGroup[countryIncomeGroup == "XKX"] <- "XKO"
 
