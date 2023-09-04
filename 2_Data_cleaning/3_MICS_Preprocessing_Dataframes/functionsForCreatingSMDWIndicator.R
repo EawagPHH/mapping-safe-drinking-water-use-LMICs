@@ -1,7 +1,5 @@
 #title: "functions for creating SMDWs indicator"
 
-setwd("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes")
-
 replaceMinus99WithNa <- function(df){
   df[df == -99] <- NA
   return(df)
