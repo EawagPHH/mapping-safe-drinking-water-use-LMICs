@@ -30,11 +30,11 @@ library(here)
 ## Loading data sets
 
 ```{r}
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R"))
 
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
-source("./4_Training/feature_names/39_features.R")
+source(here("./4_Training/feature_names/39_features.R"))
 
 UN_Population_Devision_Names <- readCountryNamesOfUNPopulationDivisionWorldPopulationProspects()
 
@@ -65,7 +65,7 @@ combined_MICS_envir_human_e.coli <- EcoliFreeRegionalProportion %>%
 
 #for modelling e.coli contamination at PoC with 40 features
 
-source("./4_Training/feature_names/39_features.R")
+source(here("./4_Training/feature_names/39_features.R"))
 
 combined_MICS_envir_human_e.coli  <- combined_MICS_envir_human_e.coli %>%
   select(all_of("HH7_region"),all_of("NAME_0"), all_of(bandNames_39), all_of("No_EcoliAtRegionalLevel"),all_of("HouseholdsInRegion.Freq.x")) 
@@ -244,7 +244,7 @@ TrainAndPredicted_ecoli$nr_HH_in_region <- df.MICS_envir_human_e.coli_39$Househo
 
 TrainAndPredicted_ecoli$Country <- combined_MICS_envir_human_e.coli $NAME_0
 
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
 TrainAndPredicted_ecoli<- joinWithCountryIncomeGroups(TrainAndPredicted_ecoli,UN_Population_Devision_Names, country_Income_Groups)
 
@@ -281,7 +281,7 @@ plotPredObs_ecoli
 ```{r}
 #level 1 prediction
 
-EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+EO_GADM_level1 <- read.csv(here("1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
 
 regressionMatrixForPrediction <-EO_GADM_level1 %>%  
  select(all_of(bandNames_39))
@@ -315,9 +315,9 @@ FullPrediction_ecoli <- FullPrediction_ecoli %>%
 ## Descriptive analysis of E.coli results
 
 ```{r}
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
-Ecoli_originalprediction <- read.csv( "./5_Predictions/prediction_results/Fullprediction_ecoli.csv", fileEncoding = "UTF-8")
+Ecoli_originalprediction <- read.csv(here("./5_Predictions/prediction_results/Fullprediction_ecoli.csv"))
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -411,7 +411,7 @@ nationalpopulation_originalPercentageNoEcoli$percentageNoEcoli <- 1-nationalpopu
 
 nationalpopulation_originalPercentageNoEcoli_ <- nationalpopulation_originalPercentageNoEcoli %>% 
 left_join(Ecoli_originalprediction, by = c("NAME_0"="NAME_0"))%>%
-  dplyr::select(UNRegionName, UNSubRegionName,income_group, NAME_0, numberOfPeopleEcoliIncountry, percentageNoEcoli) %>% unique()
+  dplyr::select(UNRegionName, UNSubRegionName, NAME_0, numberOfPeopleEcoliIncountry, percentageNoEcoli) %>% unique()
 
 nationalpopulation_originalPercentageNoEcoli_ $propotionEcoli <- 1-nationalpopulation_originalPercentageNoEcoli_ $percentageNoEcoli
 
@@ -577,7 +577,7 @@ Calculating and plotting SHAP values for Water Availability predictions
 ```{r}
 # Create the SHAP summary plot
 shap_summary_plot_avail <- h2o.shap_summary_plot(rf_model_Avail_final, regMatrixH2O_Avail_reg_39)
-print(shap_summary_plot_Avail)
+print(shap_summary_plot_avail)
 
 shap_values_Avail <- predict_contributions.H2OModel(
   rf_model_Avail_final,
@@ -621,7 +621,7 @@ Plot_SHAP_Avail_grouped
 ```{r}
 #level 1 prediction
 
-EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+EO_GADM_level1 <- read.csv(here("1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"))
 
 regressionMatrixForPrediction <-EO_GADM_level1 %>%  
  select(all_of(bandNames_39))
@@ -680,7 +680,7 @@ combined_Accessibility_envir_human_39 <-  Accessibility_training %>%
 ## modelling water accessibility
 ## grid-search to iteratively explore the results of a suite of random forest models trained on the selected covariates. A list of hyperparameters was selected, varying in (1) the number of trees, (2) the number of variables sampled at each split  and (3) the minimum observations per leaf and (4)sampling rate
 
-h2o.shutdown(prompt = FALSE)
+h2o.shutdown()
 h2o.init(nthreads = 7, max_mem_size = '8g', ignore_config = TRUE)
 
 ## modelling accessibility
@@ -851,7 +851,7 @@ Plot_SHAP_Access_grouped
 ```{r}
 #level 1 prediction
 
-EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+EO_GADM_level1 <- read.csv(here("1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"))
 
 regressionMatrixForPrediction <-EO_GADM_level1 %>%  
  select(all_of(bandNames_39))
@@ -885,9 +885,9 @@ FullPrediction_Access <- FullPrediction_Access %>%
 ## Descriptive analysis of accessibility results
 
 ```{r}
-#source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+#source("here(./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
-Access_prediction <- read.csv( "./5_Prediction/prediction_results/Fullprediction_Access.csv", fileEncoding = "UTF-8")
+Access_prediction <- read.csv(here("./5_Predictions/prediction_results/Fullprediction_Access_.csv"))
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
@@ -1138,9 +1138,6 @@ Create the SHAP summary plot
 shap_summary_plot_Improved <- h2o.shap_summary_plot(rf_model_improved_final, regMatrixH2O_improved_reg_39)
 print(shap_summary_plot_Improved)
 
-shap_summary_plot <- h2o.shap_summary_plot(rf_model_SMDW, regMatrixH2O_SMDW)
-print(shap_summary_plot)
-
 shap_summary_plot_data <- shap_summary_plot_Improved[['data']]
 shap_summary_plot_data$feature <- as.character(shap_summary_plot_data$feature)
 shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
@@ -1168,7 +1165,7 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
 ```{r}
 #level 1 prediction
 
-EO_GADM_level1 <- read.csv(here("Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"), encoding = "UTF-8")
+EO_GADM_level1 <- read.csv(here("1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv"))
 
 regressionMatrixForPrediction <-EO_GADM_level1 %>%  
  select(all_of(bandNames_39))
@@ -1202,9 +1199,9 @@ FullPrediction_Improved <- FullPrediction_Improved %>%
 ## Descriptive analysis of improved drinking water source results
 
 ```{r}
-source("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
 
-Improved_prediction <- read.csv( "./5_Prediction/predition_results/Fullprediction_improved.csv", fileEncoding = "UTF-8")
+Improved_prediction <- read_csv("~/Documents/GitHub/mapping-safe-drinking-water-use-LMICs/5_Predictions/prediction_results/Fullprediction_improved.csv")
 
 GlobalRegions <- readAndRenameStandardGlobalRegionNames()
 
