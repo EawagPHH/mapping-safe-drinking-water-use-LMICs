@@ -6,10 +6,6 @@ output: html_document
 ---
 
 ```{r}
-# Set working directory
-knitr::opts_chunk$set(echo = TRUE, root.dir = 
-"./3_Feature_selection")
-
 library(data.table)
 library(factoextra)
 library(tidyverse)
@@ -151,14 +147,14 @@ bandNames <- c(
 Load 100 000 randomly sampled data points from the selected features layers and then exclude observations with NAs. 
 ```{r}
 # Load data from 100k randomly sampled data points
-random_points_data <- fread("./switchdrive/Data_for_reviewers/EnvironmentalFeatures/subs100k.csv") %>% mutate_all(as.numeric)
+random_points_data <- fread("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/EnvironmentalFeatures/subs100k.csv") %>% mutate_all(as.numeric)
 
 #select variables 
 random_points <- random_points_data %>% select(all_of(bandNames)) %>%
   na.omit() #loose about 20000 observations which have NAs
 ```
 
-## Use clustering of variables to reduce the number of features for our model.
+## Hierarchical cluster analysis. Here we cluster into 24, 39, 51, 73 and 91 groups. Later we select only one feature from each group.
 ```{r}
 
 library(ClustOfVar)
@@ -170,7 +166,7 @@ for (k in c(24,39,51,73,91)){
   cuttree <- cutreevar(hclust, k = k)
   
   df <- cuttree$cluster %>% as.data.frame() %>% rename('cluster' = 1) %>% rownames_to_column("variable") %>% arrange(cluster)
-  df %>% fwrite(paste0('./Feature Selection/clustofvar_50k_new_',k,'.csv'))
+  #df %>% fwrite(paste0('./Feature Selection/clustofvar_50k_new_',k,'.csv'))
   
 }
 ```
