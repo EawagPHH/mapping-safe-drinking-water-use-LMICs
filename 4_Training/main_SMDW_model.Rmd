@@ -1074,6 +1074,8 @@ plotPredictionVsJMP_Income <- ggplot(nationalPredictions_JMP_SMDWs_omitNA,
    #geom_linerange(data = nationalPredictions_JMP_SMDWs_omitNA, aes(xmin = nationalSMDWcoverage_IQR_25, xmax = nationalSMDWcoverage_IQR_75, size=.3))+
   theme_bw() + scale_color_npg()
 
+plotPredictionVsJMP_Income
+
 plotPredictionVsJMP_UNRegion <- ggplot(nationalPredictions_JMP_SMDWs_omitNA, 
                       aes(x = nationalSMDWcoverage, 
                           y = JMP.reported,size=nationalPopulation, colour= UNRegionName)) +
@@ -1092,6 +1094,8 @@ plotPredictionVsJMP_UNRegion <- ggplot(nationalPredictions_JMP_SMDWs_omitNA,
               linetype = "dashed") +
    #geom_linerange(data = nationalPredictions_JMP_SMDWs_omitNA, aes(xmin = nationalSMDWcoverage_IQR_25, xmax = nationalSMDWcoverage_IQR_75, size=.3))+
   theme_bw() + scale_color_npg()
+
+plotPredictionVsJMP_UNRegion
 
 #write.csv(nationalPredictions_JMP_SMDWs,"~./5_Prediction/prediction_results/nationalPredictions_JMP_SMDWs_newest.csv") 
 ```
@@ -1123,6 +1127,9 @@ delta_JMP_singlePrediction_income <- nationalPredictions_JMP_SMDWs_omitNA %>%
 delta_JMP_meanPrediction_income <- nationalPredictions_JMP_SMDWs_omitNA %>%
   group_by(Income.group) %>%
   summarise(deltaRegion_JMP_meanPrediction = mean(delta_JMP_meanPrediction))
+
+r2_JMP_singlePred <- 1 - (sum((nationalPredictions_JMP_SMDWs_omitNA$JMP.reported-nationalPredictions_JMP_SMDWs_omitNA$nationalSMDWcoverage)^2)/sum((nationalPredictions_JMP_SMDWs_omitNA$JMP.reported-mean(nationalPredictions_JMP_SMDWs_omitNA$JMP.reported))^2))
+r2_JMP_singlePred
 
 ```
 
