@@ -1,0 +1,398 @@
+---
+title: "climate_classifications"
+format: html
+editor: visual
+---
+
+# Assigning Surveyed Regions to Climate Zones
+
+## 1. Summary
+
+Here we classify the global administrative districts included in the Multiple Indicator Cluster Surveys (MICS) used in our study into climate zones based on the global distribution of Köppen-Geiger climate zones by [Beck et al. (2023)](https://www.nature.com/articles/s41597-023-02549-6), downloaded from [www.gloh2o.org/koppen](http://www.gloh2o.org/koppen) on 9.02.2024. We identified the corresponding climate zones by overlaying the borders of the global administrative districts included in our data set with the climate maps.
+
+[![Figure 1: Köppen-Geiger climate zones with the administrative districts included in our data set marked in black. Blue regions are tropical, red regions are arid, yellow regions are temperate, turquoise regions are cold and white are polar. The code on Google Earth Engine can be accessed \[here\](https://code.earthengine.google.com/92ac33bbf61d1ff9629e179082f975ae).](images/Screenshot%202024-02-11%20at%2018.46.15.png)](https://code.earthengine.google.com/92ac33bbf61d1ff9629e179082f975ae)
+
+```{r}
+
+ library(here)
+ library(dplyr)
+ library(tidyverse)
+ library(vcd)
+ library(ggplot2)
+ library(ggmosaic)
+
+```
+
+## 2. Preparing data frames
+
+```{r}
+# laoding dataframe
+
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R"))
+
+daily_precipitation <- read.csv(here("./1_Data/EnvironmentalFeatures/DailyClimate_MICS_aroundSampleDate.csv"))
+
+df_MICS_WithHouseholdID <- read.csv("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/df_MICS_SMDW_WithHouseholdID.csv")
+
+df.MICS_HH <- readHouseHoldSurveyData() 
+
+# Adjusting spelling of country names to join data frames
+
+df.MICS_HH$country[df.MICS_HH$country == "GuineaBissau"] <- "Guinea-Bissau"
+df.MICS_HH$country[df.MICS_HH$country == "Lao"] <- "Laos"
+df.MICS_HH$country[df.MICS_HH$country == "PakistanPunjab"] <- "Pakistan"
+df.MICS_HH$country[df.MICS_HH$country == "Palestine"] <- "Palestina"
+df.MICS_HH$country[df.MICS_HH$country == "SÃ£o TomÃ© and PrÃncipe"] <- "São Tomé and Príncipe"
+df.MICS_HH$country[df.MICS_HH$country == "SierraLeone"] <- "Sierra Leone"
+
+
+df_MICS_WithHouseholdID$country[df_MICS_WithHouseholdID$country == "Guinea Bissau"] <- "Guinea-Bissau"
+df_MICS_WithHouseholdID$country[df_MICS_WithHouseholdID$country == "Lao"] <- "Laos"
+df_MICS_WithHouseholdID$country[df_MICS_WithHouseholdID$country == "PakistanPunjab"] <- "Pakistan"
+df_MICS_WithHouseholdID$country[df_MICS_WithHouseholdID$country == "Palestine"] <- "Palestina"
+df_MICS_WithHouseholdID$country[df_MICS_WithHouseholdID$country == "Sao Tome and Principe"] <- "São Tomé and Príncipe"
+
+```
+
+## 3. Assigning survey regions to climate zones
+
+```{r}
+# Assigning countries and regions to climate zones 
+
+daily_precipitation <- daily_precipitation  %>%
+  mutate(climateZone = case_when(NAME_0 == 'Algeria' ~ 'Arid', 
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Barisal' |
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Chittagong' ~ 'Tropical',
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Dhaka' |
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Rajshahi' |
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Rangpur' |
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Sylhet' |
+                                 NAME_0 == 'Bangladesh' & NAME_1 =='Khulna' ~ 'Temperate',
+                                 NAME_0 == 'Central African Republic' ~ 'Tropical',
+                                 NAME_0 == 'Chad' & NAME_1 =='Barh el Ghazel' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Batha' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Borkou' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Chari-Baguirmi' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Ennedi Est' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Ennedi Ouest' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Gu√É¬©ra' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Hadjer-Lamis' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Kanem' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Lac'| 
+                                 NAME_0 == 'Chad' & NAME_1 =='Ouadda√É¬Ø'|
+                                 NAME_0 == 'Chad' & NAME_1 =='Sila'|
+                                 NAME_0 == 'Chad' & NAME_1 =='Wadi Fira' ~ 'Arid',
+                                 NAME_0 == 'Chad' & NAME_1 =='Logone Occidental' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Logone Oriental' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Mandoul' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Mayo-Kebbi Est' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Mayo-Kebbi Ouest' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Moyen-Chari' |
+                                 NAME_0 == 'Chad' & NAME_1 =='Ndjamena'|
+                                 NAME_0 == 'Chad' & NAME_1 =='Salamat'|
+                                 NAME_0 == 'Chad' & NAME_1 =='Tandjil√É¬©' ~ 'Tropical',
+                                 NAME_0 == 'Gambia' ~ 'Tropical',
+                                 NAME_0 == 'Georgia' & NAME_1 =='Ajaria' |
+                                 NAME_0 == 'Georgia' & NAME_1 =='Guria' |
+                                 NAME_0 == 'Georgia' & NAME_1 =='Imereti' |
+                                 NAME_0 == 'Georgia' & NAME_1 =='Kakheti' |
+                                 NAME_0 == 'Georgia' & NAME_1 =='Mtskheta-Mtianeti'|
+                                 NAME_0 == 'Georgia' & NAME_1 =='Samegrelo-Zemo Svaneti'|
+                                 NAME_0 == 'Georgia' & NAME_1 =='Shida Kartli'
+                                 ~ 'Temperate',
+                                 NAME_0 == 'Georgia' & NAME_1 =='Kvemo Kartli'|
+                                 NAME_0 == 'Georgia' & NAME_1 =='Tbilisi' ~ 'Arid',
+                                 NAME_0 == 'Georgia' & NAME_1 =='Samtskhe-Javakheti' ~ 'Cold',
+                                 NAME_0 == 'Ghana' ~ 'Tropical',
+                                 NAME_0 == 'Guinea-Bissau' ~ 'Tropical',
+                                 NAME_0 == 'Guyana' ~ 'Tropical',
+                                 NAME_0 == 'Guyana' ~ 'Tropical',
+                                 NAME_0 == 'Iraq' & NAME_1 =='Dihok'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Arbil'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='As-Sulaymaniyah' ~ 'Temperate',
+                                 NAME_0 == 'Iraq' & NAME_1 =='Al-Anbar'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Al-Basrah'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Al-Muthannia'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Al-Qadisiyah'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='An-Najaf'|
+                                 NAME_0 == 'Iraq' & NAME_1 =="At-Ta'mim"|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Babil'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Baghdad'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Dhi-Qar'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Diyala'|
+                                 NAME_0 == 'Iraq' & NAME_1 =="Karbala'"|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Maysan'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Ninawa'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Sala ad-Din'|
+                                 NAME_0 == 'Iraq' & NAME_1 =='Wasit'~ 'Arid',
+                                 NAME_0 == 'Kiribati' ~ 'Tropical',
+                                 NAME_0 == 'Kosovo' ~ 'Temperate',
+                                 NAME_0 == 'Laos' & NAME_1 =='Houaphan' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Ph√É¬¥ngsali' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Louang Namtha' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Louangphrabang' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Oud√É¬¥mxai' |
+                                 NAME_0 == 'Laos' & NAME_1 =='X√É¬©kong' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Xais√É¬¥mboun' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Xiangkhoang' ~ 'Temperate',
+                                 NAME_0 == 'Laos' & NAME_1 =='Attapu' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Bokeo' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Bolikhamxai' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Champasak' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Khammouan' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Saravan' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Savannakh√É¬©t' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Vientiane' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Vientiane' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Vientiane [prefecture]' | 
+                                 NAME_0 == 'Laos' & NAME_1 =='Xaignabouri' |
+                                 NAME_0 == 'Laos' & NAME_1 =='Xiangkhoang' ~ 'Tropical',
+                                 NAME_0 == 'Lesotho' ~ 'Temperate',
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Analamanga'| 
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Itasy' |
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Vakinankaratra' | 
+                                 NAME_0 == 'Madagascar' & NAME_2 =="Amoron'i mania" | 
+                                 NAME_0 == 'Madagascar' & NAME_2 =="Haute matsiatra" |
+                                 NAME_0 == 'Madagascar' & NAME_2 =="Ihorombe" |
+                                 NAME_0 == 'Madagascar' & NAME_2 =="Amoron'i mania" ~ 'Temperate',
+                                 NAME_0 == 'Madagascar' & NAME_1 =='Antsiranana' | 
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Atsimo-Atsinana' |
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Bongolava' |
+                                 NAME_0 == 'Madagascar' & NAME_1 =='Mahajanga' |
+                                 NAME_0 == 'Madagascar' & NAME_1 =='Toamasina' |
+                                 NAME_0 == 'Madagascar' & NAME_2 =='Vatovavy Fitovinany' ~ 'Tropical',
+                                 NAME_0 == 'Madagascar' & NAME_1 =='Toliary'~ 'Arid',
+                                 NAME_0 == 'Mongolia' & NAME_1 =='CENTRAL'|
+                                 NAME_0 == 'Mongolia' & NAME_1 =='EASTERN'|
+                                 NAME_0 == 'Mongolia' & NAME_1 =='KHANGAI'|
+                                 NAME_0 == 'Mongolia' & NAME_1 =='WESTERN'~ 'Arid',
+                                 NAME_0 == 'Mongolia' & NAME_1 =='Ulaanbaatar' ~ 'Cold',
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Borno'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Jigawa'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Sokoto'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Yobe'~ 'Arid',
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Abia'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Adamawa'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Akwa Ibom'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Anambra'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Bauchi'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Bayelsa'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Benue'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Cross River'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Delta'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Ebonyi'|  
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Edo'|  
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Ekiti'|  
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Enugu'|  
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Federal Capital Territory'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Gombe'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Imo'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Kaduna'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Kano'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Katsina'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Kebbi'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Kogi'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Kwara'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Lagos'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Nassarawa'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Niger'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Ogun'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Ondo'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Osun'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Oyo'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Plateau'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Rivers'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Taraba'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Rivers'|
+                                 NAME_0 == 'Nigeria' & NAME_1 =='Zamfara'~ 'Tropical',
+                                 NAME_0 == 'Pakistan' & NAME_1 =='Punjab'~ 'Arid',
+                                 NAME_0 == 'Palestina' & NAME_1 =='Gaza'~ 'Arid',
+                                 NAME_0 == 'Palestina' & NAME_2 =='Bethlehem'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Jericho'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Tubas'~ 'Arid',
+                                 NAME_0 == 'Palestina' & NAME_2 =='Hebron' |
+                                 NAME_0 == 'Palestina' & NAME_2 =='Jenin'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Jerusalem'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Nablus'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Qalqilya'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Ramallah and Al-Bireh'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Salfit'|
+                                 NAME_0 == 'Palestina' & NAME_2 =='Tulkarm' ~ 'Temperate',
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Alto Paraguay'|
+                                 NAME_0 == 'Paraguay' & NAME_1 =='San Pedro'~ 'Tropical',
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Alto Paran√É¬°'|
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Asunci√É¬≥n'|
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Caaguaz√É¬∫'|
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Central'|
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Itap√É¬∫a'~ 'Temperate',
+                                 NAME_0 == 'Paraguay' & NAME_1 =='Boquer√É¬≥n'~ 'Arid', 
+                                 NAME_0 == 'São Tomé and Príncipe' ~ 'Tropical',
+                                 NAME_0 == 'Sierra Leone' ~ 'Tropical',
+                                 NAME_0 == 'Suriname' ~ 'Tropical',
+                                 NAME_0 == 'Togo' ~ 'Tropical',
+                                 NAME_0 == 'Tonga' ~ 'Tropical',
+                                 NAME_0 == 'Tunisia' ~ 'Arid',
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Bulawayo'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Masvingo'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Matabeleland North'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Matabeleland South'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Midlands'~ 'Arid',
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Harare'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Manicaland'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Mashonaland Central'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Mashonaland East'|
+                                 NAME_0 == 'Zimbabwe' & NAME_1 =='Mashonaland West'~ 'Temperate'
+                                  ))
+```
+
+## 4. Creating SMDWS use indicator
+
+```{r}
+# Creating SMDWS indicator and joining with daily precipitation household survey data frame
+
+source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/functionsForCreatingSMDWIndicator.R"))
+
+df.MICS_SMDW <- creatingSMDWIndicators_toJoinWithClimateVariables(df.MICS_HH)
+
+full_df_SMDW_precip <- df.MICS_SMDW %>%
+  left_join(df_MICS_WithHouseholdID, by = c("country"="country", "HH1"="HH1", "HH2"="HH2")) %>%
+  left_join(daily_precipitation, by = c("country"="NAME_0","HH1"="X.HH1","HH5D"="HH5D","HH5M"="HH5M", "HH5Y"="HH5Y")) 
+```
+
+## 5. Creating definitions for wetter and drier periods
+
+We sampled daily precipitation values from Google Earth Engine using the Climate Hazard Group Infrared Precipitation with Station daily data. We sample pentad (5 consecutive day) total precipitation for 6 pentads before and after the sampling data on GEE and use that data here.
+
+We classify the survey day as being during a wet period based on a simplified version of the "anomalous accumulation" method by Liebmann et al. (2007), using pentad rather than daily precipitation values. Here "anomalous accumulation" for a pentad is calculated by subtracting the amount it rained over 5 consecutive days from the annual 5 day average precipitation over the 365 days (between 10 months before and 2 after sample collection). We define sample collection as having taken place during a 15 or 30 day wet period if the sample date lies within or straight after a period for which pentad precipitation remains above the annual average (priorPentadX, or afterPentadX is positive) for at least 3 or 6 consecutive pentads (15 or 30 days).
+
+```{r}
+
+# wet and dry season defined using pentad precipitation 
+# calculating difference between pentad precipitation and annual average pentad precipitation for pentads before and after the day of sample collection
+
+#priorPentad1 
+full_df_SMDW_precip$priorPentad1 <- full_df_SMDW_precip$precipitation_sum5daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#priorPentad2 
+full_df_SMDW_precip$priorPentad2 <- full_df_SMDW_precip$precipitation_sum10daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#priorPentad3 
+full_df_SMDW_precip$priorPentad3 <- full_df_SMDW_precip$precipitation_sum15daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#priorPentad4 
+full_df_SMDW_precip$priorPentad4 <- full_df_SMDW_precip$precipitation_sum20daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#priorPentad5 
+full_df_SMDW_precip$priorPentad5 <- full_df_SMDW_precip$precipitation_sum25daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#priorPentad6 
+full_df_SMDW_precip$priorPentad6 <- full_df_SMDW_precip$precipitation_sum30daysPrior-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+
+#afterPentad1 
+full_df_SMDW_precip$afterPentad1 <- full_df_SMDW_precip$precipitation_sum5daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#afterPentad2 
+full_df_SMDW_precip$afterPentad2 <- full_df_SMDW_precip$precipitation_sum10daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#afterPentad3 
+full_df_SMDW_precip$afterPentad3 <- full_df_SMDW_precip$precipitation_sum15daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#afterPentad4 
+full_df_SMDW_precip$afterPentad4 <- full_df_SMDW_precip$precipitation_sum20daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#afterPentad5 
+full_df_SMDW_precip$afterPentad5 <- full_df_SMDW_precip$precipitation_sum25daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+#afterPentad6 
+full_df_SMDW_precip$afterPentad6 <- full_df_SMDW_precip$precipitation_sum30daysAfter-full_df_SMDW_precip$precipitation_sumYearPrior_2mShift/365*5
+
+
+# Condition for sample date being in the wet season: if the sample date lies within or straight after a period for which pentad precipitation remains above the annual average (priorPentad1 is positive) for at least 6 consecutive pentads (30 days). 
+
+full_df_SMDW_precip  <- full_df_SMDW_precip   %>%
+  mutate(Period_1Month = ifelse((priorPentad1 > 0 & priorPentad2 > 0 & priorPentad3 > 0 &
+                          priorPentad4 > 0 & priorPentad5 > 0 & priorPentad6 > 0 |
+                            
+                          priorPentad1 > 0 & priorPentad2 > 0 & priorPentad3 > 0 &
+                          priorPentad4 > 0 & priorPentad5 > 0 & afterPentad1 > 0|
+                            
+                          priorPentad1 > 0 & priorPentad2 > 0 & priorPentad3 > 0 &
+                          priorPentad4 > 0 &  afterPentad2 > 0 & afterPentad1 > 0|
+                            
+                          priorPentad1 > 0 & priorPentad2 > 0 & priorPentad3 > 0 &
+                          afterPentad3 > 0 & afterPentad2 > 0 & afterPentad1 > 0|
+                            
+                          priorPentad1 > 0 & priorPentad2 > 0 & afterPentad4 > 0 &
+                          afterPentad3 > 0 & afterPentad2 > 0 & afterPentad1 > 0|
+                            
+                          priorPentad1 > 0 & afterPentad5 > 0 & afterPentad4 > 0 &
+                          afterPentad3 > 0 & afterPentad2 > 0 & afterPentad1 > 0
+                            
+                          ), "wet", "dry")) 
+
+# Condition for sample date being in the wet season: if the sample date lies within or straight after a period for which pentad precipitation remains above the annual average (priorPentad1 is positive) for at least 3 consecutive pentads (15 days). 
+
+full_df_SMDW_precip  <- full_df_SMDW_precip   %>%
+  mutate("DateOfSurvey" = ifelse((priorPentad1 > 0 & priorPentad2 > 0 & priorPentad3 > 0 |
+                            
+                          priorPentad1 > 0 & priorPentad2 > 0 & afterPentad1 > 0|
+                            
+                          priorPentad1 > 0 & afterPentad2 > 0 & afterPentad1 > 0
+                          ), "Falls within 15 day wet period", "Does not fall within 15 day wet period")) 
+
+
+
+```
+
+## 6. Plotting proportion of samples gathered during wet periods across climate zones
+
+```{r}
+
+df.mosaic_plot<- full_df_SMDW_precip %>%
+  select("climateZone","Period_1Month","DateOfSurvey","country") %>%
+  subset(climateZone == "Tropical"|climateZone == "Temperate"|climateZone == "Arid"|climateZone == "Cold")
+
+df.season_15d<- df.mosaic_plot %>%
+ select("climateZone","DateOfSurvey") 
+
+ftable(df.season_15d)
+# 33% of samples collected in temperate and tropical climates (n=38954) were gathered during wet periods lasting at least 15 days (n=12787)
+
+ ggplot(data = df.mosaic_plot) + 
+  geom_mosaic(aes(x=product(climateZone), fill = DateOfSurvey))+
+  scale_y_continuous() +
+  labs(x="Climate zone", y = "Relative frequancy", title = "", fill = "Date of survey") +
+  theme_bw(base_size = 9)
+ 
+ #ggsave(
+   #"Fig_S15.pdf",
+   #dpi=300,
+  #width= 6, height = 4
+#)
+ 
+df.period_1M_country<- df.mosaic_plot %>%
+ select("country","Period_1Month") 
+
+df.period_15d_country<- df.mosaic_plot %>%
+ select("country","DateOfSurvey") 
+
+ftable(df.period_1M_country)
+ftable(df.period_15d_country)
+
+```
+
+```{r}
+#  Barplots of data availability across climate zones and seasons
+
+ggplot(full_df_SMDW_precip, aes(fill=as.factor(SMDW), y=..count.., x=climateZone )) +
+  ggtitle("Data collection across climate zones")+
+  geom_bar(fill="light blue") + 
+  labs(x = "",
+       y = "Number of Observations")+
+  theme_bw()
+
+
+
+
+```
