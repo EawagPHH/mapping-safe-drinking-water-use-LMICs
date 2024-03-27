@@ -2,9 +2,9 @@
 
 ## Summary
 
-Here we explore environmental and anthropogenic covariates driving the spatial variation in safely managed drinking water services (SMDWs), and generate a global map of subnational (GADM version 3.6) estimates of SMDWs use across 135 low- and middle-income countries. Further, we determine the subcomponents limiting use of SMDWs around the world.
+Here we explore environmental and anthropogenic covariates driving the spatial variation in safely managed drinking water services (SMDWS), and generate a global map of subnational (GADM version 3.6) estimates of SMDWs use across 135 low- and middle-income countries. Further, we determine the subcomponents limiting use of SMDWS around the world.
 
-This repository includes "1_Data" as well as code for "2_Data_cleaning", "3_Feature_selection", "4_Training", and "5_Predictions" of SMDWs and its constituent subcomponents. We provide processed versions of the Earth Observation (EO) data in "1_Data/EnvironmentalFeatures" and share the code for the process we used in 2_Data_cleaning/1_SamplingEnvironmentalFeatures/ and 2_Data_cleaning/2_EO_matching_names_and_combining_files/ for users to understand how we produced it. If you use the EO data from the data frame we provide you need to cite the data sources which are listed in Data S1 of the Auxiliary Supplemental Material of the Paper "Mapping Safely Managed Drinking Water in Low and Middle Income Countries".
+This repository includes "1_Data" as well as code for "2_Data_cleaning", "3_Feature_selection", "4_Training", and "5_Predictions" of SMDWs and its constituent subcomponents. We provide processed data derived from Earth Observation (EO) products in "1_Data/EnvironmentalFeatures" and share the code for the process we used in 2_Data_cleaning/1_SamplingEnvironmentalFeatures/ and 2_Data_cleaning/2_EO_matching_names_and_combining_files/ for users to understand how we preprocessed it in Google Earth Engine. If you use the EO data from the data frame we provide you need to cite the data sources which are listed in Data S2 of the Auxiliary Supplemental Material of the Paper "Mapping Safely Managed Drinking Water in Low and Middle Income Countries".
 
 ## Where to start?
 
@@ -29,3 +29,7 @@ Downloaded from <https://washdata.org/data/downloads> on 11.07.2022.
 5)  UNSD Methodology for Global Regions
 
 Downloaded from <https://unstats.un.org/unsd/methodology/m49/overview/> on 14.07.2022
+
+6) Worldwide Governance Indicators
+
+Downloaded from <https://www.worldbank.org/en/publication/worldwide-governance-indicators> on 9.02.2024 
