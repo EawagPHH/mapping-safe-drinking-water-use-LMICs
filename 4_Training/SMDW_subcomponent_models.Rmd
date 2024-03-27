@@ -227,8 +227,14 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
         geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
         scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
         coord_flip() +
-        labs(y = "SHAP contribution to E.coli prediction", x = "", col = "Normalized\nFeature Value") +
-        theme_bw() 
+        labs(y = "SHAP contribution to E. coli absence in drinking water source prediction", x = "", col = "Normalized\nfeature value") +
+        theme_bw(base_size = 9) 
+
+ggsave(
+  "Fig_S13.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 Plot results from best RF Model for E.coli contamination Plot as
@@ -248,13 +254,19 @@ source(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_
 
 TrainAndPredicted_ecoli<- joinWithCountryIncomeGroups(TrainAndPredicted_ecoli,UN_Population_Devision_Names, country_Income_Groups)
 
+GlobalRegions <- readAndRenameStandardGlobalRegionNames()
+
+TrainAndPredicted_ecoli_withGlobalRegions <- TrainAndPredicted_ecoli %>% left_join(GlobalRegions, by = c("ISO3.Alpha.code"="ISO.alpha3.Code"))
+
+TrainAndPredicted_ecoli_withGlobalRegions$UNRegionName[TrainAndPredicted_ecoli_withGlobalRegions$Country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
 # Plot predicted vs observed values
 
-colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+colours <- c("#E64B35FF","#91D1C2FF","#3C5488FF","#4DBBD5FF", "#EFC00F")
                                     
-plotPredObs_ecoli <- ggplot(TrainAndPredicted_ecoli, 
+plotPredObs_ecoli <- ggplot(TrainAndPredicted_ecoli_withGlobalRegions, 
                       aes(x = predict, 
-                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+                          y = train, size = nr_HH_in_region, colour= UNRegionName)) +
   geom_point(shape=1) +
   labs(x = "Predicted proportion of population with E.coli free drinking water",
        y = "Observed proportion of population with E.coli free drinking water") +
@@ -269,11 +281,17 @@ stat_smooth(se = T,
               show.legend = NA, 
               linetype = "dashed") +
   labs(size="Households in region (n)", 
-              col="Income group") +
+              col="UN region") +
   scale_colour_manual(values = colours) +
-  theme_bw()
+  theme_bw(base_size = 9) 
 
-plotPredObs_ecoli                                                                                  
+plotPredObs_ecoli
+
+ggsave(
+  "Fig_S6.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 ## E.coli prediction at global administrative (GADM) area level 1
@@ -378,8 +396,9 @@ UNSubregionoriginal_numberEcoli <- ggplot(Ecoli_originalprediction_UNSubregion, 
   scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6), limits = c(0, 1250000000))+
   labs(y = "Number of people exposed to E.coli in their primary drinking water source", x="") +
 coord_flip() +
-  theme_bw()
+  theme_bw(base_size = 9)
 UNSubregionoriginal_numberEcoli
+
 ```
 
 ## E.coli estimates at UNsubregion levels
@@ -395,7 +414,15 @@ UNSubregion_original_ProportionNoEcoli <- ggplot(Ecoli_originalprediction_UNSubr
   geom_bar(stat = "identity",fill="light blue" ) + 
   labs(y = "Proportion of population exposed to E.coli in the primary drinking water source",x="") +
 coord_flip() +
-  theme_bw()
+  theme_bw(base_size = 9)
+
+UNSubregion_original_ProportionNoEcoli 
+
+ggsave(
+  "Fig_S9.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 
 nationalpopulation_originalPercentageNoEcoli <- Ecoli_originalprediction %>% 
   #filter(UNSubRegionName== "Sub-Saharan Africa") %>%
@@ -463,6 +490,9 @@ combined_Availability_envir_human_39 <-combined_Availability_envir_human_39%>% d
 
 combined_Avail_envir_regMatrix_39 <- combined_Availability_envir_human_39%>%
   select(all_of(bandNames_39),all_of(varToModel_Avail), HouseholdsInRegion.Freq.x, country_fold)%>% drop_na(country_fold)
+
+#write.csv(combined_Avail_envir_regMatrix_39, here("5_Predictions/prediction_results/Regre_Matrix_Avail.csv"), fileEncoding = "UTF-8", row.names = F)
+
   
 #save regression Matrix as H2O data frames  
 
@@ -544,13 +574,15 @@ country_Income_Groups <- readCountryIncomeGroup()
 
 TrainAndPredicted_Avail<- joinWithCountryIncomeGroups(TrainAndPredicted_Avail,UN_Population_Devision_Names, country_Income_Groups)
 
-# Plot predicted vs observed values
+TrainAndPredicted_Avail_withGlobalRegions <- TrainAndPredicted_Avail %>% left_join(GlobalRegions, by = c("ISO3.Alpha.code"="ISO.alpha3.Code"))
 
-#colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+TrainAndPredicted_Avail_withGlobalRegions$UNRegionName[TrainAndPredicted_Avail_withGlobalRegions$Country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+# Plot predicted vs observed values
                                     
-plotPredObs_Avail <- ggplot(TrainAndPredicted_Avail, 
+plotPredObs_Avail <- ggplot(TrainAndPredicted_Avail_withGlobalRegions, 
                       aes(x = predict, 
-                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+                          y = train, size = nr_HH_in_region, colour= UNRegionName)) +
   geom_point(shape=1) +
   labs(x = "Predicted proportion of population with available drinking water",
        y = "Observed proportion of population with available drinking water") +
@@ -565,11 +597,19 @@ stat_smooth(se = T,
               show.legend = NA, 
               linetype = "dashed") +
   labs(size="Households in region (n)", 
-              col="Income group") +
+              col="UN region") +
   scale_colour_manual(values = colours) +
-  theme_bw()
+  theme_bw(base_size = 9) +
+  guides(size = guide_legend(order = 1),
+         colour = guide_legend(order = 2))
 
-plotPredObs_Avail                                                                                       
+plotPredObs_Avail   
+
+ggsave(
+  "Fig_S8.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 Calculating and plotting SHAP values for Water Availability predictions
@@ -593,12 +633,39 @@ mean_values_Avail <- cbind(feature = rownames(mean_values_Avail), mean_values_Av
 mean_values_Avail  <- rename39Features(mean_values_Avail)
 
 mean_values_Avail <- group39FeaturesInto5IndicatorGroups(mean_values_Avail)
+
+
+shap_summary_plot_data <- shap_summary_plot_avail[['data']]
+shap_summary_plot_data$feature <- as.character(shap_summary_plot_data$feature)
+shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
+
+shap_summary_plot_data <- shap_summary_plot_data %>%
+  left_join(mean_values_Avail, by = c("feature"="feature"))
+
+
+shap_summary_plot_data %>%
+  mutate(feature = fct_reorder(feature, Mean)) %>%
+ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
+        geom_hline(yintercept = 0, linetype = "dashed") +
+        geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
+        scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
+        coord_flip() +
+        labs(y = "SHAP contribution to availability when needed prediction", x = "", col = "Normalized\nfeature value") +
+        theme_bw(base_size = 9) 
+
+ggsave(
+  "Fig_S14.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 Plotting summarized average SHAP values by Indicator Group for
 Availability
 
 ```{r}
+#colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+
 SHAP_values_Avail_grouped <- mean_values_Avail %>% 
   group_by(Indicator.Group) %>% 
   summarise(SumOfAverageSHAPValue = sum(Mean))
@@ -775,16 +842,19 @@ country_Income_Groups <- readCountryIncomeGroup()
 
 TrainAndPredicted_Access<- joinWithCountryIncomeGroups(TrainAndPredicted_Access,UN_Population_Devision_Names, country_Income_Groups)
 
+TrainAndPredicted_Access_withGlobalRegions <- TrainAndPredicted_Access %>% left_join(GlobalRegions, by = c("ISO3.Alpha.code"="ISO.alpha3.Code"))
+
+TrainAndPredicted_Access_withGlobalRegions$UNRegionName[TrainAndPredicted_Access_withGlobalRegions$Country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+
 # Plot predicted vs observed values
 
-colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
-                                    
-plotPredObs_Access <- ggplot(TrainAndPredicted_Access, 
+plotPredObs_Access <- ggplot(TrainAndPredicted_Access_withGlobalRegions, 
                       aes(x = predict, 
-                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+                          y = train, size = nr_HH_in_region, colour= UNRegionName)) +
   geom_point(shape=1) +
-  labs(x = "Predicted proportion of population drinking water on premices",
-       y = "Observed proportion of population with drinking water on premices") +
+  labs(x = "Predicted proportion of population with drinking water on premises",
+       y = "Observed proportion of population with drinking water on premises") +
   coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
 stat_smooth(se = T,
               colour = "black",
@@ -795,12 +865,20 @@ stat_smooth(se = T,
               na.rm = FALSE, 
               show.legend = NA, 
               linetype = "dashed") +
+  theme_bw(base_size = 9)+
   labs(size="Households in region (n)", 
-              col="Income group") +
+              col="UN region") +
   scale_colour_manual(values = colours) +
-  theme_bw()
+  guides(size = guide_legend(order = 1),
+         colour = guide_legend(order = 2))
 
-plotPredObs_Access                                                                                       
+plotPredObs_Access  
+
+ggsave(
+  "Fig_S5.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 Calculating and plotting SHAP values for Water Accessibility predictions
@@ -822,6 +900,29 @@ mean_values_Access <- cbind(feature = rownames(mean_values_Access), mean_values_
 mean_values_Access  <- rename39Features(mean_values_Access)
 
 mean_values_Access <- group39FeaturesInto5IndicatorGroups(mean_values_Access)
+
+shap_summary_plot_data <- shap_summary_plot_Access[['data']]
+shap_summary_plot_data$feature <- as.character(shap_summary_plot_data$feature)
+shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
+
+shap_summary_plot_data <- shap_summary_plot_data %>%
+  left_join(mean_values_Access, by = c("feature"="feature"))
+
+shap_summary_plot_data %>%
+  mutate(feature = fct_reorder(feature, Mean)) %>%
+ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
+        geom_hline(yintercept = 0, linetype = "dashed") +
+        geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
+        scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
+        coord_flip() +
+        labs(y = "SHAP contribution to accessibility on premises prediction", x = "", col = "Normalized\nfeature value") +
+        theme_bw(base_size = 9) 
+
+ggsave(
+  "Fig_S12.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 
 #write.csv(mean_values_Access, "./5_Prediction/prediction_results/Shap_values_Access_newest.csv", fileEncoding = "UTF-8", row.names = T)
 ```
@@ -984,10 +1085,12 @@ combined_Improved_envir_human_39 <- combined_Improved_envir_human_39 %>%
   drop_na(country_fold)
                              
 # select only variables needed for random forest models  
-combined_SMDW_envir_regMatrix_39 <- combined_Improved_envir_human_39 %>%
+combined_Improved_envir_regMatrix_39 <- combined_Improved_envir_human_39 %>%
   select(all_of(bandNames_39),all_of(varToModel_improved),HouseholdsInRegion.Freq.x, country_fold) 
 
-regMatrixH2O_improved_reg_39 <- as.h2o(combined_SMDW_envir_regMatrix_39, destination_frame = "regMatrixH2O_improved_reg_39")
+regMatrixH2O_improved_reg_39 <- as.h2o(combined_Improved_envir_regMatrix_39, destination_frame = "regMatrixH2O_improved_reg_39")
+
+#write.csv(combined_Improved_envir_regMatrix_39, here("5_Predictions/prediction_results/Regre_Matrix_Improved.csv"), fileEncoding = "UTF-8", row.names = F)
 
 rf.params_39_improved<-list(ntrees = c(100,200),
                 mtries = c(6,10,13,20), #(about n^(1/2), 1/4, 1/3, 1/2 of number of features)
@@ -1063,16 +1166,19 @@ country_Income_Groups <- readCountryIncomeGroup()
 
 TrainAndPredicted_Improved<- joinWithCountryIncomeGroups(TrainAndPredicted_Improved,UN_Population_Devision_Names, country_Income_Groups)
 
-# Plot predicted vs observed values
+TrainAndPredicted_Improved_withGlobalRegions <- TrainAndPredicted_Improved %>% left_join(GlobalRegions, by = c("ISO3.Alpha.code"="ISO.alpha3.Code"))
 
-colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#4DBBD5FF", "#00A087FF")
+TrainAndPredicted_Improved_withGlobalRegions$UNRegionName[TrainAndPredicted_Improved_withGlobalRegions$Country == "Kosovo (under UNSC res. 1244)"] <- "Europe"
+
+
+# Plot predicted vs observed values
                                     
-plotPredObs_Improved <- ggplot(TrainAndPredicted_Improved, 
+plotPredObs_Improved <- ggplot(TrainAndPredicted_Improved_withGlobalRegions, 
                       aes(x = predict, 
-                          y = train, size = nr_HH_in_region, colour= Income.group)) +
+                          y = train, size = nr_HH_in_region, colour= UNRegionName)) +
   geom_point(shape=1) +
-  labs(x = "Predicted proportion of population using improved source",
-       y = "Observed proportion of population using improved source") +
+  labs(x = "Predicted proportion of population using an improved source",
+       y = "Observed proportion of population using an improved source") +
   coord_cartesian(xlim = c(0,1), ylim = c(0,1)) +
 stat_smooth(se = T,
               colour = "black",
@@ -1084,11 +1190,19 @@ stat_smooth(se = T,
               show.legend = NA, 
               linetype = "dashed") +
   labs(size="Households in region (n)", 
-              col="Income group") +
+              col="UN region") +
   scale_colour_manual(values = colours) +
-  theme_bw()
+  theme_bw(base_size= 9) +
+  guides(size = guide_legend(order = 1),
+         colour = guide_legend(order = 2))
 
-plotPredObs_Improved                                                                                       
+plotPredObs_Improved  
+
+ggsave(
+  "Fig_S7.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 ```
 
 Calculating and plotting SHAP values for improved source predictions
@@ -1145,7 +1259,6 @@ shap_summary_plot_data <-rename39Features(shap_summary_plot_data)
 shap_summary_plot_data <- shap_summary_plot_data %>%
   left_join(mean_values_Improved, by = c("feature"="feature"))
 
-library(viridis)
 shap_summary_plot_data %>%
   mutate(feature = fct_reorder(feature, Mean)) %>%
 ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
@@ -1153,8 +1266,14 @@ ggplot(aes(feature, contribution, color = normalized_value, text = row)) +
         geom_point(position = h2o:::position_jitter_density(), alpha = 0.5, size = 1.2) +
         scale_fill_gradientn(colors = viridis_pal()(9), breaks=c(0,1),labels=c("low","high"), limits=c(0, 1)) +
         coord_flip() +
-        labs(y = "SHAP contribution to improved source prediction", x = "", col = "Normalized\nFeature Value") +
-        theme_bw() 
+        labs(y = "SHAP contribution to improved source prediction", x = "", col = "Normalized\nfeature value") +
+        theme_bw(base_size = 9) 
+
+ggsave(
+  "Fig_S11.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 
 ```
 

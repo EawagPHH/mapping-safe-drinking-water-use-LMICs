@@ -16,9 +16,14 @@ library(here)
 Loading (1) Multiple Indicator Cluster Survey (MICS) data for our test set as well as (2) a list with region names from the MICS surveys (HH7_region) in the test set matched with corresponding GADM areas at level 1.
 
 ```{r}
+source("~/Documents/GitHub/mapping-safe-drinking-water-use-LMICs/2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/functionsForJoiningAndStructuringDataframes.R")
+
 #(1)
 df.MICS_test <- readHouseHoldSurveyDataForTestSet()
 
+#congo was removed from test set as no information on water availability was present
+df.MICS_test <- df.MICS_test %>% 
+  subset(country != "Congo")
 #(2)
 matchedRegionNames_test <- readMatchedRegionNamesForTestSet()
 
@@ -53,7 +58,7 @@ SMDW_test_HH7 <- createIndicatorForRegionalSMDWCoverage_forTestSet(df.MICS_SMDW_
 SMDW_test_country <- createIndicatorForCountrySMDWCoverage(df.MICS_SMDW_FullTestSet)
 
 ```
-Next we match our SMDW predictions at GADM area level 1 with our calculated SMDW coverage rates at a) HH7_region level and b) country level. We do this for predictions generated from our best performing random forest model built on the original training set as well as for the average prediction of 100 random forest models build on geographically stratified training sets.
+Next we match our SMDW predictions at GADM area level 1 with our calculated SMDW coverage rates at a) HH7_region level and b) country level. We do this for predictions generated from our best performing random forest model built on the original training set of 39 geospatial covariates as well as for the average prediction of 100 random forest models build on geographically stratified training sets.
 
 ```{r}
 #Load predicted values from highest performing model and average of geographically stratified models
@@ -61,17 +66,19 @@ Next we match our SMDW predictions at GADM area level 1 with our calculated SMDW
 SMDW_Predictions <- read.csv(here("./5_Predictions/prediction_results/SMDWPredictions_forTest.csv")) %>% 
   select(predict.x, mean,GID_1, GID_0)
 
-#Load and join population counts for 2020 to prediction data frame
+#Load and join population counts for 2020 to prediction data frames
 Population_2020 <- read.csv(here("./1_Data/EnvironmentalFeatures/FeaturesAtGADMlevel1.csv")) %>% 
   select(GID_1, GPWv4_Population_2020)
 
 SMDW_Predictions <- SMDW_Predictions %>% 
   left_join(Population_2020, by = c("GID_1"="GID_1"))
 
-#Join prediction data frame with matched HH7_region names
+
+#Join prediction data frames with matched HH7_region names
 
 SMDW_Predictions <- SMDW_Predictions %>% 
   left_join(matchedRegionNames_test, by = c("GID_1"="GID_1")) %>% na.omit(SMDW_Predictions$HH7)
+
 
 #Calculate the predicted proportion of people using SMDW in HH7_regions using predictions at GADM 1 and population estimates. 
 
@@ -107,7 +114,6 @@ SMDW_100Predictions_country <- SMDW_Predictions %>%
   mutate(numberPeopleWithSMDW_country = sum(averageNumberPeopleWithSMDW_GADM1),
          GPWv4_Population_2020_country = sum(GPWv4_Population_2020))
 
-
 #3a) calculate proportion of people using SMDW in each HH7_region
 
 SMDW_originalPrediction_HH7$predict_HH7 <-
@@ -116,7 +122,6 @@ SMDW_originalPrediction_HH7$predict_HH7 <-
 SMDW_100Predictions_HH7$predict_HH7 <-
   SMDW_100Predictions_HH7$numberPeopleWithSMDW_HH7/SMDW_100Predictions_HH7$GPWv4_Population_2020_HH7
 
-
 #3a) calculate proportion of people using SMDW in each country
 
 SMDW_originalPrediction_country$predict_country <-
@@ -124,7 +129,6 @@ SMDW_originalPrediction_country$predict_country <-
 
 SMDW_100Predictions_country$predict_country <-
   SMDW_100Predictions_country$numberPeopleWithSMDW_country/SMDW_100Predictions_country$GPWv4_Population_2020_country
-
 
 #Join SMDW predictions with test set at HH7_region and country level
 
@@ -140,6 +144,7 @@ SMDW_test_HH7_100pred <- SMDW_100Predictions_HH7 %>%
   unique() %>%
   na.omit()
 
+
 SMDW_test_country_original <- SMDW_originalPrediction_country %>% 
   left_join(SMDW_test_country, by = c("country"="country"),all=TRUE) %>% 
   select("predict_country","SMDWcoverageAtCountryLevel","country", "HouseholdsInCountry.Freq.x", "GID_0") %>% 
@@ -152,6 +157,9 @@ SMDW_test_country_100pred <- SMDW_100Predictions_country %>%
   unique() %>%
   na.omit()
 
+```
+
+```{r}
 # calculate coefficient of determination and mean square error
 
 #for single best performing model
@@ -163,6 +171,12 @@ r2_test_HH7_original
 MAE_test_HH7_original <- sum(abs(SMDW_test_HH7_original$SMDWcoverageAtRegionalLevel - SMDW_test_HH7_original$predict_HH7))/length(SMDW_test_HH7_original$SMDWcoverageAtRegionalLevel)
 MAE_test_HH7_original
 
+#r2_test_country_original <- 1 - (sum((SMDW_test_country_original$SMDWcoverageAtCountryLevel-SMDW_test_country_original$predict_country)^2)/sum((SMDW_test_country_original$SMDWcoverageAtCountryLevel-mean(SMDW_test_country_original$SMDWcoverageAtCountryLevel))^2))
+#r2_test_country_original
+
+#MAE_test_country_original <- sum(abs(SMDW_test_country_original$SMDWcoverageAtCountryLevel - SMDW_test_country_original$predict_country))/length(SMDW_test_country_original$SMDWcoverageAtCountryLevel)
+#MAE_test_country_original
+
 #for 100 geographically stratified models
 r2_test_HH7_100pred <- 1 - (sum((SMDW_test_HH7_100pred$SMDWcoverageAtRegionalLevel-SMDW_test_HH7_100pred$predict_HH7)^2)/sum((SMDW_test_HH7_100pred$SMDWcoverageAtRegionalLevel-mean(SMDW_test_HH7_100pred$SMDWcoverageAtRegionalLevel))^2))
 r2_test_HH7_100pred
@@ -170,17 +184,12 @@ r2_test_HH7_100pred
 MAE_test_HH7_100pred <- sum(abs(SMDW_test_HH7_100pred$SMDWcoverageAtRegionalLevel - SMDW_test_HH7_100pred$predict_HH7))/length(SMDW_test_HH7_100pred$SMDWcoverageAtRegionalLevel)
 MAE_test_HH7_100pred
 
-r2_test_country_original <- 1 - (sum((SMDW_test_country_original$SMDWcoverageAtCountryLevel-SMDW_test_country_original$predict_country)^2)/sum((SMDW_test_country_original$SMDWcoverageAtCountryLevel-mean(SMDW_test_country_original$SMDWcoverageAtCountryLevel))^2))
-r2_test_country_original
+#r2_test_country_100pred <- 1 - (sum((SMDW_test_country_100pred$SMDWcoverageAtCountryLevel-SMDW_test_country_100pred$predict_country)^2)/sum((SMDW_test_country_100pred$SMDWcoverageAtCountryLevel-mean(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel))^2))
+#r2_test_country_100pred
 
-MAE_test_country_original <- sum(abs(SMDW_test_country_original$SMDWcoverageAtCountryLevel - SMDW_test_country_original$predict_country))/length(SMDW_test_country_original$SMDWcoverageAtCountryLevel)
-MAE_test_country_original
+#MAE_test_country_100pred<- sum(abs(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel - SMDW_test_country_100pred$predict_country))/length(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel)
+#MAE_test_country_100pred
 
-r2_test_country_100pred <- 1 - (sum((SMDW_test_country_100pred$SMDWcoverageAtCountryLevel-SMDW_test_country_100pred$predict_country)^2)/sum((SMDW_test_country_100pred$SMDWcoverageAtCountryLevel-mean(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel))^2))
-r2_test_country_100pred
-
-MAE_test_country_100pred<- sum(abs(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel - SMDW_test_country_100pred$predict_country))/length(SMDW_test_country_100pred$SMDWcoverageAtCountryLevel)
-MAE_test_country_100pred
 ```
 
 Plotting test set at HH7
@@ -232,14 +241,15 @@ Plot_UNRegionDistribution_Test
 ```{r}
 # Plot predicted vs observed values- coloured by UN Region
 
-colours <- c("#E64B35FF", "#91D1C2FF","#3C5488FF","#00A087FF", "#4DBBD5FF")                                    
+colours <- c("#E64B35FF","#91D1C2FF","#3C5488FF","#EFC00F")
+                                 
 plotPredObs_SMDWtest_HH7_orig <- ggplot(SMDW_test_HH7_original, 
                       aes(x = predict_HH7, 
                           y = SMDWcoverageAtRegionalLevel, size = HouseholdsInRegion.Freq.x, colour= UNRegionName)) +
   geom_point(shape=1) +
-  labs(x = "Predicted Proportion of Population Using SMDWs (single model)",
-       y = "Proportion of Population Using SMDWs") +
-   coord_cartesian(xlim = c(0,0.8), ylim = c(0,0.8)) +
+  labs(x = "Predicted proportion of population using SMDWS (single model)",
+       y = "Observed proportion of population using SMDWS") +
+   coord_cartesian(xlim = c(0,0.7), ylim = c(0,0.7)) +
   geom_abline(slope = 1,
               intercept = 0,
               na.rm = FALSE, 
@@ -250,20 +260,25 @@ plotPredObs_SMDWtest_HH7_orig <- ggplot(SMDW_test_HH7_original,
               size = 0.5,
               method = "lm") +
   labs(size="Households in region (n)", 
-       col="UN Region")+
+       col="UN region")+
   scale_colour_manual(values = colours)+
-  theme_bw()
+  theme_bw(base_size= 9)
 
 plotPredObs_SMDWtest_HH7_orig
 
+ggsave(
+  "Fig_S4_B.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 
 plotPredObs_SMDWtest_HH7_100pred <- ggplot(SMDW_test_HH7_100pred, 
                       aes(x = predict_HH7, 
                           y = SMDWcoverageAtRegionalLevel, size = HouseholdsInRegion.Freq.x, colour= UNRegionName)) +
   geom_point(shape=1) +
-  labs(x = "Mean Predicted Proportion of Population Using SMDWs (100 models)",
-       y = "Proportion of Population Using SMDWs") +
-   coord_cartesian(xlim = c(0,0.8), ylim = c(0,0.8)) +
+  labs(x = "Mean predicted proportion of population using SMDWS (100 models)",
+       y = "Observed proportion of population using SMDWS") +
+   coord_cartesian(xlim = c(0,0.7), ylim = c(0,0.7)) +
   geom_abline(slope = 1,
               intercept = 0,
               na.rm = FALSE, 
@@ -274,11 +289,17 @@ plotPredObs_SMDWtest_HH7_100pred <- ggplot(SMDW_test_HH7_100pred,
               size = 0.5,
               method = "lm") +
   labs(size="Households in region (n)", 
-       col="UN Region")+
+       col="UN region")+
   scale_colour_manual(values = colours)+
-  theme_bw()
+  theme_bw(base_size= 9)
 
 plotPredObs_SMDWtest_HH7_100pred
+
+ggsave(
+  "Fig_S4_A.pdf",
+  dpi=300,
+  width= 6, height = 4
+)
 
 ```
 

@@ -116,6 +116,20 @@ creatingSMDWIndicators_forTestSet <- function(df.MICS_HH){
   return(df.MICS_HH_SMDW)
 }
 
+creatingSMDWIndicators_toJoinWithClimateVariables <- function(df.MICS_HH){
+  df.MICS_HH_WithNa <- replaceMinus99WithNa(df.MICS_HH)
+  df.MICS_HH_WithNaRename <- renameVariables(df.MICS_HH_WithNa)
+  df.MICS_HH_WithNaRename_chr <- makeWS1_WS2_WS4_WS8_WS3ToCharacter(df.MICS_HH_WithNaRename)
+  df.MICS_HH_ReplacedNa<-replaceNaWithMinus99forWS1_WS2_WS4_WS8_WS3(df.MICS_HH_WithNaRename_chr)
+  df.MICS_HH_WithAccessibility<- createAccessibilityIndicator(df.MICS_HH_ReplacedNa)
+  df.MICS_HH_WithAccessibilityWithNA <- replaceMinus99WithNa(df.MICS_HH_WithAccessibility)
+  df.MICS_HH_SMDWvariablesWithoutNA <- df.MICS_HH_WithAccessibilityWithNA %>%  
+    select("Accessible","country","WQ27_sourcewaterBIN","WS7_sufficiency","HH7_region","HH48","WS1_mainWaterSourceDrink","wqsweight","HH1","HH2") %>% na.omit()  
+  df.MICS_HH_SMDWvariablesWithImprovedAccessibilityWithoutNA <-createImprovedAccessibleIndicator(df.MICS_HH_SMDWvariablesWithoutNA)
+  df.MICS_HH_SMDW <- createSMDWIndicator(df.MICS_HH_SMDWvariablesWithImprovedAccessibilityWithoutNA)
+  df.MICS_HH_SMDW <- df.MICS_HH_SMDW %>% select("country","HH7_region","HH48","wqsweight","SMDW","HH1","HH2")
+  return(df.MICS_HH_SMDW)
+}
 
 creatingSMDWIndicators <- function(df.MICS_HH){
     df.MICS_HH_WithNa <- replaceMinus99WithNa(df.MICS_HH)
@@ -748,6 +762,15 @@ c("Bangladesh"="1", "Gambia"="2", "Georgia"="3", "Ghana"="4", "Guinea-Bissau"="5
   "State of Palestine"="20", "Paraguay"="21", "Sierra Leone"="22", "Tonga"= "23", 
   "Sao Tome and Principe"="24","Algeria"="25","Central African Republic"="26",
   "Kiribati"="27" ))
+  df$country_fold <- as.factor(df$country_fold)
+  detach("package:plyr", unload = TRUE)
+  return(df)
+}
+
+createColumnForCVfoldBasedOnCountriesInTestSet <- function(df){
+  library(plyr)
+  df$country_fold <- revalue(df$NAME_0,
+                             c("Dominican Republic"="1", "Fiji"="2", "Malawi"="3", "Nepal"="4", "Samoa"="5","Vietnam"="6", "Benin"="7"))
   df$country_fold <- as.factor(df$country_fold)
   detach("package:plyr", unload = TRUE)
   return(df)
