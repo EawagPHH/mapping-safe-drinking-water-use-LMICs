@@ -249,6 +249,47 @@ rename39Features <- function(df){
   return(df)
 }
 
+rename41Features <- function(df){
+  
+  df$feature[df$feature == "Government_Effectiveness" ] <- "Government Effectiveness"
+  df$feature[df$feature == "Regulatory_Quality" ] <- "Regulatory Quality"
+  
+  df$feature[df$feature == "CGIAR_Aridity_Index" ] <- "Aridity Index"
+  df$feature[df$feature == "CHELSA_BIO_Precipitation_Seasonality"] <- "Precipitation Seasonality" 
+  df$feature[df$feature == "ConsensusLandCoverClass_Urban_Builtup" ] <- "Urban Builtup Land Cover"
+  df$feature[df$feature == "EarthEnvCloudCover_CloudForestPrediction " ] <- "Cloud Forest Prediction"
+  df$feature[df$feature == "EarthEnvCloudCover_CloudForestPrediction" ] <- "Cloud Forest Prediction"
+  df$feature[df$feature == "EsaCci_BurntAreasProbability" ] <- "Burnt Areas Probability"
+  df$feature[df$feature == "CrowtherLab_Tree_Density" ] <- "Tree Density"
+  df$feature[df$feature == "SG_Absolute_depth_to_bedrock " ] <- "Absolute Depth To Bedrock"
+  df$feature[df$feature == "SG_Absolute_depth_to_bedrock" ] <- "Absolute Depth To Bedrock"
+  df$feature[df$feature == "GPWv4_Population_Density" ] <- "Population Density"
+  df$feature[df$feature == "CHELSA_BIO_Annual_Mean_Temperature " ] <- "Annual Mean Temperature"
+  df$feature[df$feature == "CHELSA_BIO_Annual_Mean_Temperature" ] <- "Annual Mean Temperature"
+  df$feature[df$feature == "ConsensusLandCoverClass_Barren"] <- "Barren Land Cover"
+  df$feature[df$feature == "SG_H2O_Capacity_015cm" ] <- "H2O Capacity 15cm Below Ground Surface"
+  df$feature[df$feature == "EarthEnvTexture_Range_EVI" ] <- "Enhanced Vegetation Index Range"
+  df$feature[df$feature == "EarthEnvTexture_Evenness_EVI" ] <- "Enhanced Vegetation Index Evenness"
+  df$feature[df$feature == "ConsensusLandCoverClass_Cultivated_and_Managed_Vegetation" ] <- "Cultivated and Managed Vegetation"
+  df$feature[df$feature == "GLW3_RuminantsDistribution_downsampled10km" ] <- "Ruminants Distribution"
+  df$feature[df$feature == "MODIS_NPP" ] <- "Net Primary Production"
+  df$feature[df$feature == "CGIAR_PET " ] <- "Potential Evapo-transpiration"
+  df$feature[df$feature == "CGIAR_PET" ] <- "Potential Evapo-transpiration"
+  df$feature[df$feature == "SG_Bulk_density_015cm " ] <- "Bulk Density 15cm Below Ground Surface"
+  df$feature[df$feature == "SG_Bulk_density_015cm" ] <- "Bulk Density 15cm Below Ground Surface"
+  df$feature[df$feature == "CHELSA_BIO_Annual_Precipitation " ] <- "Annual Precipitation"
+  df$feature[df$feature == "CHELSA_BIO_Annual_Precipitation" ] <- "Annual Precipitation"
+  df$feature[df$feature == "CHELSA_BIO_Precipitation_Seasonality" ] <- "Precipitation Seasonality"
+  df$feature[df$feature == "ConsensusLandCoverClass_Shrubs " ] <- "Shrub Land Cover"
+  df$feature[df$feature == "ConsensusLandCoverClass_Shrubs" ] <- "Shrub Land Cover"
+  df$feature[df$feature == "ConsensusLandCoverClass_Herbaceous_Vegetation" ] <- "Herbaceous Vegetation"
+  df$feature[df$feature == "FanEtAl_Depth_to_Water_Table_AnnualMean" ] <- "Depth to Water Table"
+  df$feature[df$feature == "ConsensusLandCoverClass_Deciduous_Broadleaf_Trees" ] <- "Deciduous Broadleaf Tree Cover"
+  
+  return(df)
+}
+
+
 group39FeaturesInto5IndicatorGroups <- function(df){
   library(plyr)
   df$Indicator.Group <- revalue(df$feature,
