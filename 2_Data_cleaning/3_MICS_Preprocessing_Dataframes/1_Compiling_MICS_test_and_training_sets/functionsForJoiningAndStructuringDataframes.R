@@ -33,12 +33,12 @@ readHouseHoldSurveyData <- function(){
 }
 
 readHouseHoldSurveyDataForTestSet <- function(){
-  df.MICS_HH <- read.csv("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/df_SMDW_test_final.csv")
+  df.MICS_HH <- read.csv("~/switchdrive/PHD-2020-2024/SMDWs submission/Data_for_reviewers/df_SMDW_test_final_revised.csv")
   return(df.MICS_HH)
 }
 
 readMatchedRegionNamesForTestSet <- function(){
-  df.MICS_HH <- read.csv(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet.csv"))
+  df.MICS_HH <- read.csv(here("./2_Data_cleaning/3_MICS_Preprocessing_Dataframes/1_Compiling_MICS_test_and_training_sets/GADMandHH7_regionNamesForTestSet_revised.csv"))
   return(df.MICS_HH)
 }
   
