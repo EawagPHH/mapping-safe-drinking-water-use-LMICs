@@ -29,3 +29,7 @@ Downloaded from <https://washdata.org/data/downloads> on 11.07.2022.
 5)  UNSD Methodology for Global Regions
 
 Downloaded from <https://unstats.un.org/unsd/methodology/m49/overview/> on 14.07.2022
+
+6) Worldwide Governance Indicators
+
+Downloaded from <https://www.worldbank.org/en/publication/worldwide-governance-indicators> on 9.02.2024 
